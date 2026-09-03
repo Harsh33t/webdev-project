@@ -1,0 +1,146 @@
+<svg width="1440" height="920" viewBox="0 0 1440 920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .page-title { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 36px; font-weight: bold; fill: #ffffff; text-anchor: middle; }
+      .card-title { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #ffffff; text-anchor: middle; }
+      .card-desc { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 14px; fill: #ffffff; opacity: 0.85; text-anchor: middle; }
+      .btn-txt { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; text-anchor: middle; letter-spacing: 1px; }
+      .nav-logo { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 20px; font-weight: bold; fill: pink; letter-spacing: 1px; }
+      .nav-item { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 16px; fill: #ffffff; }
+      .nav-active { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #ffffff; }
+      .footer-txt { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 14px; fill: #ffffff; opacity: 0.6; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="920" fill="#000000"/>
+
+  <!-- Top Navbar -->
+  <rect x="0" y="0" width="1440" height="65" fill="#0d0d0d"/>
+  <line x1="0" y1="65" x2="1440" y2="65" stroke="#222222" stroke-width="1"/>
+  <text x="50" y="40" class="nav-logo">Solar Explorer</text>
+  <text x="1180" y="40" class="nav-item">Home</text>
+  <text x="1260" y="40" class="nav-item">Planets</text>
+  <text x="1340" y="40" class="nav-active">Missions</text>
+
+  <!-- Page Title -->
+  <text x="720" y="130" class="page-title">Famous Space Missions</text>
+
+  <!-- Grid of 6 Mission Cards -->
+  <!-- ROW 1 -->
+  <!-- Card 1: Apollo 11 -->
+  <g transform="translate(190, 170)">
+    <rect width="320" height="240" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <!-- Apollo Icon -->
+    <g transform="translate(130, 25)">
+      <polygon points="30,10 40,30 20,30" fill="#f1f5f9"/>
+      <rect x="23" y="30" width="14" height="20" fill="#cbd5e1"/>
+      <polygon points="23,50 17,60 27,50" fill="#94a3b8"/>
+      <polygon points="37,50 43,60 33,50" fill="#94a3b8"/>
+      <circle cx="30" cy="38" r="3" fill="#38bdf8"/>
+    </g>
+    <text x="160" y="130" class="card-title">Apollo 11 (1969)</text>
+    <text x="160" y="165" class="card-desc">First human landing on the Moon</text>
+    <text x="160" y="187" class="card-desc">by NASA, carrying astronauts Neil</text>
+    <text x="160" y="209" class="card-desc">Armstrong and Buzz Aldrin.</text>
+  </g>
+
+  <!-- Card 2: Voyager 1 & 2 -->
+  <g transform="translate(560, 170)">
+    <rect width="320" height="240" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <!-- Voyager Icon -->
+    <g transform="translate(130, 25)">
+      <ellipse cx="30" cy="22" rx="22" ry="8" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="30" cy="22" r="3" fill="#64748b"/>
+      <line x1="30" y1="22" x2="30" y2="10" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="25" y="30" width="10" height="14" fill="#f59e0b"/>
+      <line x1="25" y1="36" x2="8" y2="52" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="35" y1="36" x2="52" y2="48" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+    <text x="160" y="130" class="card-title">Voyager 1 &amp; 2 (1977)</text>
+    <text x="160" y="165" class="card-desc">Explored outer planets and became</text>
+    <text x="160" y="187" class="card-desc">the first human-made objects to</text>
+    <text x="160" y="209" class="card-desc">enter interstellar space.</text>
+  </g>
+
+  <!-- Card 3: Hubble Telescope -->
+  <g transform="translate(930, 170)">
+    <rect width="320" height="240" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <!-- Hubble Icon -->
+    <g transform="translate(130, 25)">
+      <rect x="22" y="12" width="16" height="36" fill="#94a3b8" rx="2"/>
+      <rect x="24" y="8" width="12" height="4" fill="#475569"/>
+      <rect x="6" y="24" width="14" height="12" fill="#38bdf8" stroke="#0284c7" stroke-width="1"/>
+      <rect x="40" y="24" width="14" height="12" fill="#38bdf8" stroke="#0284c7" stroke-width="1"/>
+    </g>
+    <text x="160" y="130" class="card-title">Hubble Telescope (1990)</text>
+    <text x="160" y="165" class="card-desc">Revolutionary space observatory</text>
+    <text x="160" y="187" class="card-desc">capturing high-resolution images</text>
+    <text x="160" y="209" class="card-desc">of deep stars and galaxies.</text>
+  </g>
+
+  <!-- ROW 2 -->
+  <!-- Card 4: Curiosity Rover -->
+  <g transform="translate(190, 450)">
+    <rect width="320" height="240" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <!-- Curiosity Icon -->
+    <g transform="translate(130, 25)">
+      <rect x="18" y="28" width="24" height="14" fill="#cbd5e1"/>
+      <line x1="22" y1="28" x2="22" y2="14" stroke="#94a3b8" stroke-width="2"/>
+      <rect x="18" y="10" width="10" height="6" fill="#475569"/>
+      <circle cx="21" cy="13" r="1.5" fill="#ef4444"/>
+      <circle cx="25" cy="13" r="1.5" fill="#38bdf8"/>
+      <circle cx="16" cy="48" r="5" fill="#334155"/>
+      <circle cx="30" cy="48" r="5" fill="#334155"/>
+      <circle cx="44" cy="48" r="5" fill="#334155"/>
+    </g>
+    <text x="160" y="130" class="card-title">Curiosity Rover (2012)</text>
+    <text x="160" y="165" class="card-desc">Car-sized Mars rover studying</text>
+    <text x="160" y="187" class="card-desc">Martian climate, geology, and past</text>
+    <text x="160" y="209" class="card-desc">conditions for ancient life.</text>
+  </g>
+
+  <!-- Card 5: Chandrayaan-3 -->
+  <g transform="translate(560, 450)">
+    <rect width="320" height="240" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <!-- Chandrayaan Icon -->
+    <g transform="translate(130, 25)">
+      <polygon points="20,22 40,22 45,42 15,42" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+      <rect x="25" y="15" width="10" height="7" fill="#f59e0b"/>
+      <rect x="6" y="24" width="10" height="16" fill="#1d4ed8" stroke="#f59e0b" stroke-width="1"/>
+      <rect x="44" y="24" width="10" height="16" fill="#1d4ed8" stroke="#f59e0b" stroke-width="1"/>
+      <line x1="18" y1="42" x2="10" y2="52" stroke="#64748b" stroke-width="2"/>
+      <line x1="42" y1="42" x2="50" y2="52" stroke="#64748b" stroke-width="2"/>
+    </g>
+    <text x="160" y="130" class="card-title">Chandrayaan-3 (2023)</text>
+    <text x="160" y="165" class="card-desc">Historic ISRO mission that achieved</text>
+    <text x="160" y="187" class="card-desc">the world's first soft landing near</text>
+    <text x="160" y="209" class="card-desc">the Moon's South Pole.</text>
+  </g>
+
+  <!-- Card 6: James Webb -->
+  <g transform="translate(930, 450)">
+    <rect width="320" height="240" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <!-- JWST Icon -->
+    <g transform="translate(130, 25)">
+      <polygon points="30,48 8,38 30,30 52,38" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/>
+      <polygon points="30,14 38,18 38,28 30,32 22,28 22,18" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
+      <circle cx="30" cy="23" r="2.5" fill="#0f172a"/>
+    </g>
+    <text x="160" y="130" class="card-title">James Webb (2021)</text>
+    <text x="160" y="165" class="card-desc">Most powerful infrared telescope,</text>
+    <text x="160" y="187" class="card-desc">peering back over 13.5 billion</text>
+    <text x="160" y="209" class="card-desc">years into the early universe.</text>
+  </g>
+
+  <!-- Back to Home Button -->
+  <g transform="translate(620, 740)">
+    <rect width="200" height="48" fill="#ffffff"/>
+    <text x="100" y="30" class="btn-txt">BACK TO HOME</text>
+  </g>
+
+  <!-- Footer -->
+  <rect x="0" y="860" width="1440" height="60" fill="#0d0d0d"/>
+  <line x1="0" y1="860" x2="1440" y2="860" stroke="#222222" stroke-width="1"/>
+  <text x="720" y="895" class="footer-txt">Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</text>
+</svg>

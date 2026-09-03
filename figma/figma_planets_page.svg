@@ -1,0 +1,129 @@
+<svg width="1440" height="1020" viewBox="0 0 1440 1020" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .page-title { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 36px; font-weight: bold; fill: #ffffff; text-anchor: middle; }
+      .card-title { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 19px; font-weight: bold; fill: #ffffff; text-anchor: middle; }
+      .card-desc { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 14px; fill: #ffffff; opacity: 0.85; text-anchor: middle; }
+      .btn-txt { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; text-anchor: middle; letter-spacing: 1px; }
+      .nav-logo { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 20px; font-weight: bold; fill: pink; letter-spacing: 1px; }
+      .nav-item { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 16px; fill: #ffffff; }
+      .nav-active { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #ffffff; }
+      .footer-txt { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 14px; fill: #ffffff; opacity: 0.6; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="1020" fill="#000000"/>
+
+  <!-- Top Navbar -->
+  <rect x="0" y="0" width="1440" height="65" fill="#0d0d0d"/>
+  <line x1="0" y1="65" x2="1440" y2="65" stroke="#222222" stroke-width="1"/>
+  <text x="50" y="40" class="nav-logo">Solar Explorer</text>
+  <text x="1180" y="40" class="nav-item">Home</text>
+  <text x="1260" y="40" class="nav-active">Planets</text>
+  <text x="1340" y="40" class="nav-item">Missions</text>
+
+  <!-- Page Title -->
+  <text x="720" y="130" class="page-title">The Planets</text>
+
+  <!-- Grid of 8 Planet Cards -->
+  <!-- ROW 1 -->
+  <!-- Card 1: Mercury -->
+  <g transform="translate(190, 170)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <circle cx="120" cy="70" r="38" fill="#9ca3af"/>
+    <text x="120" y="145" class="card-title">Mercury</text>
+    <text x="120" y="180" class="card-desc">Closest planet to the Sun.</text>
+    <text x="120" y="202" class="card-desc">Small, rocky world with</text>
+    <text x="120" y="224" class="card-desc">cratered plains.</text>
+  </g>
+
+  <!-- Card 2: Venus -->
+  <g transform="translate(460, 170)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <circle cx="120" cy="70" r="38" fill="#f59e0b"/>
+    <text x="120" y="145" class="card-title">Venus</text>
+    <text x="120" y="180" class="card-desc">Hottest planet covered</text>
+    <text x="120" y="202" class="card-desc">with thick toxic clouds of</text>
+    <text x="120" y="224" class="card-desc">sulfuric acid.</text>
+  </g>
+
+  <!-- Card 3: Earth -->
+  <g transform="translate(730, 170)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <circle cx="120" cy="70" r="38" fill="#3b82f6"/>
+    <circle cx="110" cy="62" r="14" fill="#22c55e" opacity="0.8"/>
+    <circle cx="132" cy="80" r="10" fill="#22c55e" opacity="0.8"/>
+    <text x="120" y="145" class="card-title">Earth</text>
+    <text x="120" y="180" class="card-desc">Our home world with liquid</text>
+    <text x="120" y="202" class="card-desc">water oceans and a</text>
+    <text x="120" y="224" class="card-desc">protective atmosphere.</text>
+  </g>
+
+  <!-- Card 4: Mars -->
+  <g transform="translate(1000, 170)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <circle cx="120" cy="70" r="38" fill="#ef4444"/>
+    <text x="120" y="145" class="card-title">Mars</text>
+    <text x="120" y="180" class="card-desc">The Red Planet, home to</text>
+    <text x="120" y="202" class="card-desc">Olympus Mons and</text>
+    <text x="120" y="224" class="card-desc">iron-rich dusty soil.</text>
+  </g>
+
+  <!-- ROW 2 -->
+  <!-- Card 5: Jupiter -->
+  <g transform="translate(190, 460)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <circle cx="120" cy="70" r="40" fill="#ea580c"/>
+    <rect x="80" y="60" width="80" height="8" fill="#fed7aa" rx="4"/>
+    <rect x="80" y="75" width="80" height="7" fill="#c2410c" rx="3"/>
+    <circle cx="138" cy="85" r="5" fill="#991b1b"/>
+    <text x="120" y="145" class="card-title">Jupiter</text>
+    <text x="120" y="180" class="card-desc">The largest gas giant,</text>
+    <text x="120" y="202" class="card-desc">famous for its centuries-old</text>
+    <text x="120" y="224" class="card-desc">Great Red Spot storm.</text>
+  </g>
+
+  <!-- Card 6: Saturn -->
+  <g transform="translate(460, 460)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <ellipse cx="120" cy="70" rx="44" ry="12" fill="none" stroke="#facc15" stroke-width="4" transform="rotate(-15 120 70)"/>
+    <circle cx="120" cy="70" r="30" fill="#ca8a04"/>
+    <text x="120" y="145" class="card-title">Saturn</text>
+    <text x="120" y="180" class="card-desc">Encircled by thousands</text>
+    <text x="120" y="202" class="card-desc">of majestic ringlets made</text>
+    <text x="120" y="224" class="card-desc">of ice and rock.</text>
+  </g>
+
+  <!-- Card 7: Uranus -->
+  <g transform="translate(730, 460)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <circle cx="120" cy="70" r="38" fill="#06b6d4"/>
+    <ellipse cx="120" cy="70" rx="44" ry="10" fill="none" stroke="#a5f3fc" stroke-width="2" transform="rotate(75 120 70)"/>
+    <text x="120" y="145" class="card-title">Uranus</text>
+    <text x="120" y="180" class="card-desc">An icy blue giant that</text>
+    <text x="120" y="202" class="card-desc">rotates uniquely on</text>
+    <text x="120" y="224" class="card-desc">its side at 98 degrees.</text>
+  </g>
+
+  <!-- Card 8: Neptune -->
+  <g transform="translate(1000, 460)">
+    <rect width="240" height="260" fill="#0d0d0d" stroke="#262626" stroke-width="1"/>
+    <circle cx="120" cy="70" r="38" fill="#2563eb"/>
+    <text x="120" y="145" class="card-title">Neptune</text>
+    <text x="120" y="180" class="card-desc">The outermost giant planet</text>
+    <text x="120" y="202" class="card-desc">with supersonic winds and</text>
+    <text x="120" y="224" class="card-desc">deep blue storms.</text>
+  </g>
+
+  <!-- Back to Home Button -->
+  <g transform="translate(620, 840)">
+    <rect width="200" height="48" fill="#ffffff"/>
+    <text x="100" y="30" class="btn-txt">BACK TO HOME</text>
+  </g>
+
+  <!-- Footer -->
+  <rect x="0" y="960" width="1440" height="60" fill="#0d0d0d"/>
+  <line x1="0" y1="960" x2="1440" y2="960" stroke="#222222" stroke-width="1"/>
+  <text x="720" y="995" class="footer-txt">Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</text>
+</svg>

@@ -1,0 +1,77 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .text-title { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 52px; font-weight: bold; fill: #ffffff; letter-spacing: 4px; text-anchor: middle; }
+      .text-sub { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 20px; fill: #ffffff; opacity: 0.85; text-anchor: middle; }
+      .text-btn { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 15px; font-weight: bold; fill: #000000; text-anchor: middle; letter-spacing: 1px; }
+      .nav-logo { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 20px; font-weight: bold; fill: pink; letter-spacing: 1px; }
+      .nav-item { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 16px; fill: #ffffff; }
+      .footer-txt { font-family: 'Century Gothic', 'Trebuchet MS', Arial, sans-serif; font-size: 14px; fill: #ffffff; opacity: 0.6; text-anchor: middle; }
+    </style>
+    <linearGradient id="heroGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="900" fill="#000000"/>
+
+  <!-- Top Navbar -->
+  <rect x="0" y="0" width="1440" height="65" fill="#0d0d0d"/>
+  <line x1="0" y1="65" x2="1440" y2="65" stroke="#222222" stroke-width="1"/>
+  <text x="50" y="40" class="nav-logo">Solar Explorer</text>
+  <text x="1180" y="40" class="nav-item">Home</text>
+  <text x="1260" y="40" class="nav-item">Planets</text>
+  <text x="1340" y="40" class="nav-item">Missions</text>
+
+  <!-- Hero Space Art Backdrop -->
+  <g id="SpaceBackdrop">
+    <!-- Starfield dots -->
+    <circle cx="200" cy="150" r="1.5" fill="#ffffff" opacity="0.8"/>
+    <circle cx="350" cy="280" r="2" fill="#ffffff" opacity="0.6"/>
+    <circle cx="850" cy="180" r="1.5" fill="#ffffff" opacity="0.9"/>
+    <circle cx="1100" cy="320" r="1" fill="#ffffff" opacity="0.7"/>
+    <circle cx="600" cy="650" r="1.5" fill="#ffffff" opacity="0.5"/>
+    <circle cx="1300" cy="700" r="2" fill="#ffffff" opacity="0.8"/>
+    <circle cx="150" cy="500" r="1" fill="#ffffff" opacity="0.7"/>
+    <circle cx="950" cy="620" r="2" fill="#ffffff" opacity="0.9"/>
+
+    <!-- Glowing Sun on Left -->
+    <circle cx="10" cy="450" r="140" fill="#f59e0b" opacity="0.9"/>
+    <circle cx="10" cy="450" r="170" fill="#fbbf24" opacity="0.2"/>
+
+    <!-- Orbital lines -->
+    <ellipse cx="720" cy="460" rx="600" ry="160" fill="none" stroke="#334155" stroke-width="1" opacity="0.4"/>
+    <ellipse cx="720" cy="460" rx="450" ry="120" fill="none" stroke="#334155" stroke-width="1" opacity="0.4"/>
+    <ellipse cx="720" cy="460" rx="300" ry="80" fill="none" stroke="#334155" stroke-width="1" opacity="0.4"/>
+
+    <!-- Planet illustrations -->
+    <circle cx="280" cy="440" r="16" fill="#f59e0b"/> <!-- Venus -->
+    <circle cx="420" cy="455" r="26" fill="#3b82f6"/> <!-- Earth -->
+    <circle cx="560" cy="445" r="18" fill="#ef4444"/> <!-- Mars -->
+    <circle cx="760" cy="450" r="55" fill="#f97316"/> <!-- Jupiter -->
+    <!-- Saturn -->
+    <ellipse cx="1040" cy="430" rx="65" ry="18" fill="none" stroke="#facc15" stroke-width="6" opacity="0.8" transform="rotate(-15 1040 430)"/>
+    <circle cx="1040" cy="430" r="42" fill="#ca8a04"/>
+    <!-- Uranus & Neptune -->
+    <circle cx="1220" cy="440" r="24" fill="#06b6d4"/>
+    <circle cx="1340" cy="445" r="22" fill="#3b82f6"/>
+  </g>
+
+  <!-- Overlay Dark Shade -->
+  <rect x="0" y="65" width="1440" height="775" fill="url(#heroGrad)"/>
+
+  <!-- Hero Content -->
+  <text x="720" y="410" class="text-title">SOLAR EXPLORER</text>
+  <text x="720" y="465" class="text-sub">Journey through the worlds of our solar system</text>
+
+  <!-- CTA Button -->
+  <rect x="620" y="505" width="200" height="50" fill="#ffffff"/>
+  <text x="720" y="536" class="text-btn">EXPLORE PLANETS</text>
+
+  <!-- Footer -->
+  <rect x="0" y="840" width="1440" height="60" fill="#0d0d0d"/>
+  <line x1="0" y1="840" x2="1440" y2="840" stroke="#222222" stroke-width="1"/>
+  <text x="720" y="875" class="footer-txt">Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</text>
+</svg>

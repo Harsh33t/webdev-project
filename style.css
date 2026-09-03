@@ -7,7 +7,7 @@
 
 body {
     background-color: #000000;
-    color: White;
+    color: pink;
 }
 
 /* Navbar */
@@ -22,7 +22,7 @@ body {
 }
 
 .logo h2 {
-    color: rgb(98, 236, 146);
+    color: pink;
     letter-spacing: 1px;
 }
 
@@ -78,7 +78,7 @@ body {
     text-align: center;
     padding: 30px 20px 10px;
     font-size: 2rem;
-    color: #ffffff;
+    color: White;
     opacity: 0.9;
 }
 
@@ -118,7 +118,7 @@ body {
 .planet-card p,
 .mission-card p {
     font-size: 0.9rem;
-    color: #cccccc;
+    color: white;
     opacity: 0.85;
     line-height: 1.4;
 }
