@@ -1,6 +1,6 @@
 # 🎨 Figma Export & Design Guide for Solar Explorer
 
-Here are two easy ways to open and edit the exact UI inside Figma, along with the complete design token specification.
+- 🔗 **Active Figma Project**: [https://www.figma.com/design/yUDJxUDHtmbML9Jd8vdfW3/Untitled?node-id=0-1&t=hxbvLIZiNQF1XtoF-1](https://www.figma.com/design/yUDJxUDHtmbML9Jd8vdfW3/Untitled?node-id=0-1&t=hxbvLIZiNQF1XtoF-1)
 
 ---
 

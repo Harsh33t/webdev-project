@@ -14,6 +14,13 @@ A clean, responsive, and lightweight HTML & CSS website exploring our Solar Syst
 
 ---
 
+## 🎨 Figma Design
+
+- **Figma File**: [Solar Explorer UI on Figma](https://www.figma.com/design/yUDJxUDHtmbML9Jd8vdfW3/Untitled?node-id=0-1&t=hxbvLIZiNQF1XtoF-1)
+- Vector export files are also available locally in the [`figma/`](figma/) folder.
+
+---
+
 ## 👥 Authors & Contributors
 
 - **Aviraj**
