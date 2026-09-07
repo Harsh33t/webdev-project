@@ -51,11 +51,62 @@ body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystem
 .mission-card h3 { font-size: 1.1rem; margin-bottom: 6px; }
 .mission-card p { color: #888; font-size: 0.88rem; }
 
-footer { padding: 30px 0; border-top: 1px solid rgba(255,255,255,0.1); color: #666; font-size: 0.82rem; text-align: center; background: #000; }
+/* The Sun (Split Layout) */
+.sun-split-layout { display: flex; align-items: flex-start; min-height: 100vh; background: #000; }
+.sun-stage { flex: 1.35; height: 100vh; position: sticky; top: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; }
+.sun-huge-img { width: 96%; max-width: 820px; max-height: 94vh; object-fit: contain; mix-blend-mode: screen; }
+.sun-info-flow { flex: 1; max-width: 580px; padding: 60px 48px 60px 16px; }
+.sun-block { margin-bottom: 70px; }
+.sun-meta { font-size: 0.8rem; letter-spacing: 2.5px; color: #f59e0b; font-weight: 800; text-transform: uppercase; }
+.sun-title { font-size: clamp(3rem, 5vw, 4.4rem); font-weight: 900; letter-spacing: 4px; text-transform: uppercase; margin: 4px 0 8px; line-height: 1; color: #fff; }
+.sun-subtitle { font-size: 1.15rem; color: #fde047; margin-bottom: 14px; font-weight: 500; }
+.sun-desc { font-size: 0.95rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 20px; }
+.sec-title { font-size: 1.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; color: #fff; }
+
+/* Sun Stats & Flows */
+.facts-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid rgba(255,255,255,0.15); border-left: 1px solid rgba(255,255,255,0.15); }
+.facts-grid div { padding: 22px 14px; border-bottom: 1px solid rgba(255,255,255,0.15); border-right: 1px solid rgba(255,255,255,0.15); display: flex; flex-direction: column; gap: 4px; }
+.facts-grid strong { font-size: 1.8rem; font-weight: 900; color: #fbbf24; line-height: 1.1; }
+.facts-grid span { font-size: 0.72rem; letter-spacing: 1.5px; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+
+.comp-bar { display: flex; height: 32px; border-radius: 4px; overflow: hidden; font-size: 0.75rem; font-weight: 700; line-height: 32px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+.comp-bar span:nth-child(1) { background: #f59e0b; color: #000; }
+.comp-bar span:nth-child(2) { background: #ea580c; color: #fff; }
+.comp-bar span:nth-child(3) { background: #334155; color: #cbd5e1; }
+.comp-labels { display: flex; justify-content: space-between; font-size: 0.78rem; margin-top: 8px; font-weight: 700; }
+.comp-labels span:nth-child(1) { color: #f59e0b; } .comp-labels span:nth-child(2) { color: #ea580c; } .comp-labels span:nth-child(3) { color: #94a3b8; }
+.chain-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.82rem; color: #f59e0b; }
+.chain-flow span { border: 1px solid rgba(245,158,11,0.35); background: rgba(245,158,11,0.06); padding: 5px 12px; border-radius: 20px; color: #fde047; font-weight: 600; }
+
+/* Sun Layers & Temperatures */
+.layers-list { display: flex; flex-direction: column; gap: 12px; }
+.layers-list div { border-left: 2px solid; padding-left: 14px; }
+.layers-list div:nth-child(1) { border-color: #ef4444; } .layers-list div:nth-child(1) h4 { color: #ef4444; }
+.layers-list div:nth-child(2) { border-color: #f97316; } .layers-list div:nth-child(2) h4 { color: #f97316; }
+.layers-list div:nth-child(3) { border-color: #f59e0b; } .layers-list div:nth-child(3) h4 { color: #f59e0b; }
+.layers-list div:nth-child(4) { border-color: #eab308; } .layers-list div:nth-child(4) h4 { color: #eab308; }
+.layers-list div:nth-child(5) { border-color: #f43f5e; } .layers-list div:nth-child(5) h4 { color: #f43f5e; }
+.layers-list div:nth-child(6) { border-color: #fde047; } .layers-list div:nth-child(6) h4 { color: #fde047; }
+.layers-list h4 { font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 2px; }
+.layers-list p { font-size: 0.82rem; color: #94a3b8; }
+
+.callout { border: 1px solid rgba(245,158,11,0.35); background: rgba(245,158,11,0.06); padding: 12px 16px; border-radius: 6px; font-size: 0.88rem; color: #fde047; margin-bottom: 20px; font-weight: 500; }
+.temp-bars { display: flex; flex-direction: column; gap: 14px; }
+.temp-row { display: flex; align-items: center; gap: 14px; font-size: 0.85rem; }
+.temp-row span { width: 105px; text-align: right; color: #cbd5e1; font-weight: 700; }
+.t-track { flex: 1; height: 26px; background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; display: flex; }
+.t-track div { height: 100%; font-weight: 800; font-size: 0.78rem; display: flex; align-items: center; padding: 0 10px; white-space: nowrap; }
+.temp-row:nth-child(1) .t-track div { background: #ef4444; color: #fff; }
+.temp-row:nth-child(2) .t-track div { background: #f97316; color: #fff; }
+.temp-row:nth-child(3) .t-track div { background: #eab308; color: #000; }
+
+footer { padding: 30px 0; border-top: 1px solid rgba(255,255,255,0.1); color: #666; font-size: 0.82rem; }
 
 @media (max-width: 992px) {
-    .voyage-slide { flex-direction: column; }
-    .planet-stage, .planet-info-col { max-width: 100%; text-align: left; }
+    .voyage-slide, .sun-split-layout { flex-direction: column; }
+    .sun-stage { position: relative; top: 0; height: auto; padding: 40px 20px; max-width: 100%; }
+    .sun-huge-img { max-height: 50vh; }
+    .sun-info-flow { max-width: 100%; padding: 30px 24px; }
     .voyage-timeline { display: none; }
     .navbar { padding: 16px 24px; }
 }
