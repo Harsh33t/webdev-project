@@ -1,39 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar Explorer</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-    <!-- Navigation Bar -->
     <nav class="navbar">
-        <div class="logo">
-            <h2>Solar Explorer</h2>
-        </div>
-        <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="planets.html">Planets</a>
-            <a href="missions.html">Missions</a>
-        </div>
+        <div class="logo"><h2>Solar Explorer</h2></div>
+        <div class="nav-links"><a href="index.html" class="active">Home</a><a href="sun.html">The Sun</a><a href="extreme.html">Extreme Space</a><a href="missions.html">Missions</a></div>
     </nav>
 
-    <!-- Full Background Landing Hero -->
     <section class="hero-landing">
         <h1>SOLAR EXPLORER</h1>
         <p>Journey through the worlds of our solar system</p>
-        <a href="planets.html" class="btn">EXPLORE PLANETS</a>
+        <a href="#planet-mercury" class="btn">EXPLORE PLANETS</a>
+        <a href="#planet-mercury" class="hero-scroll-hint" aria-label="Scroll to explore planets"><span>SCROLL TO EXPLORE</span><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></a>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p>
-    </footer>
+    <main class="voyage-container" id="voyage">
+        <section class="voyage-slide" id="planet-mercury" data-index="0">
+            <div class="planet-stage"><img src="images/mercury.jpg" alt="Mercury" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 01 • TERRESTRIAL</div>
+                <h2 class="planet-title">MERCURY</h2>
+                <p class="planet-summary">The closest planet to the Sun and the fastest runner in the solar system, hurtling at 47 km/s. With virtually no atmosphere, temperatures oscillate violently from boiling day to liquid-nitrogen cold night.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">57.9 Million km</span></div>
+                    <div class="spec-row"><span class="spec-label">Year Length</span><span class="spec-val">88 Earth Days</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">4,879 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Known Moons</span><span class="spec-val">0</span></div>
+                </div>
+            </div>
+        </section>
 
+        <section class="voyage-slide" id="planet-venus" data-index="1">
+            <div class="planet-stage"><img src="images/venus.jpg" alt="Venus" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 02 • SISTER WORLD</div>
+                <h2 class="planet-title">VENUS</h2>
+                <p class="planet-summary">Earth's twisted twin is the hottest world in our system. Shrouded in suffocating carbon dioxide clouds raining sulfuric acid, its runaway greenhouse effect keeps surface temperatures hot enough to melt lead.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">108.2 Million km</span></div>
+                    <div class="spec-row"><span class="spec-label">Surface Temperature</span><span class="spec-val">465 °C</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">12,104 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Axial Rotation</span><span class="spec-val">Retrograde (243d)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="voyage-slide" id="planet-earth" data-index="2">
+            <div class="planet-stage"><img src="images/earth.jpg" alt="Earth" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 03 • GOLDILOCKS ZONE</div>
+                <h2 class="planet-title">EARTH</h2>
+                <p class="planet-summary">Our cosmic sanctuary. The only celestial body known to harbor conscious life, blessed with liquid water oceans, an active magnetic shield, dynamic plate tectonics, and a vibrant, breathable atmosphere.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">149.6 Million km (1 AU)</span></div>
+                    <div class="spec-row"><span class="spec-label">Surface Coverage</span><span class="spec-val">71% Water Oceans</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">12,742 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Known Moons</span><span class="spec-val">1 (The Moon)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="voyage-slide" id="planet-mars" data-index="3">
+            <div class="planet-stage"><img src="images/mars.jpg" alt="Mars" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 04 • THE RED FRONTIER</div>
+                <h2 class="planet-title">MARS</h2>
+                <p class="planet-summary">Colored by iron-oxide dust, Mars features the largest volcano in the solar system (Olympus Mons, 22 km high) and the gargantuan Valles Marineris canyon. Prime destination for humanity's next interplanetary leap.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">227.9 Million km</span></div>
+                    <div class="spec-row"><span class="spec-label">Sol Length</span><span class="spec-val">24h 37m</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">6,779 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Known Moons</span><span class="spec-val">2 (Phobos, Deimos)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="voyage-slide" id="planet-jupiter" data-index="4">
+            <div class="planet-stage"><img src="images/jupiter.jpg" alt="Jupiter" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 05 • GAS GIANT</div>
+                <h2 class="planet-title">JUPITER</h2>
+                <p class="planet-summary">More massive than all other planets combined, Jupiter acts as the solar system's gravitational shield. Its swirling cloud bands contain the Great Red Spot — an anticyclonic storm larger than Earth raging for centuries.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">778.5M km (5.2 AU)</span></div>
+                    <div class="spec-row"><span class="spec-label">Rotation Period</span><span class="spec-val">9h 56m per day</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">139,820 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Known Moons</span><span class="spec-val">95 Verified</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="voyage-slide" id="planet-saturn" data-index="5">
+            <div class="planet-stage"><img src="images/saturn.jpg" alt="Saturn" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 06 • RINGED MAJESTY</div>
+                <h2 class="planet-title">SATURN</h2>
+                <p class="planet-summary">Famous for its majestic ring system stretching over 282,000 km yet averaging only 10 meters in thickness. Composed predominantly of billions of pristine water-ice particles, rocky debris, and cosmic dust.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">1.43 Billion km</span></div>
+                    <div class="spec-row"><span class="spec-label">Mean Density</span><span class="spec-val">0.687 g/cm³ (&lt; Water)</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">116,460 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Known Moons</span><span class="spec-val">146 Verified</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="voyage-slide" id="planet-uranus" data-index="6">
+            <div class="planet-stage"><img src="images/uranus.jpg" alt="Uranus" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 07 • ICE GIANT</div>
+                <h2 class="planet-title">URANUS</h2>
+                <p class="planet-summary">A calm, pale aquamarine ice world rich in methane, water, and ammonia ices. Unique among all planets, Uranus spins completely on its side with an axial tilt of 98°, likely the result of an ancient catastrophic collision.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">2.87 Billion km</span></div>
+                    <div class="spec-row"><span class="spec-label">Lowest Recorded Temp</span><span class="spec-val">-224 °C</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">50,724 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Axial Tilt</span><span class="spec-val">97.8° (Sideways)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="voyage-slide" id="planet-neptune" data-index="7">
+            <div class="planet-stage"><img src="images/neptune.jpg" alt="Neptune" class="planet-full-img" loading="lazy"></div>
+            <div class="planet-info-col">
+                <div class="planet-meta-tag">PLANET 08 • OUTERMOST GIANT</div>
+                <h2 class="planet-title">NEPTUNE</h2>
+                <p class="planet-summary">The most distant major planet in our solar system. Bathed in vivid azure blue, Neptune is an extreme supersonic tempest world with the fastest recorded winds anywhere, screaming past 2,100 km/h.</p>
+                <div class="planet-specs">
+                    <div class="spec-row"><span class="spec-label">Distance from Sun</span><span class="spec-val">4.50 Billion km (30 AU)</span></div>
+                    <div class="spec-row"><span class="spec-label">Orbital Period</span><span class="spec-val">165 Earth Years</span></div>
+                    <div class="spec-row"><span class="spec-label">Equatorial Diameter</span><span class="spec-val">49,244 km</span></div>
+                    <div class="spec-row"><span class="spec-label">Fastest Winds</span><span class="spec-val">2,100+ km/h</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer><p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p></footer>
 </body>
-
 </html>
