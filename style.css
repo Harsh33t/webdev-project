@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #000;
   color: #fff;
@@ -427,6 +431,11 @@ body {
   font-size: 0.88rem;
 }
 
+/* Criss-Cross Layout */
+.crisscross:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
 /* Footer */
 footer {
   padding: 30px 0;
@@ -443,7 +452,8 @@ footer {
   }
 
   .voyage-slide,
-  .sun-split-layout {
+  .sun-split-layout,
+  .crisscross:nth-child(even) {
     flex-direction: column;
   }
 
