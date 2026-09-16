@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar Explorer - Space Missions</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="missions-page">
     <nav class="navbar">
         <div class="logo"><h2>Solar Explorer</h2></div>
         <div class="nav-links">
@@ -17,21 +16,116 @@
         </div>
     </nav>
 
-    <header class="page-header">
-        <h1 class="page-title">Famous Space Missions</h1>
-        <p class="page-subtitle">Landmark expeditions that expanded humanity's reach into the cosmos</p>
+    <header class="timeline-header">
+        <h1 class="timeline-title">Space Missions</h1>
+        <p class="timeline-sub">A visual timeline charting humanity's greatest expeditions across our solar system and into interstellar space.</p>
+        
+        <div class="timeline-filters">
+            <button class="filter-btn active" onclick="filterMissions('all', this)">All Epochs</button>
+            <button class="filter-btn" onclick="filterMissions('lunar', this)">Lunar</button>
+            <button class="filter-btn" onclick="filterMissions('deep-space', this)">Deep Space</button>
+            <button class="filter-btn" onclick="filterMissions('orbiters', this)">Observatories</button>
+        </div>
     </header>
 
-    <main class="missions-container">
-        <article class="mission-card"><img src="images/apollo.svg" alt="Apollo 11"><h3>Apollo 11 (1969)</h3><p>First human landing on the Moon by NASA, carrying astronauts Neil Armstrong and Buzz Aldrin.</p></article>
-        <article class="mission-card"><img src="images/voyager.svg" alt="Voyager"><h3>Voyager 1 & 2 (1977)</h3><p>Explored outer planets and became the first human-made objects to enter interstellar space.</p></article>
-        <article class="mission-card"><img src="images/hubble.svg" alt="Hubble"><h3>Hubble Telescope (1990)</h3><p>Revolutionary space observatory capturing high-resolution images of deep stars and galaxies.</p></article>
-        <article class="mission-card"><img src="images/curiosity.svg" alt="Curiosity"><h3>Curiosity Rover (2012)</h3><p>Car-sized Mars rover studying Martian climate, geology, and past conditions for life.</p></article>
-        <article class="mission-card"><img src="images/chandrayaan.svg" alt="Chandrayaan-3"><h3>Chandrayaan-3 (2023)</h3><p>Historic ISRO mission that achieved the world's first soft landing near the Moon's South Pole.</p></article>
-        <article class="mission-card"><img src="images/jwst.svg" alt="JWST"><h3>James Webb (2021)</h3><p>Most powerful infrared space telescope, peering back over 13.5 billion years into early universe.</p></article>
+    <main class="timeline-container">
+        <!-- 1969: Apollo 11 -->
+        <article class="timeline-item left" data-category="lunar">
+            <div class="timeline-dot"></div>
+            <span class="timeline-year">1969</span>
+            <div class="t-card">
+                <div class="t-top"><div class="t-icon-wrap"><img src="images/apollo.svg" alt="Apollo 11"></div><span class="t-agency">NASA • CREWED</span></div>
+                <h3>Apollo 11</h3>
+                <div class="t-feat">First Human Lunar Landing</div>
+                <p>Commander Neil Armstrong and Lunar Module Pilot Buzz Aldrin landed the Eagle in the Sea of Tranquility, fulfilling humanity's dream of walking on another world.</p>
+                <div class="t-meta"><span>Destination: <strong>The Moon</strong></span><span>Status: <strong class="pill-done">Completed</strong></span></div>
+            </div>
+        </article>
+
+        <!-- 1977: Voyager 1 & 2 -->
+        <article class="timeline-item right" data-category="deep-space">
+            <div class="timeline-dot"></div>
+            <span class="timeline-year">1977</span>
+            <div class="t-card">
+                <div class="t-top"><div class="t-icon-wrap"><img src="images/voyager.svg" alt="Voyager"></div><span class="t-agency">NASA / JPL • ROBOTIC</span></div>
+                <h3>Voyager 1 &amp; 2</h3>
+                <div class="t-feat">Outer Planets Grand Tour</div>
+                <p>Twin probes dispatched to survey Jupiter, Saturn, Uranus, and Neptune. Both spacecraft have now crossed the heliopause into pristine interstellar space over 24 billion km away.</p>
+                <div class="t-meta"><span>Destination: <strong>Interstellar Void</strong></span><span>Status: <strong class="pill-active">Transmitting</strong></span></div>
+            </div>
+        </article>
+
+        <!-- 1990: Hubble Space Telescope -->
+        <article class="timeline-item left" data-category="orbiters">
+            <div class="timeline-dot"></div>
+            <span class="timeline-year">1990</span>
+            <div class="t-card">
+                <div class="t-top"><div class="t-icon-wrap"><img src="images/hubble.svg" alt="Hubble"></div><span class="t-agency">NASA / ESA • ORBITAL</span></div>
+                <h3>Hubble Space Telescope</h3>
+                <div class="t-feat">Revolutionizing Cosmic Vision</div>
+                <p>Orbiting above Earth's obscuring atmosphere, Hubble has executed over 1.5 million observations, determining the expansion rate of the universe and capturing iconic deep-field galaxies.</p>
+                <div class="t-meta"><span>Orbit: <strong>Low Earth (540 km)</strong></span><span>Status: <strong class="pill-active">Operational</strong></span></div>
+            </div>
+        </article>
+
+        <!-- 2011: Curiosity Rover -->
+        <article class="timeline-item right" data-category="deep-space">
+            <div class="timeline-dot"></div>
+            <span class="timeline-year">2011</span>
+            <div class="t-card">
+                <div class="t-top"><div class="t-icon-wrap"><img src="images/curiosity.svg" alt="Curiosity"></div><span class="t-agency">NASA • MARS EXPLORATION</span></div>
+                <h3>Curiosity Rover</h3>
+                <div class="t-feat">Searching for Ancient Habitability</div>
+                <p>Nuclear-powered robotic rover exploring Mount Sharp inside Gale Crater, confirming that ancient Mars had liquid freshwater lakes capable of supporting microbial life.</p>
+                <div class="t-meta"><span>Destination: <strong>Mars Surface</strong></span><span>Status: <strong class="pill-active">Active Exploration</strong></span></div>
+            </div>
+        </article>
+
+        <!-- 2021: James Webb Space Telescope -->
+        <article class="timeline-item left" data-category="orbiters">
+            <div class="timeline-dot"></div>
+            <span class="timeline-year">2021</span>
+            <div class="t-card">
+                <div class="t-top"><div class="t-icon-wrap"><img src="images/jwst.svg" alt="JWST"></div><span class="t-agency">NASA / ESA / CSA • DEEP SPACE</span></div>
+                <h3>James Webb (JWST)</h3>
+                <div class="t-feat">Peering into the Cosmic Dawn</div>
+                <p>Equipped with a 6.5-meter gold beryllium primary mirror, Webb observes the early universe in deep infrared, detecting the very first galaxies formed 13.5 billion years ago.</p>
+                <div class="t-meta"><span>Position: <strong>Sun-Earth L2 Point</strong></span><span>Status: <strong class="pill-active">Flagship Science</strong></span></div>
+            </div>
+        </article>
+
+        <!-- 2023: Chandrayaan-3 -->
+        <article class="timeline-item right" data-category="lunar">
+            <div class="timeline-dot"></div>
+            <span class="timeline-year">2023</span>
+            <div class="t-card">
+                <div class="t-top"><div class="t-icon-wrap"><img src="images/chandrayaan.svg" alt="Chandrayaan-3"></div><span class="t-agency">ISRO • LUNAR EXPEDITION</span></div>
+                <h3>Chandrayaan-3</h3>
+                <div class="t-feat">Historic South Pole Touchdown</div>
+                <p>ISRO's Vikram lander and Pragyan rover accomplished humanity's first successful soft landing near the uncharted lunar South Pole, probing lunar soil temperatures and seismic activity.</p>
+                <div class="t-meta"><span>Destination: <strong>Lunar South Pole</strong></span><span>Status: <strong class="pill-done">Mission Accomplished</strong></span></div>
+            </div>
+        </article>
     </main>
 
-    <div style="text-align:center;margin:20px 0 50px;"><a href="index.html" class="btn">BACK TO HOME</a></div>
-    <footer><p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p></footer>
+    <div style="text-align:center;margin:20px 0 60px;"><a href="index.html" class="btn">BACK TO HOME</a></div>
+
+    <footer>
+        <p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p>
+    </footer>
+
+    <script>
+        function filterMissions(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 </html>

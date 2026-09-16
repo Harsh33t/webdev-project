@@ -1,12 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
 /* Base styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {
@@ -30,8 +32,10 @@ body {
 }
 
 .logo h2 {
-  font-size: 1.2rem;
-  letter-spacing: 2px;
+  font-family: 'Orbitron', 'Space Grotesk', sans-serif;
+  font-size: 1.25rem;
+  letter-spacing: 3px;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
@@ -64,8 +68,10 @@ body {
 }
 
 .hero-landing h1 {
+  font-family: 'Orbitron', 'Space Grotesk', sans-serif;
   font-size: 3.5rem;
-  letter-spacing: 4px;
+  letter-spacing: 6px;
+  font-weight: 900;
   margin-bottom: 15px;
 }
 
@@ -112,6 +118,10 @@ body {
   justify-content: center;
   gap: 60px;
   padding: 60px 8vw;
+}
+
+.crisscross .voyage-slide:nth-child(even) {
+  flex-direction: row-reverse;
 }
 
 .planet-stage {
@@ -382,58 +392,228 @@ body {
   color: #fff;
 }
 
-/* Missions Page */
-.page-header {
+/* Space Missions Interactive Timeline - Straight Monochrome Design */
+.timeline-header {
   text-align: center;
-  padding: 50px 20px 10px;
+  padding: 60px 24px 25px;
 }
 
-.page-title {
-  font-size: 2.2rem;
-  letter-spacing: 2px;
-  margin-bottom: 8px;
+.timeline-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
 }
 
-.page-subtitle {
+.timeline-sub {
   color: #888;
   font-size: 0.95rem;
+  max-width: 580px;
+  margin: 0 auto 35px;
 }
 
-.missions-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 24px;
+/* Filter Bar */
+.timeline-filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
 }
 
-.mission-card {
-  background-color: #0a0a0a;
-  border: 1px solid #222;
-  padding: 24px 20px;
-  text-align: center;
+.filter-btn {
+  background: #0d0d0d;
+  color: #888;
+  border: 1px solid #333333;
+  padding: 8px 18px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 0;
 }
 
-.mission-card img {
-  width: 65px;
-  height: 65px;
-  margin-bottom: 15px;
+.filter-btn.active,
+.filter-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
 }
 
-.mission-card h3 {
-  font-size: 1.1rem;
+/* Timeline Track */
+.timeline-container {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
+}
+
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: #333333;
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  position: relative;
+  width: 50%;
+  margin-bottom: 40px;
+}
+
+.timeline-item.left {
+  left: 0;
+  padding-right: 45px;
+}
+
+.timeline-item.right {
+  left: 50%;
+  padding-left: 45px;
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 0;
+  z-index: 2;
+}
+
+.timeline-item.left .timeline-dot {
+  right: -6px;
+}
+
+.timeline-item.right .timeline-dot {
+  left: -6px;
+}
+
+.timeline-year {
+  position: absolute;
+  top: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.timeline-item.left .timeline-year {
+  right: -70px;
+}
+
+.timeline-item.right .timeline-year {
+  left: -70px;
+}
+
+/* Card */
+.t-card {
+  background: #0d0d0d;
+  border: 1px solid #222222;
+  border-radius: 0;
+  padding: 24px 22px;
+}
+
+.t-card:hover {
+  border-color: #555555;
+}
+
+.t-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.t-icon-wrap {
+  width: 44px;
+  height: 44px;
+  background: #141414;
+  border: 1px solid #262626;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.t-icon-wrap img {
+  width: 28px;
+  height: 28px;
+}
+
+.t-agency {
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  color: #888888;
+  font-weight: 700;
+}
+
+.t-card h3 {
+  font-size: 1.25rem;
+  letter-spacing: 1px;
   margin-bottom: 6px;
 }
 
-.mission-card p {
-  color: #888;
-  font-size: 0.88rem;
+.t-feat {
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
-/* Criss-Cross Layout */
-.crisscross:nth-child(even) {
-  flex-direction: row-reverse;
+.t-card p {
+  color: #888888;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.t-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #222222;
+  padding-top: 12px;
+  font-size: 0.78rem;
+  color: #777777;
+}
+
+.t-meta strong {
+  color: #ffffff;
+}
+
+.pill-active {
+  color: #ffffff !important;
+}
+
+.pill-done {
+  color: #aaaaaa !important;
+}
+
+@media (max-width: 800px) {
+  .timeline-container::before {
+    left: 20px;
+  }
+  .timeline-item {
+    width: 100%;
+    left: 0 !important;
+    padding-left: 55px !important;
+    padding-right: 0 !important;
+  }
+  .timeline-dot {
+    left: 13px !important;
+  }
+  .timeline-year {
+    position: static;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
 }
 
 /* Footer */
@@ -453,7 +633,7 @@ footer {
 
   .voyage-slide,
   .sun-split-layout,
-  .crisscross:nth-child(even) {
+  .crisscross .voyage-slide:nth-child(even) {
     flex-direction: column;
   }
 
@@ -471,4 +651,25 @@ footer {
     max-width: 100%;
     padding: 20px;
   }
+
+  .infrastructure-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .telemetry-stat:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid #1a202c;
+    padding-bottom: 8px;
+  }
 }
+
+/* Extreme Space Landing Screen */
+.extreme-landing {
+  min-height: calc(100vh - 65px);
+  position: relative;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%), url('images/extreme_hero.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  overflow: hidden;
+}
