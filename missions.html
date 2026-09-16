@@ -5,7 +5,7 @@
     <title>Solar Explorer - Space Missions</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="missions-page">
+<body>
     <nav class="navbar">
         <div class="logo"><h2>Solar Explorer</h2></div>
         <div class="nav-links">
@@ -19,18 +19,11 @@
     <header class="timeline-header">
         <h1 class="timeline-title">Space Missions</h1>
         <p class="timeline-sub">A visual timeline charting humanity's greatest expeditions across our solar system and into interstellar space.</p>
-        
-        <div class="timeline-filters">
-            <button class="filter-btn active" onclick="filterMissions('all', this)">All Epochs</button>
-            <button class="filter-btn" onclick="filterMissions('lunar', this)">Lunar</button>
-            <button class="filter-btn" onclick="filterMissions('deep-space', this)">Deep Space</button>
-            <button class="filter-btn" onclick="filterMissions('orbiters', this)">Observatories</button>
-        </div>
     </header>
 
     <main class="timeline-container">
         <!-- 1969: Apollo 11 -->
-        <article class="timeline-item left" data-category="lunar">
+        <article class="timeline-item left">
             <div class="timeline-dot"></div>
             <span class="timeline-year">1969</span>
             <div class="t-card">
@@ -43,7 +36,7 @@
         </article>
 
         <!-- 1977: Voyager 1 & 2 -->
-        <article class="timeline-item right" data-category="deep-space">
+        <article class="timeline-item right">
             <div class="timeline-dot"></div>
             <span class="timeline-year">1977</span>
             <div class="t-card">
@@ -56,7 +49,7 @@
         </article>
 
         <!-- 1990: Hubble Space Telescope -->
-        <article class="timeline-item left" data-category="orbiters">
+        <article class="timeline-item left">
             <div class="timeline-dot"></div>
             <span class="timeline-year">1990</span>
             <div class="t-card">
@@ -69,7 +62,7 @@
         </article>
 
         <!-- 2011: Curiosity Rover -->
-        <article class="timeline-item right" data-category="deep-space">
+        <article class="timeline-item right">
             <div class="timeline-dot"></div>
             <span class="timeline-year">2011</span>
             <div class="t-card">
@@ -82,7 +75,7 @@
         </article>
 
         <!-- 2021: James Webb Space Telescope -->
-        <article class="timeline-item left" data-category="orbiters">
+        <article class="timeline-item left">
             <div class="timeline-dot"></div>
             <span class="timeline-year">2021</span>
             <div class="t-card">
@@ -95,7 +88,7 @@
         </article>
 
         <!-- 2023: Chandrayaan-3 -->
-        <article class="timeline-item right" data-category="lunar">
+        <article class="timeline-item right">
             <div class="timeline-dot"></div>
             <span class="timeline-year">2023</span>
             <div class="t-card">
@@ -113,19 +106,5 @@
     <footer>
         <p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p>
     </footer>
-
-    <script>
-        function filterMissions(category, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.timeline-item').forEach(item => {
-                if (category === 'all' || item.dataset.category === category) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-    </script>
 </body>
 </html>
