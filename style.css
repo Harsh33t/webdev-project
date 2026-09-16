@@ -305,10 +305,6 @@ body {
   gap: 12px;
 }
 
-.layers-list div {
-  border-left: 2px solid #fff;
-  padding-left: 14px;
-}
 
 .layers-list h4 {
   font-size: 0.9rem;
