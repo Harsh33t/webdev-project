@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPlanetSearch();
     initAgeCalculator();
     initWeightCalculator();
+    initMissionSearch();
     initScrollReveal();
 });
 
@@ -207,6 +208,36 @@ function initWeightCalculator() {
         if (e.key === 'Enter') {
             e.preventDefault();
             calculateWeights();
+        }
+    });
+}
+
+/* ========================================================
+   Feature D — Mission Search on missions.html
+   ======================================================== */
+function initMissionSearch() {
+    const searchInput = document.getElementById('mission-search-input');
+    const emptyMsg = document.getElementById('mission-search-empty');
+    const missionItems = document.querySelectorAll('.timeline-item');
+
+    if (!searchInput || missionItems.length === 0) return;
+
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        let matches = 0;
+
+        missionItems.forEach((item) => {
+            const itemText = item.textContent.toLowerCase();
+            if (query === '' || itemText.includes(query)) {
+                item.style.display = '';
+                matches++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        if (emptyMsg) {
+            emptyMsg.style.display = matches === 0 ? 'block' : 'none';
         }
     });
 }
