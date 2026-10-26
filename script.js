@@ -1,5 +1,7 @@
 /**
  * Solar Explorer - Interactive JavaScript Logic (Second Evaluation)
+ * Contains planet search, age/weight calculators, timeline search,
+ * random facts, CelesTrak API catalogue retrieval, and feedback export.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,6 +25,7 @@ function initPlanetSearch() {
 
     if (!searchForm || !searchInput) return;
 
+    // List of available planet IDs on index.html
     const validPlanets = [
         'mercury', 'venus', 'earth', 'mars',
         'jupiter', 'saturn', 'uranus', 'neptune'
@@ -56,42 +59,6 @@ function initPlanetSearch() {
 
     searchInput.addEventListener('input', () => {
         if (searchMsg) searchMsg.textContent = '';
-    });
-}
-
-/* ========================================================
-   Feature I — Subtle Scroll Reveal Animations
-   ======================================================== */
-function initScrollReveal() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return;
-    }
-
-    if (!('IntersectionObserver' in window)) {
-        return;
-    }
-
-    const revealTargets = document.querySelectorAll(
-        '.voyage-slide, .planet-card, .timeline-item, .sun-block, .fact-card'
-    );
-
-    if (revealTargets.length === 0) return;
-
-    const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                obs.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.12,
-        rootMargin: '0px 0px -40px 0px'
-    });
-
-    revealTargets.forEach((el) => {
-        el.classList.add('reveal-init');
-        observer.observe(el);
     });
 }
 
@@ -130,6 +97,7 @@ function initAgeCalculator() {
         if (errorMsg) errorMsg.textContent = '';
         if (displayTarget) displayTarget.textContent = earthAge;
 
+        // Update each spec row with newly computed planetary age
         specRows.forEach((row) => {
             const labelText = row.querySelector('.spec-label')?.textContent.toLowerCase() || '';
             const valSpan = row.querySelector('.spec-val');
@@ -191,6 +159,7 @@ function initWeightCalculator() {
         if (errorMsg) errorMsg.textContent = '';
         if (displayTarget) displayTarget.textContent = earthWeight;
 
+        // Weight equivalent = Earth Weight * (Gravity on world / Earth Gravity)
         specRows.forEach((row) => {
             const labelText = row.querySelector('.spec-label')?.textContent.toLowerCase() || '';
             const valSpan = row.querySelector('.spec-val');
@@ -308,12 +277,18 @@ function initSatelliteExplorer() {
 
     if (!fetchBtn) return;
 
+    // Primary endpoint: CelesTrak SATCAT stations query
     const celeUrl = 'https://celestrak.org/satcat/records.php?GROUP=STATIONS&FORMAT=JSON&ONORBIT=1&MAX=25';
     let loadedRecords = [];
 
     function renderRecords(records) {
         if (!resultsGrid) return;
         resultsGrid.innerHTML = '';
+
+        if (records.length === 0) {
+            resultsGrid.innerHTML = '<p style="color:#888;grid-column:1/-1;text-align:center;padding:20px;">No satellites matched your filter.</p>';
+            return;
+        }
 
         records.forEach((sat) => {
             const card = document.createElement('div');
@@ -343,6 +318,46 @@ function initSatelliteExplorer() {
         });
     }
 
+    fetchBtn.addEventListener('click', () => {
+        if (statusMsg) statusMsg.textContent = 'Connecting to CelesTrak API and retrieving satellite catalog...';
+        fetchBtn.disabled = true;
+
+        fetch(celeUrl)
+            .then((res) => {
+                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                return res.json();
+            })
+            .then((data) => {
+                fetchBtn.disabled = false;
+                if (!Array.isArray(data) || data.length === 0) {
+                    if (statusMsg) statusMsg.textContent = 'No satellite records returned by CelesTrak.';
+                    return;
+                }
+
+                loadedRecords = data;
+                if (statusMsg) {
+                    statusMsg.textContent = `Successfully retrieved ${data.length} registered orbital stations from CelesTrak.`;
+                }
+
+                if (filterInput) filterInput.style.display = 'block';
+                renderRecords(loadedRecords);
+            })
+            .catch((err) => {
+                console.warn('CelesTrak API request error:', err);
+                fetchBtn.disabled = false;
+                if (statusMsg) {
+                    statusMsg.innerHTML = `
+                        Unable to connect to CelesTrak API (${escapeHtml(err.message)}).
+                        <br><button id="fetch-noaa-fallback-btn" class="btn calc-btn" style="margin-top:10px;">TEST NOAA SPACE WEATHER API ALTERNATIVE</button>
+                    `;
+                    const fallbackBtn = document.getElementById('fetch-noaa-fallback-btn');
+                    if (fallbackBtn) {
+                        fallbackBtn.addEventListener('click', fetchNoaaFallback);
+                    }
+                }
+            });
+    });
+
     if (filterInput) {
         filterInput.addEventListener('input', () => {
             const q = filterInput.value.trim().toLowerCase();
@@ -371,6 +386,7 @@ function initSatelliteExplorer() {
                 if (!resultsGrid) return;
                 resultsGrid.innerHTML = '';
 
+                // NOAA data contains date keys with R (Radio Blackouts), S (Solar Radiation), G (Geomagnetic Storms)
                 const latestKey = Object.keys(data)[0] || '0';
                 const latest = data[latestKey] || {};
 
@@ -391,55 +407,6 @@ function initSatelliteExplorer() {
                 if (statusMsg) statusMsg.textContent = `NOAA API request also failed: ${err.message}`;
             });
     }
-
-    fetchBtn.addEventListener('click', () => {
-        if (statusMsg) statusMsg.textContent = 'Connecting to CelesTrak API and retrieving satellite catalog...';
-        fetchBtn.disabled = true;
-
-        fetch(celeUrl)
-            .then((res) => {
-                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-                return res.json();
-            })
-            .then((data) => {
-                fetchBtn.disabled = false;
-                if (!Array.isArray(data) || data.length === 0) {
-                    if (statusMsg) statusMsg.textContent = 'No satellite records returned by CelesTrak.';
-                    return;
-                }
-
-                loadedRecords = data;
-                if (statusMsg) {
-                    statusMsg.textContent = `Successfully retrieved ${data.length} registered orbital stations from CelesTrak.`;
-                }
-
-                if (filterInput) filterInput.style.display = 'block';
-                renderRecords(loadedRecords);
-            })
-            .catch((err) => {
-                fetchBtn.disabled = false;
-                if (statusMsg) {
-                    statusMsg.innerHTML = `
-                        Unable to connect to CelesTrak API (${escapeHtml(err.message)}).
-                        <br><button id="fetch-noaa-fallback-btn" class="btn calc-btn" style="margin-top:10px;">TEST NOAA SPACE WEATHER API ALTERNATIVE</button>
-                    `;
-                    const fallbackBtn = document.getElementById('fetch-noaa-fallback-btn');
-                    if (fallbackBtn) {
-                        fallbackBtn.addEventListener('click', fetchNoaaFallback);
-                    }
-                }
-            });
-    });
-}
-
-function escapeHtml(str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
 }
 
 /* ========================================================
@@ -490,11 +457,13 @@ function initFeedbackForm() {
         const ratingVal = ratingSelect ? ratingSelect.value : '';
         const messageVal = messageInput ? messageInput.value.trim() : '';
 
+        // Name validation
         if (!nameVal) {
             if (errName) errName.textContent = 'Please enter your name.';
             isValid = false;
         }
 
+        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailVal) {
             if (errEmail) errEmail.textContent = 'Please enter your email address.';
@@ -504,16 +473,19 @@ function initFeedbackForm() {
             isValid = false;
         }
 
+        // Topic validation
         if (!topicVal) {
             if (errTopic) errTopic.textContent = 'Please select your favourite section or topic.';
             isValid = false;
         }
 
+        // Rating validation
         if (!ratingVal) {
             if (errRating) errRating.textContent = 'Please select a rating.';
             isValid = false;
         }
 
+        // Message validation
         if (!messageVal) {
             if (errMessage) errMessage.textContent = 'Please provide your feedback comments.';
             isValid = false;
@@ -527,5 +499,123 @@ function initFeedbackForm() {
             }
             return;
         }
+
+        // Build submission record with timestamp
+        const newRecord = {
+            name: nameVal,
+            email: emailVal,
+            topic: topicVal,
+            rating: ratingVal,
+            feedback: messageVal,
+            submittedAt: new Date().toISOString()
+        };
+
+        // Save to localStorage (preserving previous submissions)
+        const storageKey = 'solarExplorerFeedback';
+        let feedbackList = [];
+        let storageAvailable = true;
+
+        try {
+            const rawStored = localStorage.getItem(storageKey);
+            if (rawStored) {
+                const parsed = JSON.parse(rawStored);
+                if (Array.isArray(parsed)) {
+                    feedbackList = parsed;
+                }
+            }
+            feedbackList.push(newRecord);
+            localStorage.setItem(storageKey, JSON.stringify(feedbackList));
+        } catch (storageErr) {
+            console.warn('localStorage is not available or quota exceeded:', storageErr);
+            storageAvailable = false;
+            // Still include the current submission in the downloadable file
+            feedbackList = [newRecord];
+        }
+
+        // Export downloadable JSON file containing all accumulated submissions
+        try {
+            const jsonString = JSON.stringify(feedbackList, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const downloadUrl = URL.createObjectURL(blob);
+
+            const tempLink = document.createElement('a');
+            tempLink.href = downloadUrl;
+            tempLink.download = 'solar-explorer-feedback.json';
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+
+            setTimeout(() => {
+                URL.revokeObjectURL(downloadUrl);
+            }, 1000);
+
+            // Display success message and reset form
+            if (formStatus) {
+                const countMsg = feedbackList.length === 1
+                    ? '1 feedback record'
+                    : `${feedbackList.length} total feedback records`;
+                const storageNote = storageAvailable ? '' : ' (Note: local browser storage was restricted, but the file was generated.)';
+                formStatus.textContent = `Thank you, ${nameVal}! Your feedback has been recorded and solar-explorer-feedback.json has been downloaded with ${countMsg}.${storageNote}`;
+                formStatus.className = 'form-status success';
+                formStatus.style.display = 'block';
+            }
+
+            form.reset();
+        } catch (downloadErr) {
+            console.error('File download creation error:', downloadErr);
+            if (formStatus) {
+                formStatus.textContent = 'Your feedback was saved, but the automatic file download failed in your browser.';
+                formStatus.className = 'form-status error';
+                formStatus.style.display = 'block';
+            }
+        }
     });
+}
+
+/* ========================================================
+   Feature I — Subtle Scroll Reveal Animations
+   ======================================================== */
+function initScrollReveal() {
+    // Check for prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+        return;
+    }
+
+    const revealTargets = document.querySelectorAll(
+        '.voyage-slide, .planet-card, .timeline-item, .sun-block, .fact-card'
+    );
+
+    if (revealTargets.length === 0) return;
+
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                obs.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealTargets.forEach((el) => {
+        el.classList.add('reveal-init');
+        observer.observe(el);
+    });
+}
+
+// Simple HTML escaping helper for safe DOM insertion
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
