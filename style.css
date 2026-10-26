@@ -899,3 +899,25 @@ footer { padding: 30px 0; border-top: 1px solid #222; color: #666; font-size: 0.
   padding: 30px 20px;
   margin: 10px auto;
 }
+
+/* Feature F & G: Satellite Explorer & CelesTrak API (satellites.html) */
+.satellite-search-box {
+  max-width: 540px;
+  margin: 0 auto 30px;
+  display: flex;
+}
+
+.satellite-search-box input[type="text"] {
+  width: 100%;
+  padding: 12px 18px;
+  background: #0d0d0d;
+  border: 1px solid #333;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.satellite-search-box input[type="text"]:focus {
+  border-color: #666;
+}

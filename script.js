@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initWeightCalculator();
     initMissionSearch();
     initRandomFact();
+    initSatelliteExplorer();
     initScrollReveal();
 });
 
@@ -278,4 +279,22 @@ function initRandomFact() {
         lastIndex = newIndex;
         factText.textContent = facts[newIndex];
     });
+}
+
+/* ========================================================
+   Feature F & G — Satellite Explorer & CelesTrak API (satellites.html)
+   ======================================================== */
+function initSatelliteExplorer() {
+    const satSearchInput = document.getElementById('satellite-search-input');
+    const satCards = document.querySelectorAll('.planets-container .planet-card');
+
+    if (satSearchInput && satCards.length > 0) {
+        satSearchInput.addEventListener('input', () => {
+            const query = satSearchInput.value.trim().toLowerCase();
+            satCards.forEach((card) => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = (query === '' || text.includes(query)) ? '' : 'none';
+            });
+        });
+    }
 }
