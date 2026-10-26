@@ -342,6 +342,55 @@ function initSatelliteExplorer() {
         });
     }
 
+    if (filterInput) {
+        filterInput.addEventListener('input', () => {
+            const q = filterInput.value.trim().toLowerCase();
+            const filtered = loadedRecords.filter((sat) => {
+                const name = (sat.OBJECT_NAME || '').toLowerCase();
+                const owner = (sat.OWNER || '').toLowerCase();
+                const id = String(sat.NORAD_CAT_ID || '');
+                return name.includes(q) || owner.includes(q) || id.includes(q);
+            });
+            renderRecords(filtered);
+        });
+    }
+
+    // Fallback API if CelesTrak is blocked or network restricts it
+    function fetchNoaaFallback() {
+        if (statusMsg) statusMsg.textContent = 'Connecting to NOAA Space Weather API...';
+        const noaaUrl = 'https://services.swpc.noaa.gov/products/noaa-scales.json';
+
+        fetch(noaaUrl)
+            .then((res) => {
+                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                return res.json();
+            })
+            .then((data) => {
+                if (statusMsg) statusMsg.textContent = 'Successfully retrieved NOAA space weather data:';
+                if (!resultsGrid) return;
+                resultsGrid.innerHTML = '';
+
+                const latestKey = Object.keys(data)[0] || '0';
+                const latest = data[latestKey] || {};
+
+                const card = document.createElement('div');
+                card.className = 'satcat-card';
+                card.innerHTML = `
+                    <div class="satcat-name">NOAA Space Weather Status</div>
+                    <div class="satcat-meta">
+                        <span><strong>Timestamp:</strong> ${latest.DateStamp || ''} ${latest.TimeStamp || ''} UTC</span>
+                        <span><strong>Geomagnetic (G-Scale):</strong> Scale ${latest.G?.Scale || '0'} (${latest.G?.Text || 'None'})</span>
+                        <span><strong>Solar Radiation (S-Scale):</strong> Scale ${latest.S?.Scale || '0'} (${latest.S?.Text || 'None'})</span>
+                        <span><strong>Radio Blackouts (R-Scale):</strong> Scale ${latest.R?.Scale || '0'} (${latest.R?.Text || 'None'})</span>
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            })
+            .catch((err) => {
+                if (statusMsg) statusMsg.textContent = `NOAA API request also failed: ${err.message}`;
+            });
+    }
+
     fetchBtn.addEventListener('click', () => {
         if (statusMsg) statusMsg.textContent = 'Connecting to CelesTrak API and retrieving satellite catalog...';
         fetchBtn.disabled = true;
@@ -369,7 +418,14 @@ function initSatelliteExplorer() {
             .catch((err) => {
                 fetchBtn.disabled = false;
                 if (statusMsg) {
-                    statusMsg.textContent = `Unable to connect to CelesTrak API (${err.message}).`;
+                    statusMsg.innerHTML = `
+                        Unable to connect to CelesTrak API (${escapeHtml(err.message)}).
+                        <br><button id="fetch-noaa-fallback-btn" class="btn calc-btn" style="margin-top:10px;">TEST NOAA SPACE WEATHER API ALTERNATIVE</button>
+                    `;
+                    const fallbackBtn = document.getElementById('fetch-noaa-fallback-btn');
+                    if (fallbackBtn) {
+                        fallbackBtn.addEventListener('click', fetchNoaaFallback);
+                    }
                 }
             });
     });
