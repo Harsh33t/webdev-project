@@ -142,6 +142,12 @@ function initAgeCalculator() {
     }
 
     calcBtn.addEventListener('click', calculateAges);
+    ageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            calculateAges();
+        }
+    });
 }
 
 /* ========================================================
@@ -197,4 +203,10 @@ function initWeightCalculator() {
     }
 
     calcBtn.addEventListener('click', calculateWeights);
+    weightInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            calculateWeights();
+        }
+    });
 }

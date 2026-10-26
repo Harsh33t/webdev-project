@@ -23,8 +23,14 @@
             <div class="planet-info-col">
                 <div class="planet-meta-tag">FUN 01 • ORBITAL YEARS</div>
                 <h2 class="planet-title">HOW OLD ARE YOU?</h2>
-                <p class="planet-summary">A year is one orbit around the Sun. Every planet takes a different time, so your age changes depending on where you stand. Here's what 18 Earth years becomes:</p>
-                <div class="planet-specs">
+                <p class="planet-summary">A year is one orbit around the Sun. Every planet takes a different time, so your age changes depending on where you stand. Here's what <span id="age-display-target">18</span> Earth years becomes:</p>
+                <div class="calc-control-group">
+                    <label for="user-age-input" class="sr-only">Your Earth age in years</label>
+                    <input type="number" id="user-age-input" placeholder="Enter Earth age (yrs)" min="1" max="130" step="any" value="18">
+                    <button id="calc-age-btn" type="button" class="btn calc-btn">CALCULATE</button>
+                </div>
+                <p id="age-calc-msg" class="calc-msg" aria-live="polite"></p>
+                <div class="planet-specs" id="age-specs-list">
                     <div class="spec-row"><span class="spec-label">Mercury (88 days)</span><span class="spec-val">74.7 yrs</span></div>
                     <div class="spec-row"><span class="spec-label">Venus (225 days)</span><span class="spec-val">29.2 yrs</span></div>
                     <div class="spec-row" style="color:#fbbf24"><span class="spec-label" style="color:#fbbf24">Earth (365 days)</span><span class="spec-val">18.0 yrs</span></div>
@@ -43,8 +49,14 @@
             <div class="planet-info-col">
                 <div class="planet-meta-tag">FUN 02 • SURFACE GRAVITY</div>
                 <h2 class="planet-title">YOUR WEIGHT</h2>
-                <p class="planet-summary">Weight is just mass × gravity. Different worlds pull you with different force. Standing on Jupiter, you'd feel crushed. On the Moon, you'd float with every step. Your 70 kg on Earth becomes:</p>
-                <div class="planet-specs">
+                <p class="planet-summary">Weight is just mass × gravity. Different worlds pull you with different force. Standing on Jupiter, you'd feel crushed. On the Moon, you'd float with every step. Your <span id="weight-display-target">70</span> kg on Earth becomes:</p>
+                <div class="calc-control-group">
+                    <label for="user-weight-input" class="sr-only">Your Earth weight in kilograms</label>
+                    <input type="number" id="user-weight-input" placeholder="Enter Earth weight (kg)" min="1" max="500" step="any" value="70">
+                    <button id="calc-weight-btn" type="button" class="btn calc-btn">CALCULATE</button>
+                </div>
+                <p id="weight-calc-msg" class="calc-msg" aria-live="polite"></p>
+                <div class="planet-specs" id="weight-specs-list">
                     <div class="spec-row"><span class="spec-label">Moon (1.62 m/s²)</span><span class="spec-val">11.6 kg</span></div>
                     <div class="spec-row"><span class="spec-label">Mercury (3.7 m/s²)</span><span class="spec-val">26.5 kg</span></div>
                     <div class="spec-row"><span class="spec-label">Venus (8.87 m/s²)</span><span class="spec-val">63.4 kg</span></div>
@@ -131,5 +143,6 @@
 
     <div style="text-align:center;margin:40px 0 60px"><a href="index.html" class="btn">BACK TO HOME</a></div>
     <footer><p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p></footer>
+    <script src="script.js"></script>
 </body>
 </html>
