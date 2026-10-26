@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initPlanetSearch();
+    initScrollReveal();
 });
 
 /* ========================================================
@@ -49,5 +50,41 @@ function initPlanetSearch() {
 
     searchInput.addEventListener('input', () => {
         if (searchMsg) searchMsg.textContent = '';
+    });
+}
+
+/* ========================================================
+   Feature I — Subtle Scroll Reveal Animations
+   ======================================================== */
+function initScrollReveal() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+        return;
+    }
+
+    const revealTargets = document.querySelectorAll(
+        '.voyage-slide, .planet-card, .timeline-item, .sun-block, .fact-card'
+    );
+
+    if (revealTargets.length === 0) return;
+
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                obs.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealTargets.forEach((el) => {
+        el.classList.add('reveal-init');
+        observer.observe(el);
     });
 }
