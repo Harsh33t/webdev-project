@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initPlanetSearch();
     initAgeCalculator();
+    initWeightCalculator();
     initScrollReveal();
 });
 
@@ -141,4 +142,59 @@ function initAgeCalculator() {
     }
 
     calcBtn.addEventListener('click', calculateAges);
+}
+
+/* ========================================================
+   Feature C — Planetary Weight Calculator on fun-space.html
+   ======================================================== */
+function initWeightCalculator() {
+    const weightInput = document.getElementById('user-weight-input');
+    const calcBtn = document.getElementById('calc-weight-btn');
+    const errorMsg = document.getElementById('weight-calc-msg');
+    const displayTarget = document.getElementById('weight-display-target');
+    const specRows = document.querySelectorAll('#weight-specs-list .spec-row');
+
+    if (!calcBtn || !weightInput) return;
+
+    // Note: These figures represent the equivalent scale reading in kilograms under
+    // different celestial surface gravities, not a change in intrinsic mass.
+    const earthGravity = 9.81; // m/s²
+    const celestialGravities = {
+        'moon': 1.62,
+        'mercury': 3.7,
+        'venus': 8.87,
+        'mars': 3.72,
+        'jupiter': 24.79,
+        'saturn': 10.44,
+        'uranus': 8.87,
+        'neptune': 11.15
+    };
+
+    function calculateWeights() {
+        const earthWeight = parseFloat(weightInput.value);
+
+        if (isNaN(earthWeight) || earthWeight <= 0 || earthWeight > 500) {
+            if (errorMsg) errorMsg.textContent = 'Please enter a valid Earth weight between 1 and 500 kg.';
+            return;
+        }
+
+        if (errorMsg) errorMsg.textContent = '';
+        if (displayTarget) displayTarget.textContent = earthWeight;
+
+        specRows.forEach((row) => {
+            const labelText = row.querySelector('.spec-label')?.textContent.toLowerCase() || '';
+            const valSpan = row.querySelector('.spec-val');
+            if (!valSpan) return;
+
+            for (const [world, gravity] of Object.entries(celestialGravities)) {
+                if (labelText.includes(world)) {
+                    const weightOnWorld = earthWeight * (gravity / earthGravity);
+                    valSpan.textContent = weightOnWorld.toFixed(1) + ' kg';
+                    break;
+                }
+            }
+        });
+    }
+
+    calcBtn.addEventListener('click', calculateWeights);
 }
