@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMissionSearch();
     initRandomFact();
     initSatelliteExplorer();
+    initFeedbackForm();
     initScrollReveal();
 });
 
@@ -439,4 +440,92 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+/* ========================================================
+   Feature H — Feedback Form & Local JSON Export (feedback.html)
+   ======================================================== */
+function initFeedbackForm() {
+    const form = document.getElementById('feedback-form');
+    if (!form) return;
+
+    const nameInput = document.getElementById('fb-name');
+    const emailInput = document.getElementById('fb-email');
+    const topicSelect = document.getElementById('fb-topic');
+    const ratingSelect = document.getElementById('fb-rating');
+    const messageInput = document.getElementById('fb-message');
+    const formStatus = document.getElementById('fb-status');
+
+    const errName = document.getElementById('err-name');
+    const errEmail = document.getElementById('err-email');
+    const errTopic = document.getElementById('err-topic');
+    const errRating = document.getElementById('err-rating');
+    const errMessage = document.getElementById('err-message');
+
+    function clearErrors() {
+        if (errName) errName.textContent = '';
+        if (errEmail) errEmail.textContent = '';
+        if (errTopic) errTopic.textContent = '';
+        if (errRating) errRating.textContent = '';
+        if (errMessage) errMessage.textContent = '';
+        if (formStatus) {
+            formStatus.className = 'form-status';
+            formStatus.style.display = 'none';
+            formStatus.textContent = '';
+        }
+    }
+
+    form.addEventListener('reset', () => {
+        clearErrors();
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        clearErrors();
+
+        let isValid = true;
+        const nameVal = nameInput ? nameInput.value.trim() : '';
+        const emailVal = emailInput ? emailInput.value.trim() : '';
+        const topicVal = topicSelect ? topicSelect.value : '';
+        const ratingVal = ratingSelect ? ratingSelect.value : '';
+        const messageVal = messageInput ? messageInput.value.trim() : '';
+
+        if (!nameVal) {
+            if (errName) errName.textContent = 'Please enter your name.';
+            isValid = false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailVal) {
+            if (errEmail) errEmail.textContent = 'Please enter your email address.';
+            isValid = false;
+        } else if (!emailRegex.test(emailVal)) {
+            if (errEmail) errEmail.textContent = 'Please enter a valid email format (e.g., name@example.com).';
+            isValid = false;
+        }
+
+        if (!topicVal) {
+            if (errTopic) errTopic.textContent = 'Please select your favourite section or topic.';
+            isValid = false;
+        }
+
+        if (!ratingVal) {
+            if (errRating) errRating.textContent = 'Please select a rating.';
+            isValid = false;
+        }
+
+        if (!messageVal) {
+            if (errMessage) errMessage.textContent = 'Please provide your feedback comments.';
+            isValid = false;
+        }
+
+        if (!isValid) {
+            if (formStatus) {
+                formStatus.textContent = 'Please correct the highlighted errors before submitting.';
+                formStatus.className = 'form-status error';
+                formStatus.style.display = 'block';
+            }
+            return;
+        }
+    });
 }
