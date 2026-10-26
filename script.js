@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initAgeCalculator();
     initWeightCalculator();
     initMissionSearch();
+    initRandomFact();
     initScrollReveal();
 });
 
@@ -239,5 +240,42 @@ function initMissionSearch() {
         if (emptyMsg) {
             emptyMsg.style.display = matches === 0 ? 'block' : 'none';
         }
+    });
+}
+
+/* ========================================================
+   Feature E — Random Space Fact on extreme.html
+   ======================================================== */
+function initRandomFact() {
+    const factText = document.getElementById('extreme-fact-text');
+    const nextBtn = document.getElementById('next-fact-btn');
+
+    if (!factText || !nextBtn) return;
+
+    const facts = [
+        "A teaspoon of neutron star material would weigh approximately 6 billion tons on Earth due to hyper-dense atomic packing.",
+        "At the event horizon of a black hole, gravitational time dilation is so intense that an outside observer would see you freeze in time forever.",
+        "A single supernova detonation can briefly outshine all of the hundreds of billions of stars in its host galaxy combined.",
+        "The supermassive black hole at the center of our Milky Way, Sagittarius A*, has the mass of roughly 4.3 million Suns.",
+        "Quasars are powered by supermassive black holes feeding on gas at relativistic velocities, generating luminosity up to 1,000 times brighter than our entire galaxy.",
+        "If the Sun were replaced by a black hole of equal mass, Earth would not get sucked in—it would continue orbiting normally in perpetual darkness.",
+        "The largest known supergiant star, Stephenson 2-18, is so enormous that nearly 10 billion Suns could fit inside its volume.",
+        "Some neutron stars, known as magnetars, possess magnetic fields up to 1,000 trillion times stronger than Earth's magnetic shield.",
+        "Heavy elements like gold, platinum, and uranium were forged primarily during violent neutron star collisions and supernova explosions.",
+        "Gamma-ray bursts release as much energy in a matter of seconds as our Sun will emit over its entire 10-billion-year lifespan.",
+        "The fastest spinning known pulsar, PSR J1748-2446ad, rotates 716 times every single second—its equator moves at nearly a quarter the speed of light.",
+        "Black holes slowly radiate away their mass and can evaporate over incomprehensible eons through quantum effects known as Hawking radiation."
+    ];
+
+    let lastIndex = -1;
+
+    nextBtn.addEventListener('click', () => {
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * facts.length);
+        } while (newIndex === lastIndex && facts.length > 1);
+
+        lastIndex = newIndex;
+        factText.textContent = facts[newIndex];
     });
 }
