@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initPlanetSearch();
+    initAgeCalculator();
     initScrollReveal();
 });
 
@@ -87,4 +88,57 @@ function initScrollReveal() {
         el.classList.add('reveal-init');
         observer.observe(el);
     });
+}
+
+/* ========================================================
+   Feature B — Planetary Age Calculator on fun-space.html
+   ======================================================== */
+function initAgeCalculator() {
+    const ageInput = document.getElementById('user-age-input');
+    const calcBtn = document.getElementById('calc-age-btn');
+    const errorMsg = document.getElementById('age-calc-msg');
+    const displayTarget = document.getElementById('age-display-target');
+    const specRows = document.querySelectorAll('#age-specs-list .spec-row');
+
+    if (!calcBtn || !ageInput) return;
+
+    // Approximate orbital periods in Earth years
+    const orbitalPeriods = {
+        'mercury': 0.241,
+        'venus': 0.615,
+        'earth': 1.0,
+        'mars': 1.881,
+        'jupiter': 11.86,
+        'saturn': 29.46,
+        'uranus': 84.02,
+        'neptune': 164.8
+    };
+
+    function calculateAges() {
+        const earthAge = parseFloat(ageInput.value);
+
+        if (isNaN(earthAge) || earthAge <= 0 || earthAge > 130) {
+            if (errorMsg) errorMsg.textContent = 'Please enter a valid age between 1 and 130 years.';
+            return;
+        }
+
+        if (errorMsg) errorMsg.textContent = '';
+        if (displayTarget) displayTarget.textContent = earthAge;
+
+        specRows.forEach((row) => {
+            const labelText = row.querySelector('.spec-label')?.textContent.toLowerCase() || '';
+            const valSpan = row.querySelector('.spec-val');
+            if (!valSpan) return;
+
+            for (const [planet, period] of Object.entries(orbitalPeriods)) {
+                if (labelText.includes(planet)) {
+                    const planetaryAge = earthAge / period;
+                    valSpan.textContent = planetaryAge.toFixed(1) + ' yrs';
+                    break;
+                }
+            }
+        });
+    }
+
+    calcBtn.addEventListener('click', calculateAges);
 }
