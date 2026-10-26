@@ -22,6 +22,11 @@
     <header class="timeline-header">
         <h1 class="timeline-title">Space Missions</h1>
         <p class="timeline-sub">A visual timeline charting humanity's greatest expeditions across our solar system and into interstellar space.</p>
+        <div class="mission-search-wrap">
+            <label for="mission-search-input" class="sr-only">Search missions</label>
+            <input type="text" id="mission-search-input" placeholder="Search missions (e.g. Apollo, Voyager, Hubble, Mars, Chandrayaan)..." autocomplete="off">
+        </div>
+        <p id="mission-search-empty" class="search-empty-msg" style="display:none;" aria-live="polite">No matching missions found.</p>
     </header>
 
     <main class="timeline-container">
@@ -109,5 +114,6 @@
     <footer>
         <p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
