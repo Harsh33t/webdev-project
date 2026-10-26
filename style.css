@@ -699,3 +699,51 @@ footer { padding: 30px 0; border-top: 1px solid #222; color: #666; font-size: 0.
     gap: 12px 18px;
   }
 }
+
+/* Feature A: Planet Search (index.html) */
+.planet-search-wrap {
+  margin-top: 25px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-form {
+  display: flex;
+  width: 100%;
+  border: 1px solid #333;
+  background: #0d0d0d;
+}
+
+.search-form input[type="text"],
+.search-form input[type="search"] {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.search-form input::placeholder {
+  color: #666;
+}
+
+.search-form .search-btn {
+  padding: 12px 22px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.search-feedback {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #e5a93c;
+  min-height: 20px;
+  text-align: center;
+}

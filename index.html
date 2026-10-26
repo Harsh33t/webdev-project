@@ -15,6 +15,14 @@
         <h1>SOLAR EXPLORER</h1>
         <p>Journey through the worlds of our solar system</p>
         <a href="#planet-mercury" class="btn">EXPLORE PLANETS</a>
+        <div class="planet-search-wrap">
+            <form id="planet-search-form" class="search-form" role="search" onsubmit="return false;">
+                <label for="planet-search-input" class="sr-only">Search planet name</label>
+                <input type="text" id="planet-search-input" placeholder="Search a planet (e.g. Mars, Saturn)..." autocomplete="off">
+                <button type="submit" id="planet-search-btn" class="btn search-btn">SEARCH</button>
+            </form>
+            <p id="planet-search-msg" class="search-feedback" aria-live="polite"></p>
+        </div>
         <a href="#planet-mercury" class="hero-scroll-hint" aria-label="Scroll to explore planets"><span>SCROLL TO EXPLORE</span><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></a>
     </section>
 
@@ -141,5 +149,6 @@
     </main>
 
     <footer><p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p></footer>
+    <script src="script.js"></script>
 </body>
 </html>
