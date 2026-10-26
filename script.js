@@ -285,6 +285,7 @@ function initRandomFact() {
    Feature F & G — Satellite Explorer & CelesTrak API (satellites.html)
    ======================================================== */
 function initSatelliteExplorer() {
+    // 1. Static Satellite Educational Search
     const satSearchInput = document.getElementById('satellite-search-input');
     const satCards = document.querySelectorAll('.planets-container .planet-card');
 
@@ -297,4 +298,89 @@ function initSatelliteExplorer() {
             });
         });
     }
+
+    // 2. External API: CelesTrak Satellite Catalog (SATCAT) query
+    const fetchBtn = document.getElementById('fetch-satcat-btn');
+    const statusMsg = document.getElementById('api-status-msg');
+    const filterInput = document.getElementById('api-sat-filter');
+    const resultsGrid = document.getElementById('satcat-results-grid');
+
+    if (!fetchBtn) return;
+
+    const celeUrl = 'https://celestrak.org/satcat/records.php?GROUP=STATIONS&FORMAT=JSON&ONORBIT=1&MAX=25';
+    let loadedRecords = [];
+
+    function renderRecords(records) {
+        if (!resultsGrid) return;
+        resultsGrid.innerHTML = '';
+
+        records.forEach((sat) => {
+            const card = document.createElement('div');
+            card.className = 'satcat-card';
+
+            const name = sat.OBJECT_NAME || 'Unknown Satellite';
+            const catId = sat.NORAD_CAT_ID || 'N/A';
+            const type = sat.OBJECT_TYPE || 'PAYLOAD';
+            const owner = sat.OWNER || 'International';
+            const launchDate = sat.LAUNCH_DATE || 'Unknown';
+            const period = sat.PERIOD ? `${sat.PERIOD} min` : 'N/A';
+            const apogee = sat.APOGEE ? `${sat.APOGEE} km` : 'N/A';
+            const perigee = sat.PERIGEE ? `${sat.PERIGEE} km` : 'N/A';
+
+            card.innerHTML = `
+                <div class="satcat-name">${escapeHtml(name)}</div>
+                <div class="satcat-meta">
+                    <span><strong>NORAD ID:</strong> ${escapeHtml(String(catId))}</span>
+                    <span><strong>Type:</strong> ${escapeHtml(type)}</span>
+                    <span><strong>Country/Owner:</strong> ${escapeHtml(owner)}</span>
+                    <span><strong>Launch Date:</strong> ${escapeHtml(launchDate)}</span>
+                    <span><strong>Orbital Period:</strong> ${escapeHtml(period)}</span>
+                    <span><strong>Altitude:</strong> ${escapeHtml(perigee)} x ${escapeHtml(apogee)}</span>
+                </div>
+            `;
+            resultsGrid.appendChild(card);
+        });
+    }
+
+    fetchBtn.addEventListener('click', () => {
+        if (statusMsg) statusMsg.textContent = 'Connecting to CelesTrak API and retrieving satellite catalog...';
+        fetchBtn.disabled = true;
+
+        fetch(celeUrl)
+            .then((res) => {
+                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                return res.json();
+            })
+            .then((data) => {
+                fetchBtn.disabled = false;
+                if (!Array.isArray(data) || data.length === 0) {
+                    if (statusMsg) statusMsg.textContent = 'No satellite records returned by CelesTrak.';
+                    return;
+                }
+
+                loadedRecords = data;
+                if (statusMsg) {
+                    statusMsg.textContent = `Successfully retrieved ${data.length} registered orbital stations from CelesTrak.`;
+                }
+
+                if (filterInput) filterInput.style.display = 'block';
+                renderRecords(loadedRecords);
+            })
+            .catch((err) => {
+                fetchBtn.disabled = false;
+                if (statusMsg) {
+                    statusMsg.textContent = `Unable to connect to CelesTrak API (${err.message}).`;
+                }
+            });
+    });
+}
+
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }

@@ -87,7 +87,24 @@
         </div>
     </main>
 
-    
+    <!-- Feature G: External API Integration (CelesTrak SATCAT) -->
+    <section class="satcat-section">
+        <div class="satcat-box">
+            <div class="satcat-header">
+                <h2>CelesTrak Satellite Catalogue</h2>
+                <p>Retrieve official satellite catalog records from CelesTrak's SATCAT query database via live fetch request. This feature accesses registered orbital payloads and stations (catalogue data, not live orbital tracking positions).</p>
+            </div>
+
+            <div class="satcat-actions">
+                <button id="fetch-satcat-btn" class="btn" type="button">LOAD SATELLITE CATALOGUE</button>
+                <input type="text" id="api-sat-filter" placeholder="Filter retrieved records by name, owner, or ID..." style="display:none;" autocomplete="off">
+            </div>
+
+            <div id="api-status-msg" class="calc-msg" aria-live="polite">Click the button above to load satellite records from CelesTrak.</div>
+
+            <div id="satcat-results-grid" class="satcat-grid"></div>
+        </div>
+    </section>
 
     <div style="text-align:center;margin:20px 0 60px;">
         <a href="index.html" class="btn">BACK TO HOME</a>
