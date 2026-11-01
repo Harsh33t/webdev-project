@@ -778,8 +778,24 @@ function initMerchandisePage() {
                 passTarget.scrollIntoView({ behavior: 'smooth' });
             }
 
+            // Download JSON file for IDE inspection
+            try {
+                const jsonString = JSON.stringify(waitlist, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const downloadUrl = URL.createObjectURL(blob);
+                const tempLink = document.createElement('a');
+                tempLink.href = downloadUrl;
+                tempLink.download = 'solar-explorer-merchandise.json';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+                setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+            } catch (dlErr) {
+                console.warn('JSON file auto-download bypassed:', dlErr);
+            }
+
             if (statusBox) {
-                statusBox.textContent = `Success! Your VIP Launch Access has been reserved (ID: ${recordId}) and saved to storage in JSON format.`;
+                statusBox.textContent = `Success! Your VIP Pre-order has been reserved (ID: ${recordId}), saved in JSON format, and downloaded.`;
                 statusBox.className = 'form-status success';
                 statusBox.style.display = 'block';
             }
