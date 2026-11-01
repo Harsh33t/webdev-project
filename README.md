@@ -51,16 +51,6 @@ A responsive, high-performance, and educational web portal exploring our Solar S
 
 ---
 
-## 🎯 Phase Evaluation 2 Assessment Matrix
-
-| Evaluation Component | Weight | Implementation Details in Solar Explorer |
-|---|---|---|
-| **JavaScript Syntax & Concepts** | **10%** | ES6+ arrow functions, template literals, destructuring, higher-order array methods (`filter`, `map`, `forEach`), `Date` API, JSON serialization (`JSON.stringify`, `JSON.parse`), `Blob` & `URL` API, interval timers, asynchronous `fetch` with Promises (`then`, `catch`). |
-| **DOM Manipulation** | **10%** | `document.getElementById`, `querySelectorAll`, `createElement`, dynamic card generation, class list manipulation (`classList.add/remove`), style adjustments, form value reading & resetting, innerHTML sanitization via `escapeHtml()`, and dynamic VIP boarding pass rendering. |
-| **Event Handling** | **5%** | `DOMContentLoaded`, `submit`, `reset`, `input`, `change`, `click`, `keydown` (Enter key support), and smooth scroll actions. |
-| **HTML, CSS & JS Integration** | **5%** | Accessible error messaging via `aria-live="polite"`, clean semantic tags (`<nav>`, `<header>`, `<main>`, `<section>`, `<article>`), smooth scroll behavior, responsive CSS, and `prefers-reduced-motion` compliance. |
-
----
 
 ## 💾 Data Persistence & Storage Architecture (Evaluator Guide)
 
@@ -158,33 +148,7 @@ The new **Merchandise section ([`merchandise.html`](merchandise.html))** provide
 
 ---
 
-## 🧪 Testing & Demonstration Guide for Evaluators
-
-### Step 1: Verify Feedback Form & JSON Storage
-1. Open [`feedback.html`](feedback.html) in your browser.
-2. Fill out the fields and click **"SUBMIT & DOWNLOAD JSON"**.
-3. Verify that `solar-explorer-feedback.json` is generated and downloaded.
-4. Open DevTools Console (`F12`) to verify the log:
-   `[Solar Explorer] Feedback saved to localStorage["solarExplorerFeedback"] in JSON format: { ... }`
-5. Check DevTools -> **Application** -> **Local Storage** -> `solarExplorerFeedback` to see the serialized JSON array.
-
-### Step 2: Verify Merchandise Section & Waitlist
-1. Navigate to [`merchandise.html`](merchandise.html) using the top navigation bar.
-2. Observe the **19-day countdown clock** ticking live.
-3. Filter products using `ALL ITEMS`, `APPAREL`, `COLLECTIBLES`, `GEAR & DESK`.
-4. Click **"PRE-REGISTER"** on any card; observe smooth scroll and pre-filled product dropdown.
-5. Submit the Waitlist Form; verify the **Digital VIP Boarding Pass** appears with a unique code and 20% discount badge.
-6. Check DevTools -> **Application** -> **Local Storage** -> `solarExplorerMerchandiseWaitlist` to inspect the saved JSON record.
-
----
-
-## 📅 Project Timeline: Progress vs Plan (C6)
-
-| Milestone / Phase | Planned Scope | Actual Completion | Status |
-|---|---|---|---|
-| **Phase 1 (Week 1–4)** | Semantic HTML structure, pure CSS styling, responsive layout, Figma wireframes. | Complete site structure across all planetary and mission pages. | **Completed (100%)** |
-| **Phase 2 (Mid-term Evaluation)** | Interactive JavaScript integration: Search, calculators, external API integration, form validation, JSON persistence. | All planned features delivered + 19-day countdown and space merchandise waitlist system. | **Completed (100%)** |
-| **Phase 3 (Final Phase)** | Full e-commerce shopping cart, payment simulation, 3D WebGL solar system models, user accounts. | Scheduled post mid-term. | **Planned** |
+##
 
 ---
 
