@@ -1,4 +1,57 @@
 /**
+ * Direct IDE Storage Helper
+ * Ensures form submissions reach the Node.js persistence server (http://localhost:3000)
+ * even when the user opens the site via Live Server (port 5500), any alternate port, or file:///
+ */
+async function sendToBackendApi(endpoint, payload) {
+    const targets = [];
+
+    // 1. If currently on port 3000, relative is fastest
+    if (typeof window !== 'undefined' && window.location && window.location.port === '3000') {
+        targets.push(endpoint);
+    }
+
+    // 2. Primary local server
+    targets.push('http://localhost:3000' + endpoint);
+
+    // 3. IPv4 fallback
+    targets.push('http://127.0.0.1:3000' + endpoint);
+
+    // 4. Relative fallback
+    targets.push(endpoint);
+
+    for (const url of targets) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+            const res = await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (res.ok) {
+                const data = await res.json();
+                console.log(`[IDE Storage API] Successfully written to ${url}:`, data);
+                return { success: true, url, data };
+            }
+        } catch (err) {
+            // Silently try next fallback target
+        }
+    }
+
+    console.warn('[IDE Storage API] Could not reach Node server on port 3000. Data is saved in localStorage.');
+    return { success: false };
+}
+
+/**
  * Solar Explorer - Interactive JavaScript Logic (Second Evaluation)
  * Contains planet search, age/weight calculators, timeline search,
  * random facts, CelesTrak API catalogue retrieval, feedback export,
@@ -520,17 +573,16 @@ function initFeedbackForm() {
         console.log('[Solar Explorer] Total stored feedback records:', feedbackList);
 
         // Direct Server API Persistence (writes directly into data/feedback.json in IDE workspace)
-        fetch('/api/feedback', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newRecord)
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log('[IDE Storage API] Feedback written directly to data/feedback.json:', data);
-        })
-        .catch(() => {
-            /* Server not running; localStorage and auto-download handle persistence cleanly */
+        sendToBackendApi('/api/feedback', newRecord).then(result => {
+            if (formStatus) {
+                if (result.success) {
+                    formStatus.textContent = `Thank you, ${nameVal}! Your feedback (ID: ${recordId}) has been saved directly to data/feedback.json in the IDE!`;
+                } else {
+                    formStatus.textContent = `Thank you, ${nameVal}! Your feedback (ID: ${recordId}) has been saved to localStorage (run 'node server.js' to write directly to data/feedback.json).`;
+                }
+                formStatus.className = 'form-status success';
+                formStatus.style.display = 'block';
+            }
         });
 
         // Download JSON file
@@ -754,17 +806,16 @@ function initMerchandisePage() {
             console.log('[Solar Explorer Merchandise] Total waitlist reservations:', waitlist);
 
             // Direct Server API Persistence (writes directly into data/merchandise.json in IDE workspace)
-            fetch('/api/merchandise', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(waitlistRecord)
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log('[IDE Storage API] Pre-order written directly to data/merchandise.json:', data);
-            })
-            .catch(() => {
-                /* Server not running; localStorage and auto-download handle persistence cleanly */
+            sendToBackendApi('/api/merchandise', waitlistRecord).then(result => {
+                if (statusBox) {
+                    if (result.success) {
+                        statusBox.textContent = `Success! VIP Pre-order confirmed (ID: ${recordId}) & saved directly into data/merchandise.json in the IDE!`;
+                    } else {
+                        statusBox.textContent = `Success! VIP Pre-order confirmed (ID: ${recordId}) & saved to localStorage (run 'node server.js' to write directly to data/merchandise.json in IDE).`;
+                    }
+                    statusBox.className = 'form-status success';
+                    statusBox.style.display = 'block';
+                }
             });
 
             // Render Digital VIP Boarding Pass
@@ -779,7 +830,7 @@ function initMerchandisePage() {
                             <div class="bp-pass-id">${escapeHtml(vipPassCode)}</div>
                         </div>
                         <div class="bp-grid">
-                            <div
+                            <div>
                                 <span class="bp-item-label">Explorer / Name</span>
                                 <div class="bp-item-val">${escapeHtml(nameVal)}</div>
                             </div>
@@ -798,7 +849,7 @@ function initMerchandisePage() {
                         </div>
                         <div class="bp-footer">
                             <span class="bp-discount-badge">✓ 20% EARLY BIRD DISCOUNT CODE LOCKED</span>
-                            <span>Stored in: <code>localStorage["${MERCH_WAITLIST_STORAGE_KEY}"]</code></span>
+                            <span>Direct IDE File: <code>data/merchandise.json</code></span>
                         </div>
                     </div>
                 `;

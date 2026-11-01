@@ -47,6 +47,16 @@ const MIME_TYPES = {
     '.txt': 'text/plain; charset=UTF-8'
 };
 
+function getCorsHeaders(req) {
+    const origin = (req && req.headers && req.headers.origin) ? req.headers.origin : '*';
+    return {
+        'Access-Control-Allow-Origin': origin === 'null' ? '*' : origin,
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Accept, Access-Control-Request-Private-Network',
+        'Access-Control-Allow-Private-Network': 'true'
+    };
+}
+
 // Helper to append JSON record safely
 function appendJsonRecord(filePath, newRecord) {
     let list = [];
@@ -69,7 +79,6 @@ function parseJsonBody(req, callback) {
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
-        // Prevent flood attacks (> 1MB)
         if (body.length > 1e6) req.destroy();
     });
     req.on('end', () => {
@@ -86,13 +95,11 @@ const server = http.createServer((req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     const pathname = decodeURIComponent(parsedUrl.pathname);
 
-    // Enable CORS for flexibility
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    const corsHeaders = getCorsHeaders(req);
 
+    // Handle CORS pre-flight
     if (req.method === 'OPTIONS') {
-        res.writeHead(204);
+        res.writeHead(204, corsHeaders);
         res.end();
         return;
     }
@@ -103,7 +110,7 @@ const server = http.createServer((req, res) => {
     if (pathname === '/api/feedback' && req.method === 'POST') {
         parseJsonBody(req, (err, payload) => {
             if (err || !payload) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
                 return;
             }
@@ -111,7 +118,7 @@ const server = http.createServer((req, res) => {
             const updatedList = appendJsonRecord(FEEDBACK_FILE, payload);
             console.log(`[IDE Storage] Feedback received and written to data/feedback.json: ID ${payload.id || 'N/A'}`);
 
-            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 success: true,
                 message: 'Feedback saved directly to data/feedback.json in IDE workspace',
@@ -127,7 +134,7 @@ const server = http.createServer((req, res) => {
     // ==========================================
     if (pathname === '/api/feedback' && req.method === 'GET') {
         const raw = fs.readFileSync(FEEDBACK_FILE, 'utf8');
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(raw);
         return;
     }
@@ -138,7 +145,7 @@ const server = http.createServer((req, res) => {
     if (pathname === '/api/merchandise' && req.method === 'POST') {
         parseJsonBody(req, (err, payload) => {
             if (err || !payload) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
                 return;
             }
@@ -146,7 +153,7 @@ const server = http.createServer((req, res) => {
             const updatedList = appendJsonRecord(MERCH_FILE, payload);
             console.log(`[IDE Storage] Merchandise Pre-order received and written to data/merchandise.json: ID ${payload.id || 'N/A'}`);
 
-            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 success: true,
                 message: 'Pre-order saved directly to data/merchandise.json in IDE workspace',
@@ -162,7 +169,7 @@ const server = http.createServer((req, res) => {
     // ==========================================
     if (pathname === '/api/merchandise' && req.method === 'GET') {
         const raw = fs.readFileSync(MERCH_FILE, 'utf8');
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(raw);
         return;
     }
@@ -189,7 +196,7 @@ const server = http.createServer((req, res) => {
         const ext = path.extname(filePath).toLowerCase();
         const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
-        res.writeHead(200, { 'Content-Type': contentType });
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': contentType });
         const stream = fs.createReadStream(filePath);
         stream.pipe(res);
     });
