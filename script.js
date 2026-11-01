@@ -1,7 +1,8 @@
 /**
  * Solar Explorer - Interactive JavaScript Logic (Second Evaluation)
  * Contains planet search, age/weight calculators, timeline search,
- * random facts, CelesTrak API catalogue retrieval, and feedback export.
+ * random facts, CelesTrak API catalogue retrieval, feedback export,
+ * and merchandise waitlist VIP drop system.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initRandomFact();
     initSatelliteExplorer();
     initFeedbackForm();
+    initMerchandisePage();
     initScrollReveal();
 });
 
@@ -25,7 +27,6 @@ function initPlanetSearch() {
 
     if (!searchForm || !searchInput) return;
 
-    // List of available planet IDs on index.html
     const validPlanets = [
         'mercury', 'venus', 'earth', 'mars',
         'jupiter', 'saturn', 'uranus', 'neptune'
@@ -74,7 +75,6 @@ function initAgeCalculator() {
 
     if (!calcBtn || !ageInput) return;
 
-    // Approximate orbital periods in Earth years
     const orbitalPeriods = {
         'mercury': 0.241,
         'venus': 0.615,
@@ -97,7 +97,6 @@ function initAgeCalculator() {
         if (errorMsg) errorMsg.textContent = '';
         if (displayTarget) displayTarget.textContent = earthAge;
 
-        // Update each spec row with newly computed planetary age
         specRows.forEach((row) => {
             const labelText = row.querySelector('.spec-label')?.textContent.toLowerCase() || '';
             const valSpan = row.querySelector('.spec-val');
@@ -134,9 +133,7 @@ function initWeightCalculator() {
 
     if (!calcBtn || !weightInput) return;
 
-    // Note: These figures represent the equivalent scale reading in kilograms under
-    // different celestial surface gravities, not a change in intrinsic mass.
-    const earthGravity = 9.81; // m/s²
+    const earthGravity = 9.81;
     const celestialGravities = {
         'moon': 1.62,
         'mercury': 3.7,
@@ -159,7 +156,6 @@ function initWeightCalculator() {
         if (errorMsg) errorMsg.textContent = '';
         if (displayTarget) displayTarget.textContent = earthWeight;
 
-        // Weight equivalent = Earth Weight * (Gravity on world / Earth Gravity)
         specRows.forEach((row) => {
             const labelText = row.querySelector('.spec-label')?.textContent.toLowerCase() || '';
             const valSpan = row.querySelector('.spec-val');
@@ -255,7 +251,6 @@ function initRandomFact() {
    Feature F & G — Satellite Explorer & CelesTrak API (satellites.html)
    ======================================================== */
 function initSatelliteExplorer() {
-    // 1. Static Satellite Educational Search
     const satSearchInput = document.getElementById('satellite-search-input');
     const satCards = document.querySelectorAll('.planets-container .planet-card');
 
@@ -269,7 +264,6 @@ function initSatelliteExplorer() {
         });
     }
 
-    // 2. External API: CelesTrak Satellite Catalog (SATCAT) query
     const fetchBtn = document.getElementById('fetch-satcat-btn');
     const statusMsg = document.getElementById('api-status-msg');
     const filterInput = document.getElementById('api-sat-filter');
@@ -277,7 +271,6 @@ function initSatelliteExplorer() {
 
     if (!fetchBtn) return;
 
-    // Primary endpoint: CelesTrak SATCAT stations query
     const celeUrl = 'https://celestrak.org/satcat/records.php?GROUP=STATIONS&FORMAT=JSON&ONORBIT=1&MAX=25';
     let loadedRecords = [];
 
@@ -371,7 +364,6 @@ function initSatelliteExplorer() {
         });
     }
 
-    // Fallback API if CelesTrak is blocked or network restricts it
     function fetchNoaaFallback() {
         if (statusMsg) statusMsg.textContent = 'Connecting to NOAA Space Weather API...';
         const noaaUrl = 'https://services.swpc.noaa.gov/products/noaa-scales.json';
@@ -386,7 +378,6 @@ function initSatelliteExplorer() {
                 if (!resultsGrid) return;
                 resultsGrid.innerHTML = '';
 
-                // NOAA data contains date keys with R (Radio Blackouts), S (Solar Radiation), G (Geomagnetic Storms)
                 const latestKey = Object.keys(data)[0] || '0';
                 const latest = data[latestKey] || {};
 
@@ -410,8 +401,10 @@ function initSatelliteExplorer() {
 }
 
 /* ========================================================
-   Feature H — Feedback Form & Local JSON Export (feedback.html)
+   Feature H — Feedback Form & Local JSON Storage (feedback.html)
    ======================================================== */
+const FEEDBACK_STORAGE_KEY = 'solarExplorerFeedback';
+
 function initFeedbackForm() {
     const form = document.getElementById('feedback-form');
     if (!form) return;
@@ -442,9 +435,7 @@ function initFeedbackForm() {
         }
     }
 
-    form.addEventListener('reset', () => {
-        clearErrors();
-    });
+    form.addEventListener('reset', clearErrors);
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -457,13 +448,12 @@ function initFeedbackForm() {
         const ratingVal = ratingSelect ? ratingSelect.value : '';
         const messageVal = messageInput ? messageInput.value.trim() : '';
 
-        // Name validation
+        // Field validation
         if (!nameVal) {
             if (errName) errName.textContent = 'Please enter your name.';
             isValid = false;
         }
 
-        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailVal) {
             if (errEmail) errEmail.textContent = 'Please enter your email address.';
@@ -473,19 +463,16 @@ function initFeedbackForm() {
             isValid = false;
         }
 
-        // Topic validation
         if (!topicVal) {
             if (errTopic) errTopic.textContent = 'Please select your favourite section or topic.';
             isValid = false;
         }
 
-        // Rating validation
         if (!ratingVal) {
             if (errRating) errRating.textContent = 'Please select a rating.';
             isValid = false;
         }
 
-        // Message validation
         if (!messageVal) {
             if (errMessage) errMessage.textContent = 'Please provide your feedback comments.';
             isValid = false;
@@ -500,39 +487,39 @@ function initFeedbackForm() {
             return;
         }
 
-        // Build submission record with timestamp
+        // Generate unique Record ID
+        const recordId = 'FB-' + Date.now();
+
         const newRecord = {
+            id: recordId,
             name: nameVal,
             email: emailVal,
             topic: topicVal,
-            rating: ratingVal,
+            rating: parseInt(ratingVal, 10),
             feedback: messageVal,
             submittedAt: new Date().toISOString()
         };
 
-        // Save to localStorage (preserving previous submissions)
-        const storageKey = 'solarExplorerFeedback';
+        // Save to browser localStorage in JSON format
         let feedbackList = [];
-        let storageAvailable = true;
-
         try {
-            const rawStored = localStorage.getItem(storageKey);
+            const rawStored = localStorage.getItem(FEEDBACK_STORAGE_KEY);
             if (rawStored) {
                 const parsed = JSON.parse(rawStored);
-                if (Array.isArray(parsed)) {
-                    feedbackList = parsed;
-                }
+                if (Array.isArray(parsed)) feedbackList = parsed;
             }
             feedbackList.push(newRecord);
-            localStorage.setItem(storageKey, JSON.stringify(feedbackList));
+            localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(feedbackList));
         } catch (storageErr) {
-            console.warn('localStorage is not available or quota exceeded:', storageErr);
-            storageAvailable = false;
-            // Still include the current submission in the downloadable file
+            console.warn('localStorage error:', storageErr);
             feedbackList = [newRecord];
         }
 
-        // Export downloadable JSON file containing all accumulated submissions
+        // IDE / DevTools Console Inspection Log
+        console.log('[Solar Explorer] Feedback saved to localStorage["' + FEEDBACK_STORAGE_KEY + '"] in JSON format:', newRecord);
+        console.log('[Solar Explorer] Total stored feedback records:', feedbackList);
+
+        // Download JSON file
         try {
             const jsonString = JSON.stringify(feedbackList, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
@@ -549,23 +536,17 @@ function initFeedbackForm() {
                 URL.revokeObjectURL(downloadUrl);
             }, 1000);
 
-            // Display success message and reset form
             if (formStatus) {
-                const countMsg = feedbackList.length === 1
-                    ? '1 feedback record'
-                    : `${feedbackList.length} total feedback records`;
-                const storageNote = storageAvailable ? '' : ' (Note: local browser storage was restricted, but the file was generated.)';
-                formStatus.textContent = `Thank you, ${nameVal}! Your feedback has been recorded and solar-explorer-feedback.json has been downloaded with ${countMsg}.${storageNote}`;
+                formStatus.textContent = `Thank you, ${nameVal}! Your feedback (ID: ${recordId}) has been saved in JSON format and downloaded.`;
                 formStatus.className = 'form-status success';
                 formStatus.style.display = 'block';
             }
 
             form.reset();
         } catch (downloadErr) {
-            console.error('File download creation error:', downloadErr);
             if (formStatus) {
-                formStatus.textContent = 'Your feedback was saved, but the automatic file download failed in your browser.';
-                formStatus.className = 'form-status error';
+                formStatus.textContent = `Thank you, ${nameVal}! Your feedback (ID: ${recordId}) has been saved in JSON format.`;
+                formStatus.className = 'form-status success';
                 formStatus.style.display = 'block';
             }
         }
@@ -573,10 +554,245 @@ function initFeedbackForm() {
 }
 
 /* ========================================================
+   Feature K — Space Merchandise Countdown & Waitlist (merchandise.html)
+   ======================================================== */
+const MERCH_WAITLIST_STORAGE_KEY = 'solarExplorerMerchandiseWaitlist';
+
+function initMerchandisePage() {
+    const merchForm = document.getElementById('merch-waitlist-form');
+    const daysEl = document.getElementById('cd-days');
+
+    if (!merchForm && !daysEl) return;
+
+    /* 1. Launch Countdown Timer: 19 Days */
+    const hoursEl = document.getElementById('cd-hours');
+    const minutesEl = document.getElementById('cd-minutes');
+    const secondsEl = document.getElementById('cd-seconds');
+
+    if (daysEl && hoursEl && minutesEl && secondsEl) {
+        let remainingSeconds = 19 * 86400 + 8 * 3600 + 45 * 60 + 12;
+
+        function updateCountdown() {
+            if (remainingSeconds > 0) remainingSeconds--;
+            const d = Math.floor(remainingSeconds / 86400);
+            const h = Math.floor((remainingSeconds % 86400) / 3600);
+            const m = Math.floor((remainingSeconds % 3600) / 60);
+            const s = remainingSeconds % 60;
+
+            daysEl.textContent = String(d).padStart(2, '0');
+            hoursEl.textContent = String(h).padStart(2, '0');
+            minutesEl.textContent = String(m).padStart(2, '0');
+            secondsEl.textContent = String(s).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
+
+
+    /* 3. Card Pre-Register Quick Button */
+    const interestButtons = document.querySelectorAll('.btn-interest');
+    const productSelect = document.getElementById('wl-product');
+    const waitlistSection = document.getElementById('waitlist-section');
+
+    if (interestButtons.length > 0 && productSelect) {
+        interestButtons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const itemTitle = btn.getAttribute('data-item');
+
+                for (let i = 0; i < productSelect.options.length; i++) {
+                    if (productSelect.options[i].text.includes(itemTitle)) {
+                        productSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+
+                if (waitlistSection) {
+                    waitlistSection.scrollIntoView({ behavior: 'smooth' });
+                }
+
+                const nameInput = document.getElementById('wl-name');
+                if (nameInput) nameInput.focus();
+            });
+        });
+    }
+
+    /* 4. Waitlist Form Submission & JSON Storage */
+    if (merchForm) {
+        const nameInput = document.getElementById('wl-name');
+        const emailInput = document.getElementById('wl-email');
+        const itemSelect = document.getElementById('wl-product');
+        const sizeSelect = document.getElementById('wl-size');
+        const qtyInput = document.getElementById('wl-qty');
+        const wishlistInput = document.getElementById('wl-wishlist');
+        const notifyCheck = document.getElementById('wl-notify');
+        const statusBox = document.getElementById('wl-status');
+        const passTarget = document.getElementById('boarding-pass-target');
+
+        const errName = document.getElementById('err-wl-name');
+        const errEmail = document.getElementById('err-wl-email');
+        const errProduct = document.getElementById('err-wl-product');
+        const errQty = document.getElementById('err-wl-qty');
+        const errNotify = document.getElementById('err-wl-notify');
+
+        function clearWlErrors() {
+            if (errName) errName.textContent = '';
+            if (errEmail) errEmail.textContent = '';
+            if (errProduct) errProduct.textContent = '';
+            if (errQty) errQty.textContent = '';
+            if (errNotify) errNotify.textContent = '';
+            if (statusBox) {
+                statusBox.className = 'form-status';
+                statusBox.style.display = 'none';
+                statusBox.textContent = '';
+            }
+        }
+
+        merchForm.addEventListener('reset', () => {
+            clearWlErrors();
+            if (passTarget) passTarget.style.display = 'none';
+        });
+
+        merchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            clearWlErrors();
+
+            let isValid = true;
+            const nameVal = nameInput ? nameInput.value.trim() : '';
+            const emailVal = emailInput ? emailInput.value.trim() : '';
+            const productVal = itemSelect ? itemSelect.value : '';
+            const sizeVal = sizeSelect ? sizeSelect.value : 'N/A';
+            const qtyVal = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+            const wishlistVal = wishlistInput ? wishlistInput.value.trim() : '';
+            const notifyVal = notifyCheck ? notifyCheck.checked : false;
+
+            if (!nameVal) {
+                if (errName) errName.textContent = 'Please enter your full name.';
+                isValid = false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailVal) {
+                if (errEmail) errEmail.textContent = 'Please enter your email.';
+                isValid = false;
+            } else if (!emailRegex.test(emailVal)) {
+                if (errEmail) errEmail.textContent = 'Please enter a valid email format.';
+                isValid = false;
+            }
+
+            if (!productVal) {
+                if (errProduct) errProduct.textContent = 'Please select a merchandise item of interest.';
+                isValid = false;
+            }
+
+            if (isNaN(qtyVal) || qtyVal < 1 || qtyVal > 10) {
+                if (errQty) errQty.textContent = 'Please enter a quantity between 1 and 10.';
+                isValid = false;
+            }
+
+            if (!notifyVal) {
+                if (errNotify) errNotify.textContent = 'Please confirm early launch notification consent.';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                if (statusBox) {
+                    statusBox.textContent = 'Please fix the highlighted errors before submitting.';
+                    statusBox.className = 'form-status error';
+                    statusBox.style.display = 'block';
+                }
+                return;
+            }
+
+            const recordId = 'MERCH-' + Date.now();
+            const vipPassCode = 'VIP-ORBIT-' + Math.floor(1000 + Math.random() * 9000);
+
+            const waitlistRecord = {
+                id: recordId,
+                vipPassId: vipPassCode,
+                name: nameVal,
+                email: emailVal,
+                product: productVal,
+                size: sizeVal,
+                quantity: qtyVal,
+                suggestions: wishlistVal || 'None provided',
+                discount: '20% VIP DISCOUNT',
+                registeredAt: new Date().toISOString()
+            };
+
+            // Save to localStorage in JSON format
+            let waitlist = [];
+            try {
+                const raw = localStorage.getItem(MERCH_WAITLIST_STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) waitlist = parsed;
+                }
+                waitlist.push(waitlistRecord);
+                localStorage.setItem(MERCH_WAITLIST_STORAGE_KEY, JSON.stringify(waitlist));
+            } catch (err) {
+                console.warn('Waitlist localStorage failed:', err);
+                waitlist = [waitlistRecord];
+            }
+
+            // IDE DevTools Console Inspection Log
+            console.log('[Solar Explorer Merchandise] Waitlist saved to localStorage["' + MERCH_WAITLIST_STORAGE_KEY + '"] in JSON format:', waitlistRecord);
+            console.log('[Solar Explorer Merchandise] Total waitlist reservations:', waitlist);
+
+            // Render Digital VIP Boarding Pass
+            if (passTarget) {
+                passTarget.innerHTML = `
+                    <div class="boarding-pass-card">
+                        <div class="bp-header">
+                            <div>
+                                <div class="bp-logo-title">SOLAR EXPLORER VIP LAUNCH PASS</div>
+                                <span style="font-size:0.75rem;color:#94a3b8;letter-spacing:1px;">OFFICIAL MERCHANDISE DROP 01 &bull; Q4 2026</span>
+                            </div>
+                            <div class="bp-pass-id">${escapeHtml(vipPassCode)}</div>
+                        </div>
+                        <div class="bp-grid">
+                            <div>
+                                <span class="bp-item-label">Explorer / Name</span>
+                                <div class="bp-item-val">${escapeHtml(nameVal)}</div>
+                            </div>
+                            <div>
+                                <span class="bp-item-label">Reserved Item</span>
+                                <div class="bp-item-val">${escapeHtml(productVal)}</div>
+                            </div>
+                            <div>
+                                <span class="bp-item-label">Size &bull; Quantity</span>
+                                <div class="bp-item-val">${escapeHtml(sizeVal)} &bull; ${escapeHtml(String(qtyVal))} Unit(s)</div>
+                            </div>
+                            <div>
+                                <span class="bp-item-label">Record Storage ID</span>
+                                <div class="bp-item-val" style="font-family:'Consolas',monospace;font-size:0.85rem;color:#38bdf8;">${escapeHtml(recordId)}</div>
+                            </div>
+                        </div>
+                        <div class="bp-footer">
+                            <span class="bp-discount-badge">✓ 20% EARLY BIRD DISCOUNT CODE LOCKED</span>
+                            <span>Stored in: <code>localStorage["${MERCH_WAITLIST_STORAGE_KEY}"]</code></span>
+                        </div>
+                    </div>
+                `;
+                passTarget.style.display = 'block';
+                passTarget.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            if (statusBox) {
+                statusBox.textContent = `Success! Your VIP Launch Access has been reserved (ID: ${recordId}) and saved to storage in JSON format.`;
+                statusBox.className = 'form-status success';
+                statusBox.style.display = 'block';
+            }
+
+            merchForm.reset();
+        });
+    }
+}
+
+/* ========================================================
    Feature I — Subtle Scroll Reveal Animations
    ======================================================== */
 function initScrollReveal() {
-    // Check for prefers-reduced-motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         return;
     }
@@ -586,7 +802,7 @@ function initScrollReveal() {
     }
 
     const revealTargets = document.querySelectorAll(
-        '.voyage-slide, .planet-card, .timeline-item, .sun-block, .fact-card'
+        '.voyage-slide, .planet-card, .timeline-item, .sun-block, .fact-card, .merch-card'
     );
 
     if (revealTargets.length === 0) return;

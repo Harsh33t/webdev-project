@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Merchandise - Solar Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><h2>Solar Explorer</h2></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="sun.html">The Sun</a>
+            <a href="extreme.html">Extreme Space</a>
+            <a href="missions.html">Missions</a>
+            <a href="fun-space.html">Fun Space</a>
+            <a href="satellites.html">Satellites</a>
+            <a href="merchandise.html" class="active">Merchandise</a>
+            <a href="feedback.html">Feedback</a>
+        </div>
+    </nav>
+
+    <!-- Merchandise Hero & Coming Soon Header -->
+    <header class="merch-hero">
+        <div class="merch-hero-content">
+            <h1 class="page-title merch-hero-title">SPACE MERCHANDISE</h1>
+            <p class="timeline-sub merch-hero-sub">
+                Launching an exclusive collection of apparel, meteorite collectibles, and gear for space lovers.
+            </p>
+
+            <!-- Launch Countdown Clock: 19 Days -->
+            <div class="countdown-container" aria-label="Official Launch Countdown">
+                <div class="countdown-card">
+                    <span class="countdown-val" id="cd-days">19</span>
+                    <span class="countdown-lbl">DAYS</span>
+                </div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-card">
+                    <span class="countdown-val" id="cd-hours">08</span>
+                    <span class="countdown-lbl">HOURS</span>
+                </div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-card">
+                    <span class="countdown-val" id="cd-minutes">45</span>
+                    <span class="countdown-lbl">MINUTES</span>
+                </div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-card">
+                    <span class="countdown-val" id="cd-seconds">12</span>
+                    <span class="countdown-lbl">SECONDS</span>
+                </div>
+            </div>
+
+            <div class="merch-hero-cta">
+                <a href="#waitlist-section" class="btn">JOIN EARLY ACCESS WAITLIST</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="merch-main-container">
+
+        <!-- ========================================================
+             MERCHANDISE SHOWCASE: Upcoming Space Collection
+             ======================================================== -->
+        <section class="merch-showcase-section" aria-labelledby="showcase-heading">
+            <div class="section-title-wrap">
+                <h2 id="showcase-heading" class="sec-headline">UPCOMING MERCHANDISE PREVIEW</h2>
+                <p class="sec-desc">Engineered with premium materials and scientific accuracy. Select an item below to pre-register your interest for early bird VIP allocation.</p>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="merch-grid" id="merch-grid">
+
+                <!-- Product 1: Apollo Hoodie -->
+                <article class="merch-card" data-category="apparel" data-product-id="apollo-hoodie" data-product-name="Apollo 11 Translunar Flight Hoodie">
+                    <div class="merch-badge-bar">
+                        <span class="merch-tag">APPAREL</span>
+                        <span class="merch-status-pill">PROTOTYPE READY</span>
+                    </div>
+                    <div class="merch-visual">
+                        <svg viewBox="0 0 160 140" class="merch-svg-art" aria-hidden="true">
+                            <defs>
+                                <radialGradient id="hoodieGlow" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+                                    <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                                </radialGradient>
+                            </defs>
+                            <circle cx="80" cy="70" r="60" fill="url(#hoodieGlow)"/>
+                            <path d="M45,35 L62,25 Q80,20 98,25 L115,35 L135,62 L120,72 L110,60 L110,118 L50,118 L50,60 L40,72 L25,62 Z" fill="#141414" stroke="#444" stroke-width="1.8"/>
+                            <path d="M62,25 Q80,38 98,25 Q92,50 80,50 Q68,50 62,25 Z" fill="#1c1c1c" stroke="#666" stroke-width="1.4"/>
+                            <path d="M55,90 Q80,55 105,75" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="3,3"/>
+                            <circle cx="55" cy="90" r="3" fill="#38bdf8"/>
+                            <circle cx="105" cy="75" r="4" fill="#fbbf24"/>
+                            <text x="80" y="108" text-anchor="middle" font-size="6" fill="#888" font-family="'Space Grotesk', sans-serif" letter-spacing="1">0.67408° N, 23.47297° E</text>
+                        </svg>
+                    </div>
+                    <div class="merch-details">
+                        <h3 class="merch-name">Apollo 11 Translunar Flight Hoodie</h3>
+                        <p class="merch-desc">420 GSM French Terry heavyweight black fleece featuring translunar injection trajectory embroidery and lunar coordinates.</p>
+                        <div class="merch-specs-list">
+                            <span class="merch-spec-chip">100% Organic Cotton</span>
+                            <span class="merch-spec-chip">Gold-Thread Stitching</span>
+                        </div>
+                        <div class="merch-price-row">
+                            <div class="price-wrap">
+                                <span class="current-price">$58.00</span>
+                                <span class="vip-discount-tag">VIP EARLY BIRD: $46.40</span>
+                            </div>
+                            <button type="button" class="btn btn-small btn-interest" data-item="Apollo 11 Translunar Flight Hoodie">PRE-REGISTER</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Product 2: Thermal Flask -->
+                <article class="merch-card" data-category="gear" data-product-id="thermal-flask" data-product-name="Cosmic Vacuum Insulated Thermal Flask">
+                    <div class="merch-badge-bar">
+                        <span class="merch-tag">GEAR</span>
+                        <span class="merch-status-pill">SAMPLE APPROVED</span>
+                    </div>
+                    <div class="merch-visual">
+                        <svg viewBox="0 0 160 140" class="merch-svg-art" aria-hidden="true">
+                            <circle cx="80" cy="70" r="60" fill="url(#hoodieGlow)"/>
+                            <rect x="64" y="38" width="32" height="78" rx="6" fill="#181818" stroke="#555" stroke-width="1.6"/>
+                            <rect x="68" y="24" width="24" height="14" rx="2" fill="#262626" stroke="#777" stroke-width="1.4"/>
+                            <path d="M72,24 C72,16 88,16 88,24" fill="none" stroke="#777" stroke-width="2"/>
+                            <line x1="72" y1="58" x2="88" y2="68" stroke="#38bdf8" stroke-width="1.2"/>
+                            <line x1="88" y1="68" x2="80" y2="84" stroke="#38bdf8" stroke-width="1.2"/>
+                            <circle cx="72" cy="58" r="2" fill="#fff"/>
+                            <circle cx="88" cy="68" r="2" fill="#fff"/>
+                            <circle cx="80" cy="84" r="2.5" fill="#38bdf8"/>
+                            <text x="80" y="104" text-anchor="middle" font-size="5" fill="#aaa" font-family="'Orbitron', sans-serif" letter-spacing="1">750 ML • TITANIUM</text>
+                        </svg>
+                    </div>
+                    <div class="merch-details">
+                        <h3 class="merch-name">Deep Space Vacuum Thermal Flask</h3>
+                        <p class="merch-desc">Double-wall 304 food-grade stainless steel with matte obsidian finish. Retains 24-hour ice cold and 12-hour warmth in any atmosphere.</p>
+                        <div class="merch-specs-list">
+                            <span class="merch-spec-chip">750ml Volume</span>
+                            <span class="merch-spec-chip">BPA-Free Vacuum Lock</span>
+                        </div>
+                        <div class="merch-price-row">
+                            <div class="price-wrap">
+                                <span class="current-price">$32.00</span>
+                                <span class="vip-discount-tag">VIP EARLY BIRD: $25.60</span>
+                            </div>
+                            <button type="button" class="btn btn-small btn-interest" data-item="Deep Space Vacuum Thermal Flask">PRE-REGISTER</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Product 3: Mission Patch Set -->
+                <article class="merch-card" data-category="collectibles" data-product-id="patch-set" data-product-name="Solar Explorer Woven Mission Patch Set">
+                    <div class="merch-badge-bar">
+                        <span class="merch-tag">COLLECTIBLES</span>
+                        <span class="merch-status-pill">COLLECTOR BATCH</span>
+                    </div>
+                    <div class="merch-visual">
+                        <svg viewBox="0 0 160 140" class="merch-svg-art" aria-hidden="true">
+                            <circle cx="80" cy="70" r="60" fill="url(#hoodieGlow)"/>
+                            <polygon points="80,24 122,50 122,96 80,122 38,96 38,50" fill="#141414" stroke="#eab308" stroke-width="2.2"/>
+                            <polygon points="80,30 116,52 116,92 80,114 44,92 44,52" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                            <circle cx="80" cy="70" r="14" fill="#f59e0b" stroke="#fff" stroke-width="1"/>
+                            <ellipse cx="80" cy="70" rx="30" ry="12" fill="none" stroke="#38bdf8" stroke-width="1.4"/>
+                            <circle cx="106" cy="72" r="3" fill="#38bdf8"/>
+                            <text x="80" y="104" text-anchor="middle" font-size="5" fill="#fef08a" font-family="'Orbitron', sans-serif" letter-spacing="1">SOLAR SYSTEM 09</text>
+                        </svg>
+                    </div>
+                    <div class="merch-details">
+                        <h3 class="merch-name">Solar Explorer Woven Mission Patch Set</h3>
+                        <p class="merch-desc">Set of 9 high-density metallic bullion thread patches representing the Sun and all eight planets, complete in a collector's display folio.</p>
+                        <div class="merch-specs-list">
+                            <span class="merch-spec-chip">9-Piece Set</span>
+                            <span class="merch-spec-chip">Velcro Hook Backing</span>
+                        </div>
+                        <div class="merch-price-row">
+                            <div class="price-wrap">
+                                <span class="current-price">$42.00</span>
+                                <span class="vip-discount-tag">VIP EARLY BIRD: $33.60</span>
+                            </div>
+                            <button type="button" class="btn btn-small btn-interest" data-item="Solar Explorer Woven Mission Patch Set">PRE-REGISTER</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Product 4: JWST Desk Mat -->
+                <article class="merch-card" data-category="gear" data-product-id="jwst-mat" data-product-name="James Webb NIRCam Deep Field Desk Mat">
+                    <div class="merch-badge-bar">
+                        <span class="merch-tag">GEAR</span>
+                        <span class="merch-status-pill">PRE-ORDER READY</span>
+                    </div>
+                    <div class="merch-visual">
+                        <svg viewBox="0 0 160 140" class="merch-svg-art" aria-hidden="true">
+                            <circle cx="80" cy="70" r="60" fill="url(#hoodieGlow)"/>
+                            <polygon points="25,50 135,50 145,95 15,95" fill="#161616" stroke="#444" stroke-width="1.6"/>
+                            <line x1="80" y1="62" x2="80" y2="82" stroke="#f59e0b" stroke-width="1.5"/>
+                            <line x1="70" y1="72" x2="90" y2="72" stroke="#f59e0b" stroke-width="1.5"/>
+                            <line x1="72" y1="64" x2="88" y2="80" stroke="#f59e0b" stroke-width="0.9"/>
+                            <line x1="72" y1="80" x2="88" y2="64" stroke="#f59e0b" stroke-width="0.9"/>
+                            <circle cx="80" cy="72" r="2.5" fill="#fff"/>
+                            <ellipse cx="50" cy="68" rx="5" ry="2" transform="rotate(-20 50 68)" fill="#ef4444" opacity="0.8"/>
+                            <ellipse cx="112" cy="78" rx="6" ry="2" transform="rotate(35 112 78)" fill="#38bdf8" opacity="0.8"/>
+                            <text x="80" y="90" text-anchor="middle" font-size="4.5" fill="#aaa" font-family="'Space Grotesk', sans-serif" letter-spacing="1">900 × 400 MM • MICRO-WEAVE</text>
+                        </svg>
+                    </div>
+                    <div class="merch-details">
+                        <h3 class="merch-name">James Webb NIRCam Deep Field Desk Mat</h3>
+                        <p class="merch-desc">900x400mm high-density micro-weave tracking surface showcasing the SMACS 0723 infrared deep field with stitched anti-fray borders.</p>
+                        <div class="merch-specs-list">
+                            <span class="merch-spec-chip">Water-Resistant</span>
+                            <span class="merch-spec-chip">Anti-Slip Rubber Base</span>
+                        </div>
+                        <div class="merch-price-row">
+                            <div class="price-wrap">
+                                <span class="current-price">$28.00</span>
+                                <span class="vip-discount-tag">VIP EARLY BIRD: $22.40</span>
+                            </div>
+                            <button type="button" class="btn btn-small btn-interest" data-item="James Webb NIRCam Deep Field Desk Mat">PRE-REGISTER</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Product 5: Meteorite Pendant -->
+                <article class="merch-card" data-category="collectibles" data-product-id="meteorite-pendant" data-product-name="Campo del Cielo Meteorite Titanium Pendant">
+                    <div class="merch-badge-bar">
+                        <span class="merch-tag">COLLECTIBLES</span>
+                        <span class="merch-status-pill">NUMBERED SPECIMENS</span>
+                    </div>
+                    <div class="merch-visual">
+                        <svg viewBox="0 0 160 140" class="merch-svg-art" aria-hidden="true">
+                            <circle cx="80" cy="70" r="60" fill="url(#hoodieGlow)"/>
+                            <path d="M60,20 C70,36 78,48 80,50 C82,48 90,36 100,20" fill="none" stroke="#666" stroke-width="1.2" stroke-dasharray="2,2"/>
+                            <circle cx="80" cy="75" r="26" fill="#181818" stroke="#888" stroke-width="2"/>
+                            <polygon points="76,62 88,64 92,76 83,88 71,84 68,72" fill="#2d2d2d" stroke="#d4d4d8" stroke-width="1.4"/>
+                            <line x1="76" y1="62" x2="83" y2="88" stroke="#a1a1aa" stroke-width="0.8"/>
+                            <line x1="68" y1="72" x2="92" y2="76" stroke="#a1a1aa" stroke-width="0.8"/>
+                            <text x="80" y="112" text-anchor="middle" font-size="5" fill="#999" font-family="'Orbitron', sans-serif" letter-spacing="1">4.5 BILLION YEARS OLD</text>
+                        </svg>
+                    </div>
+                    <div class="merch-details">
+                        <h3 class="merch-name">Campo del Cielo Meteorite Pendant</h3>
+                        <p class="merch-desc">Genuine certified iron-nickel meteorite fragment from the 4,000-year-old Argentina impact site, set in aerospace grade 5 titanium.</p>
+                        <div class="merch-specs-list">
+                            <span class="merch-spec-chip">Includes Certificate</span>
+                            <span class="merch-spec-chip">Hypoallergenic Titanium</span>
+                        </div>
+                        <div class="merch-price-row">
+                            <div class="price-wrap">
+                                <span class="current-price">$79.00</span>
+                                <span class="vip-discount-tag">VIP EARLY BIRD: $63.20</span>
+                            </div>
+                            <button type="button" class="btn btn-small btn-interest" data-item="Campo del Cielo Meteorite Pendant">PRE-REGISTER</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Product 6: Voyager Coasters -->
+                <article class="merch-card" data-category="gear" data-product-id="voyager-coasters" data-product-name="Voyager Golden Record Solid Brass Coaster Set">
+                    <div class="merch-badge-bar">
+                        <span class="merch-tag">GEAR</span>
+                        <span class="merch-status-pill">LIMITED EDITION</span>
+                    </div>
+                    <div class="merch-visual">
+                        <svg viewBox="0 0 160 140" class="merch-svg-art" aria-hidden="true">
+                            <circle cx="80" cy="70" r="60" fill="url(#hoodieGlow)"/>
+                            <circle cx="80" cy="70" r="32" fill="#1f1a10" stroke="#ca8a04" stroke-width="2.4"/>
+                            <circle cx="80" cy="70" r="26" fill="none" stroke="#854d0e" stroke-width="0.8"/>
+                            <circle cx="80" cy="70" r="20" fill="none" stroke="#854d0e" stroke-width="0.8"/>
+                            <circle cx="80" cy="70" r="10" fill="none" stroke="#ca8a04" stroke-width="1"/>
+                            <circle cx="80" cy="70" r="3" fill="#ca8a04"/>
+                            <line x1="80" y1="70" x2="62" y2="60" stroke="#facc15" stroke-width="1"/>
+                            <line x1="80" y1="70" x2="98" y2="58" stroke="#facc15" stroke-width="1"/>
+                            <line x1="80" y1="70" x2="92" y2="84" stroke="#facc15" stroke-width="1"/>
+                            <line x1="80" y1="70" x2="68" y2="88" stroke="#facc15" stroke-width="1"/>
+                            <text x="80" y="112" text-anchor="middle" font-size="5" fill="#facc15" font-family="'Orbitron', sans-serif" letter-spacing="1">INTERSTELLAR RECORD</text>
+                        </svg>
+                    </div>
+                    <div class="merch-details">
+                        <h3 class="merch-name">Voyager Golden Record Brass Coaster Set</h3>
+                        <p class="merch-desc">Set of 4 heavy spun brass coasters precision laser-etched with Carl Sagan's interstellar pulsar diagram and planetary greetings with cork base.</p>
+                        <div class="merch-specs-list">
+                            <span class="merch-spec-chip">Set of 4 Coasters</span>
+                            <span class="merch-spec-chip">Solid Spun Brass</span>
+                        </div>
+                        <div class="merch-price-row">
+                            <div class="price-wrap">
+                                <span class="current-price">$36.00</span>
+                                <span class="vip-discount-tag">VIP EARLY BIRD: $28.80</span>
+                            </div>
+                            <button type="button" class="btn btn-small btn-interest" data-item="Voyager Golden Record Brass Coaster Set">PRE-REGISTER</button>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ========================================================
+             PRE-REGISTRATION & EARLY ACCESS WAITLIST FORM
+             ======================================================== -->
+        <section id="waitlist-section" class="waitlist-section" aria-labelledby="waitlist-heading">
+            <div class="section-title-wrap">
+                <h2 id="waitlist-heading" class="sec-headline">JOIN THE LAUNCH WAITLIST</h2>
+                <p class="sec-desc">Submit your details to secure guaranteed first-batch allocation, an automatic <strong>20% launch discount</strong>, and a digital collector's boarding pass.</p>
+            </div>
+
+            <div class="waitlist-form-container">
+                <form id="merch-waitlist-form" class="feedback-form" novalidate>
+                    <div class="form-group">
+                        <label for="wl-name">Full Name *</label>
+                        <input type="text" id="wl-name" name="name" placeholder="e.g., Alex Vance" required autocomplete="name">
+                        <span class="field-error" id="err-wl-name" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wl-email">Email Address *</label>
+                        <input type="email" id="wl-email" name="email" placeholder="alex@domain.com" required autocomplete="email">
+                        <span class="field-error" id="err-wl-email" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wl-product">Merchandise of Interest *</label>
+                        <select id="wl-product" name="product" required>
+                            <option value="">-- Choose your desired space gear --</option>
+                            <option value="Entire Launch Collector Bundle (All 6 Items)">Entire Launch Collector Bundle (All 6 Items)</option>
+                            <option value="Apollo 11 Translunar Flight Hoodie">Apollo 11 Translunar Flight Hoodie ($58)</option>
+                            <option value="Deep Space Vacuum Thermal Flask">Deep Space Vacuum Thermal Flask ($32)</option>
+                            <option value="Solar Explorer Woven Mission Patch Set">Solar Explorer Woven Mission Patch Set ($42)</option>
+                            <option value="James Webb NIRCam Deep Field Desk Mat">James Webb NIRCam Deep Field Desk Mat ($28)</option>
+                            <option value="Campo del Cielo Meteorite Pendant">Campo del Cielo Meteorite Pendant ($79)</option>
+                            <option value="Voyager Golden Record Brass Coaster Set">Voyager Golden Record Brass Coaster Set ($36)</option>
+                        </select>
+                        <span class="field-error" id="err-wl-product" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label for="wl-size">Apparel Size (If Ordering Clothing)</label>
+                            <select id="wl-size" name="size">
+                                <option value="N/A">Not applicable / Non-apparel</option>
+                                <option value="Small">Small (S)</option>
+                                <option value="Medium">Medium (M)</option>
+                                <option value="Large">Large (L)</option>
+                                <option value="XL">Extra Large (XL)</option>
+                                <option value="2XL">Double Extra Large (2XL)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="wl-qty">Desired Quantity *</label>
+                            <input type="number" id="wl-qty" name="quantity" min="1" max="10" value="1" required>
+                            <span class="field-error" id="err-wl-qty" aria-live="polite"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wl-wishlist">What custom space merchandise should we build next?</label>
+                        <textarea id="wl-wishlist" name="wishlist" rows="3" placeholder="e.g. Lunar Lander Desk Lamp, Mars Rover Metal Model, Cosmic Tarot Deck..."></textarea>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="wl-notify" name="notify" checked required>
+                            <span>Yes, notify me via email the minute this collection drops with my 20% early bird code. *</span>
+                        </label>
+                        <span class="field-error" id="err-wl-notify" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="wl-submit-btn" class="btn">JOIN WAITLIST</button>
+                        <button type="reset" id="wl-reset-btn" class="btn btn-secondary">RESET</button>
+                    </div>
+
+                    <div id="wl-status" class="form-status" aria-live="polite"></div>
+                </form>
+
+                <!-- Interactive Boarding Pass (Rendered via DOM upon submit) -->
+                <div id="boarding-pass-target" class="boarding-pass-wrap" style="display:none;" aria-live="polite">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div style="text-align:center;margin:30px 0 60px;">
+        <a href="index.html" class="btn">BACK TO HOME</a>
+    </div>
+
+    <footer>
+        <p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,30 +1,203 @@
 # 🌌 Solar Explorer
 
-A clean, responsive, and lightweight HTML & CSS website exploring our Solar System, planetary profiles, and historic space missions.
+A responsive, high-performance, and educational web portal exploring our Solar System, planetary science, space missions, satellite tracking, and official space merchandise.
+
+> **Project Phase Evaluation 2 (A2 - 30% Assessment)**  
+> **Focus:** Full Integration of HTML, CSS, and Interactive JavaScript  
+> **Rubric Coverage:** JS Syntax & Concepts (10%), DOM Manipulation (10%), Event Handling (5%), HTML/CSS/JS Integration (5%)  
+> **Criteria:** C6 (Progress vs Plan), C7 (Technical Understanding), C8 (Problem Solving), C9 (Working Documentation), C10 (Individual Contribution)
 
 ---
 
-## 🚀 Features
+## 📑 Table of Contents
 
-- **Home Page (`index.html`)**: Space-themed landing page with full solar system backdrop and quick navigation.
-- **Planets Page (`planets.html`)**: Profiles of all 8 planets from Mercury to Neptune with characteristics and tags.
-- **Missions Page (`missions.html`)**: Highlights of landmark space missions (Apollo 11, Voyager 1 & 2, Hubble, Curiosity, Chandrayaan-3, JWST).
-- **Self-Contained**: 100% offline-ready with lightweight vector SVG planet and spacecraft icons.
-- **Pure CSS**: Clean, modern dark theme styling without external frameworks or dependencies.
-
----
-
-## 🎨 Figma Design
-
-- **Figma File**: [Solar Explorer UI on Figma](https://www.figma.com/design/yUDJxUDHtmbML9Jd8vdfW3/Untitled?node-id=0-1&t=hxbvLIZiNQF1XtoF-1)
-- Vector export files are also available locally in the [`figma/`](figma/) folder.
+1. [Project Synopsis & Charter](#-project-synopsis--charter)
+2. [Complete Page Directory](#-complete-page-directory)
+3. [Phase Evaluation 2 Assessment Matrix](#-phase-evaluation-2-assessment-matrix)
+4. [Data Persistence & Storage Architecture (Evaluator Guide)](#-data-persistence--storage-architecture-evaluator-guide)
+5. [New Feature: Space Lovers Merchandise & 19-Day Countdown](#-new-feature-space-lovers-merchandise--19-day-countdown)
+6. [Interactive Features Breakdown](#-interactive-features-breakdown)
+7. [Testing & Demonstration Guide for Evaluators](#-testing--demonstration-guide-for-evaluators)
+8. [Project Timeline: Progress vs Plan (C6)](#-project-timeline-progress-vs-plan-c6)
+9. [Team Authors & Individual Contributions (C10)](#-team-authors--individual-contributions-c10)
 
 ---
 
-## 👥 Authors & Contributors
+## 🔭 Project Synopsis & Charter
 
-- **Aviraj**
-- **Harsheet**
-- **Pratham**
-- **Samarth**
-- **Shivansh**
+**Solar Explorer** is designed as a modular space educational platform and enthusiast hub. It combines deep celestial knowledge, interactive physical calculators, real-time satellite tracking via external space databases, and an upcoming high-end space merchandise showcase with VIP launch allocation.
+
+### Core Objectives
+1. **Interactive Scientific Learning:** Present celestial mechanics, orbital periods, surface gravities, and extreme cosmic phenomena through engaging client-side calculations.
+2. **Accessible Web Standards:** Provide semantic HTML5 layouts, WCAG 2.1 accessible forms with `aria-live` error states, keyboard navigation, and responsive typography.
+3. **Robust Data Persistence:** Implement structured JSON client-side storage (`localStorage`) with unique record identifiers, formatted DevTools console logging for evaluator inspection, and automatic JSON file download.
+4. **Minimalist Aesthetic:** Embody a sleek, dark-mode cosmic theme utilizing Google Fonts (`Orbitron` and `Space Grotesk`), custom vector SVG art, and clean responsive CSS.
+
+---
+
+## 🌐 Complete Page Directory
+
+| Page | File | Description & JavaScript Highlights |
+|---|---|---|
+| **Home** | [`index.html`](index.html) | Planetary voyage overview with smooth scroll navigation and **Feature A: Planet Search**. |
+| **The Sun** | [`sun.html`](sun.html) | High-resolution solar profile, core nuclear fusion stats, and solar dynamics. |
+| **Extreme Space** | [`extreme.html`](extreme.html) | Black holes, neutron stars, gamma-ray bursts, and **Feature E: Random Cosmic Fact Generator**. |
+| **Missions** | [`missions.html`](missions.html) | Historic human spaceflight timeline with **Feature D: Live Mission Search & Filter**. |
+| **Fun Space** | [`fun-space.html`](fun-space.html) | Interactive science calculators: **Feature B: Planetary Age Calculator** & **Feature C: Planetary Weight Calculator**. |
+| **Satellites** | [`satellites.html`](satellites.html) | Educational orbiter profiles, live filter, and **Feature G: Live CelesTrak SATCAT API Retrieval** (with NOAA fallback). |
+| **Space Merchandise** *(New!)* | [`merchandise.html`](merchandise.html) | **Official Space Lovers Drop**: Live 19-day countdown timer, upcoming merchandise preview cards, category filter, VIP pre-registration form with validation, digital boarding pass generator, and JSON storage. |
+| **Feedback** | [`feedback.html`](feedback.html) | Multi-field feedback form with client-side validation, unique Record IDs (`FB-...`), browser `localStorage` JSON storage, DevTools logging, and automatic `.json` file download. |
+| **The Planets** | [`planets.html`](planets.html) | Dedicated grid catalog of all 8 solar system worlds with quick specs. |
+
+---
+
+## 🎯 Phase Evaluation 2 Assessment Matrix
+
+| Evaluation Component | Weight | Implementation Details in Solar Explorer |
+|---|---|---|
+| **JavaScript Syntax & Concepts** | **10%** | ES6+ arrow functions, template literals, destructuring, higher-order array methods (`filter`, `map`, `forEach`), `Date` API, JSON serialization (`JSON.stringify`, `JSON.parse`), `Blob` & `URL` API, interval timers, asynchronous `fetch` with Promises (`then`, `catch`). |
+| **DOM Manipulation** | **10%** | `document.getElementById`, `querySelectorAll`, `createElement`, dynamic card generation, class list manipulation (`classList.add/remove`), style adjustments, form value reading & resetting, innerHTML sanitization via `escapeHtml()`, and dynamic VIP boarding pass rendering. |
+| **Event Handling** | **5%** | `DOMContentLoaded`, `submit`, `reset`, `input`, `change`, `click`, `keydown` (Enter key support), and smooth scroll actions. |
+| **HTML, CSS & JS Integration** | **5%** | Accessible error messaging via `aria-live="polite"`, clean semantic tags (`<nav>`, `<header>`, `<main>`, `<section>`, `<article>`), smooth scroll behavior, responsive CSS, and `prefers-reduced-motion` compliance. |
+
+---
+
+## 💾 Data Persistence & Storage Architecture (Evaluator Guide)
+
+When evaluating in the IDE or browser DevTools, the instructor ("sir") can verify where and how the data is stored:
+
+### 1. Storage Location & Medium
+- **Target Medium:** Browser `window.localStorage` (retained across page reloads and browser sessions).
+- **Feedback Storage Key:** `solarExplorerFeedback`
+- **Merchandise Waitlist Storage Key:** `solarExplorerMerchandiseWaitlist`
+
+### 2. Data Format & Structure
+Data is stored strictly as a **serialized JSON array of objects (`application/json`)**.
+
+#### Feedback Submission Record:
+```json
+{
+  "id": "FB-1730456123456",
+  "name": "Alex Vance",
+  "email": "alex@example.com",
+  "topic": "Extreme Space",
+  "rating": 5,
+  "feedback": "The neutron star density comparisons and black hole explanations are phenomenal.",
+  "submittedAt": "2026-11-01T10:15:23.456Z"
+}
+```
+
+#### Merchandise Waitlist Record:
+```json
+{
+  "id": "MERCH-1730456789123",
+  "vipPassId": "VIP-ORBIT-4821",
+  "name": "Sarah Connor",
+  "email": "sarah@deepspace.org",
+  "product": "Apollo 11 Translunar Flight Hoodie",
+  "size": "Medium",
+  "quantity": 1,
+  "suggestions": "Would love an ISS trajectory patch!",
+  "discount": "20% VIP DISCOUNT",
+  "registeredAt": "2026-11-01T10:20:00.000Z"
+}
+```
+
+### 3. Record Unique Identification (`id`)
+Each submitted record automatically generates a unique identifier:
+- Feedback: `FB-<timestamp>` (e.g. `FB-1730456123456`)
+- Merchandise: `MERCH-<timestamp>` (e.g. `MERCH-1730456789123`)
+
+### 4. How the Evaluator Can Check in the IDE / Browser
+1. **Inspect LocalStorage:** Open DevTools (`F12`) -> Click **Application** (or **Storage**) tab -> Select **Local Storage** -> Inspect `solarExplorerFeedback` and `solarExplorerMerchandiseWaitlist`.
+2. **Inspect Console Output:** Every submission automatically logs formatted output to the console:
+   ```javascript
+   [Solar Explorer] Feedback saved to localStorage["solarExplorerFeedback"] in JSON format: { ... }
+   [Solar Explorer] Total stored feedback records: [ ... ]
+   ```
+3. **Inspect File Export:** The feedback form also generates and downloads `solar-explorer-feedback.json` automatically on submission.
+
+---
+
+## 🛍️ New Feature: Space Lovers Merchandise & 19-Day Countdown
+
+The new **Merchandise section ([`merchandise.html`](merchandise.html))** provides a clean, minimalist upcoming shop launchpad for space enthusiasts:
+
+### 1. Coming Soon Hero & 19-Day Countdown
+- Ticking countdown timer (`DAYS`, `HOURS`, `MINUTES`, `SECONDS`) initialized at **19 days** counting down smoothly.
+- Minimalist typography strictly matching the site's dark cosmic theme.
+
+### 2. Curated Merchandise Preview Grid
+- 6 curated product cards with bespoke vector SVG artwork and specifications:
+  1. **Apollo 11 Translunar Flight Hoodie** ($58.00 • VIP: $46.40)
+  2. **Deep Space Vacuum Insulated Thermal Flask** ($32.00 • VIP: $25.60)
+  3. **Solar Explorer Woven Mission Patch Set** ($42.00 • VIP: $33.60)
+  4. **James Webb NIRCam Deep Field Desk Mat** ($28.00 • VIP: $22.40)
+  5. **Campo del Cielo Meteorite Titanium Pendant** ($79.00 • VIP: $63.20)
+  6. **Voyager Golden Record Brass Coaster Set** ($36.00 • VIP: $28.80)
+- **Quick Action:** Clicking **"PRE-REGISTER"** on any card smooth-scrolls to the form and auto-selects that item in the dropdown.
+
+### 3. VIP Early Access / Waitlist Form & Boarding Pass
+- Client-side validation for name, email, merchandise item, quantity, and consent.
+- Generates a **Digital VIP Boarding Pass** in the DOM with a unique code (`VIP-ORBIT-XXXX`) and locked-in **20% early bird discount**.
+- Persists submissions into `localStorage['solarExplorerMerchandiseWaitlist']` in JSON format.
+
+---
+
+## ⚙️ Interactive Features Breakdown
+
+1. **Feature A — Planet Search (`index.html`)**: Real-time planet lookup with error handling and smooth auto-scroll to the target world.
+2. **Feature B — Planetary Age Calculator (`fun-space.html`)**: Converts Earth age into orbital years across all 8 planets using orbital period physics.
+3. **Feature C — Planetary Weight Calculator (`fun-space.html`)**: Calculates equivalent scale readings using celestial surface gravities.
+4. **Feature D — Mission Timeline Search (`missions.html`)**: Instant text filter searching mission names, descriptions, and years.
+5. **Feature E — Random Cosmic Fact Generator (`extreme.html`)**: Cycle through astrophysics facts with non-repeating random selection.
+6. **Feature F & G — Satellite Explorer & CelesTrak API (`satellites.html`)**: Local catalog filter and live asynchronous API query to CelesTrak SATCAT database with a fallback to NOAA Space Weather.
+7. **Feature H — Feedback Persistence & Export (`feedback.html`)**: Client-side validation, `localStorage` JSON storage, unique IDs, console logging, and downloadable JSON file.
+8. **Feature K — Merchandise 19-Day Countdown & Waitlist (`merchandise.html`)**: 19-day countdown timer, product filtering, waitlist form, VIP boarding pass generator, and JSON persistence.
+9. **Feature I — Scroll Reveal Animations**: IntersectionObserver-based entrance transitions respecting `prefers-reduced-motion`.
+
+---
+
+## 🧪 Testing & Demonstration Guide for Evaluators
+
+### Step 1: Verify Feedback Form & JSON Storage
+1. Open [`feedback.html`](feedback.html) in your browser.
+2. Fill out the fields and click **"SUBMIT & DOWNLOAD JSON"**.
+3. Verify that `solar-explorer-feedback.json` is generated and downloaded.
+4. Open DevTools Console (`F12`) to verify the log:
+   `[Solar Explorer] Feedback saved to localStorage["solarExplorerFeedback"] in JSON format: { ... }`
+5. Check DevTools -> **Application** -> **Local Storage** -> `solarExplorerFeedback` to see the serialized JSON array.
+
+### Step 2: Verify Merchandise Section & Waitlist
+1. Navigate to [`merchandise.html`](merchandise.html) using the top navigation bar.
+2. Observe the **19-day countdown clock** ticking live.
+3. Filter products using `ALL ITEMS`, `APPAREL`, `COLLECTIBLES`, `GEAR & DESK`.
+4. Click **"PRE-REGISTER"** on any card; observe smooth scroll and pre-filled product dropdown.
+5. Submit the Waitlist Form; verify the **Digital VIP Boarding Pass** appears with a unique code and 20% discount badge.
+6. Check DevTools -> **Application** -> **Local Storage** -> `solarExplorerMerchandiseWaitlist` to inspect the saved JSON record.
+
+---
+
+## 📅 Project Timeline: Progress vs Plan (C6)
+
+| Milestone / Phase | Planned Scope | Actual Completion | Status |
+|---|---|---|---|
+| **Phase 1 (Week 1–4)** | Semantic HTML structure, pure CSS styling, responsive layout, Figma wireframes. | Complete site structure across all planetary and mission pages. | **Completed (100%)** |
+| **Phase 2 (Mid-term Evaluation)** | Interactive JavaScript integration: Search, calculators, external API integration, form validation, JSON persistence. | All planned features delivered + 19-day countdown and space merchandise waitlist system. | **Completed (100%)** |
+| **Phase 3 (Final Phase)** | Full e-commerce shopping cart, payment simulation, 3D WebGL solar system models, user accounts. | Scheduled post mid-term. | **Planned** |
+
+---
+
+## 👥 Team Authors & Individual Contributions (C10)
+
+| Contributor | Primary Modules & Responsibilities | Specific Second Evaluation Deliverables |
+|---|---|---|
+| **Pratham** | Core Architecture, Data Persistence & Form Handlers | Implemented `localStorage` JSON storage engine, unique ID generation algorithm (`FB-...` / `MERCH-...`), and DevTools inspection logging. |
+| **Harsheet** | Merchandise Waitlist & VIP Pass Generation | Developed the 19-day live countdown timer, merchandise category filtering system, and digital VIP boarding pass generator. |
+| **Aviraj** | API Integrations & Asynchronous Logic | Built CelesTrak Satellite Catalog (SATCAT) query integration, error handling pipelines, NOAA space weather fallback, and downloadable JSON blob generators. |
+| **Samarth** | Interactive Calculators & Search Systems | Authored the Planetary Age Calculator, Planetary Weight Calculator, Planet Search system (`index.html`), and Mission Timeline search filter (`missions.html`). |
+| **Shivansh** | UI/UX Design System, SVG Art & Accessibility | Implemented responsive layout styling, bespoke vector merchandise illustrations, WCAG 2.1 accessible form validation, and `prefers-reduced-motion` compliance. |
+
+---
+
+*Solar Explorer — Developed for Web Development Mid-Term Project Phase Evaluation 2 (A2).*
