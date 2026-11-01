@@ -98,14 +98,20 @@ Each submitted record automatically generates a unique identifier:
 - Feedback: `FB-<timestamp>` (e.g. `FB-1730456123456`)
 - Merchandise: `MERCH-<timestamp>` (e.g. `MERCH-1730456789123`)
 
-### 4. How the Evaluator Can Check in the IDE / Browser
-1. **Inspect LocalStorage:** Open DevTools (`F12`) -> Click **Application** (or **Storage**) tab -> Select **Local Storage** -> Inspect `solarExplorerFeedback` and `solarExplorerMerchandiseWaitlist`.
-2. **Inspect Console Output:** Every submission automatically logs formatted output to the console:
+### 4. How the Evaluator Can Check in the IDE & Browser
+
+The project supports **direct in-IDE JSON file persistence** as well as **browser LocalStorage**:
+
+1. **Direct IDE Workspace Files (`data/*.json`):**
+   - Open [`data/feedback.json`](data/feedback.json) and [`data/merchandise.json`](data/merchandise.json) directly in the IDE file tree.
+   - When running the project server (`node server.js`), any form submission in the browser writes directly to these `.json` files in the IDE in real time.
+2. **Inspect LocalStorage:** Open DevTools (`F12`) -> Click **Application** (or **Storage**) tab -> Select **Local Storage** -> Inspect `solarExplorerFeedback` and `solarExplorerMerchandiseWaitlist`.
+3. **Inspect Console Output:** Every submission automatically logs formatted output to the console:
    ```javascript
    [Solar Explorer] Feedback saved to localStorage["solarExplorerFeedback"] in JSON format: { ... }
-   [Solar Explorer] Total stored feedback records: [ ... ]
+   [IDE Storage API] Feedback written directly to data/feedback.json: { ... }
    ```
-3. **Inspect File Export:** The feedback form also generates and downloads `solar-explorer-feedback.json` automatically on submission.
+4. **Inspect File Export:** Submitting feedback or pre-orders also triggers an automatic download of `solar-explorer-feedback.json` and `solar-explorer-merchandise.json`.
 
 ---
 

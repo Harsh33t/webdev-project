@@ -519,6 +519,20 @@ function initFeedbackForm() {
         console.log('[Solar Explorer] Feedback saved to localStorage["' + FEEDBACK_STORAGE_KEY + '"] in JSON format:', newRecord);
         console.log('[Solar Explorer] Total stored feedback records:', feedbackList);
 
+        // Direct Server API Persistence (writes directly into data/feedback.json in IDE workspace)
+        fetch('/api/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newRecord)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('[IDE Storage API] Feedback written directly to data/feedback.json:', data);
+        })
+        .catch(() => {
+            /* Server not running; localStorage and auto-download handle persistence cleanly */
+        });
+
         // Download JSON file
         try {
             const jsonString = JSON.stringify(feedbackList, null, 2);
@@ -739,6 +753,20 @@ function initMerchandisePage() {
             console.log('[Solar Explorer Merchandise] Waitlist saved to localStorage["' + MERCH_WAITLIST_STORAGE_KEY + '"] in JSON format:', waitlistRecord);
             console.log('[Solar Explorer Merchandise] Total waitlist reservations:', waitlist);
 
+            // Direct Server API Persistence (writes directly into data/merchandise.json in IDE workspace)
+            fetch('/api/merchandise', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(waitlistRecord)
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('[IDE Storage API] Pre-order written directly to data/merchandise.json:', data);
+            })
+            .catch(() => {
+                /* Server not running; localStorage and auto-download handle persistence cleanly */
+            });
+
             // Render Digital VIP Boarding Pass
             if (passTarget) {
                 passTarget.innerHTML = `
@@ -751,7 +779,7 @@ function initMerchandisePage() {
                             <div class="bp-pass-id">${escapeHtml(vipPassCode)}</div>
                         </div>
                         <div class="bp-grid">
-                            <div>
+                            <div
                                 <span class="bp-item-label">Explorer / Name</span>
                                 <div class="bp-item-val">${escapeHtml(nameVal)}</div>
                             </div>
