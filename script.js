@@ -585,37 +585,7 @@ function initFeedbackForm() {
             }
         });
 
-        // Download JSON file
-        try {
-            const jsonString = JSON.stringify(feedbackList, null, 2);
-            const blob = new Blob([jsonString], { type: 'application/json' });
-            const downloadUrl = URL.createObjectURL(blob);
-
-            const tempLink = document.createElement('a');
-            tempLink.href = downloadUrl;
-            tempLink.download = 'solar-explorer-feedback.json';
-            document.body.appendChild(tempLink);
-            tempLink.click();
-            document.body.removeChild(tempLink);
-
-            setTimeout(() => {
-                URL.revokeObjectURL(downloadUrl);
-            }, 1000);
-
-            if (formStatus) {
-                formStatus.textContent = `Thank you, ${nameVal}! Your feedback (ID: ${recordId}) has been saved in JSON format and downloaded.`;
-                formStatus.className = 'form-status success';
-                formStatus.style.display = 'block';
-            }
-
-            form.reset();
-        } catch (downloadErr) {
-            if (formStatus) {
-                formStatus.textContent = `Thank you, ${nameVal}! Your feedback (ID: ${recordId}) has been saved in JSON format.`;
-                formStatus.className = 'form-status success';
-                formStatus.style.display = 'block';
-            }
-        }
+        form.reset();
     });
 }
 
@@ -855,28 +825,6 @@ function initMerchandisePage() {
                 `;
                 passTarget.style.display = 'block';
                 passTarget.scrollIntoView({ behavior: 'smooth' });
-            }
-
-            // Download JSON file for IDE inspection
-            try {
-                const jsonString = JSON.stringify(waitlist, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                const downloadUrl = URL.createObjectURL(blob);
-                const tempLink = document.createElement('a');
-                tempLink.href = downloadUrl;
-                tempLink.download = 'solar-explorer-merchandise.json';
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                document.body.removeChild(tempLink);
-                setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
-            } catch (dlErr) {
-                console.warn('JSON file auto-download bypassed:', dlErr);
-            }
-
-            if (statusBox) {
-                statusBox.textContent = `Success! Your VIP Pre-order has been reserved (ID: ${recordId}), saved in JSON format, and downloaded.`;
-                statusBox.className = 'form-status success';
-                statusBox.style.display = 'block';
             }
 
             merchForm.reset();

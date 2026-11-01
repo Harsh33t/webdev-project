@@ -7,5 +7,14 @@
     "rating": 5,
     "feedback": "Outstanding visual presentation and educational depth. The interactive calculators and celestial physics are accurate and engaging.",
     "submittedAt": "2026-11-01T17:30:00.000Z"
+  },
+  {
+    "id": "FB-1793559315944",
+    "name": "Agent Self-Verification",
+    "email": "agent@deepmind.com",
+    "topic": "Extreme Space",
+    "rating": 5,
+    "feedback": "Testing feedback form live in real Google Chrome browser!",
+    "submittedAt": "2026-11-01T18:55:15.944Z"
   }
 ]
