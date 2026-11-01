@@ -591,7 +591,7 @@ function initMerchandisePage() {
 
 
     /* 3. Card Pre-Register Quick Button */
-    const interestButtons = document.querySelectorAll('.btn-interest');
+    const interestButtons = document.querySelectorAll('.btn-preorder, .btn-interest');
     const productSelect = document.getElementById('wl-product');
     const waitlistSection = document.getElementById('waitlist-section');
 

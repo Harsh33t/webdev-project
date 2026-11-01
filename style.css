@@ -1327,132 +1327,115 @@ footer {
   line-height: 1.6;
 }
 
-/* Merchandise Showcase Grid */
-
+/* Merchandise Showcase Grid - Exactly matching screenshot mockup */
 .merch-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   margin-bottom: 60px;
 }
 
+@media (max-width: 960px) {
+  .merch-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .merch-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .merch-card {
-  background: #0d0d0d;
-  border: 1px solid #222;
+  background: #0b0b0b;
+  border: 1px solid #1a1a1a;
+  border-radius: 14px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  transition: border-color 0.25s ease, transform 0.25s ease;
 }
 
 .merch-card:hover {
+  border-color: #333333;
   transform: translateY(-4px);
-  border-color: #555;
-}
-
-.merch-badge-bar {
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 20px 0;
-}
-
-.merch-tag {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #888;
-  text-transform: uppercase;
-}
-
-.merch-status-pill {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #f59e0b;
-  background: rgba(245, 158, 11, 0.1);
-  padding: 3px 8px;
-  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .merch-visual {
-  padding: 20px 24px;
+  width: 100%;
+  height: 250px;
+  background: #050505;
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 180px;
-  background: radial-gradient(circle, #181818 0%, #0d0d0d 75%);
-  border-bottom: 1px solid #1a1a1a;
+  justify-content: center;
+  overflow: hidden;
+  padding: 12px;
 }
 
-.merch-svg-art {
-  width: 140px;
-  height: 120px;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6));
+.merch-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .merch-details {
-  padding: 22px 22px 24px;
+  padding: 20px 22px 22px;
   display: flex;
   flex-direction: column;
   flex: 1;
-  justify-content: space-between;
-  gap: 14px;
 }
 
 .merch-name {
-  font-size: 1.25rem;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.22rem;
   font-weight: 700;
-  color: #fff;
-  letter-spacing: 1px;
-  line-height: 1.35;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.2px;
 }
 
 .merch-desc {
-  color: #999;
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-
-.merch-specs-list {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.merch-spec-chip {
-  background: #161616;
-  border: 1px solid #282828;
-  padding: 4px 10px;
-  font-size: 0.75rem;
-  color: #bbb;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.9rem;
+  color: #888888;
+  margin: 0 0 22px 0;
+  line-height: 1.45;
 }
 
 .merch-price-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #222;
-  padding-top: 14px;
-  margin-top: 6px;
-}
-
-.price-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  margin-top: auto;
 }
 
 .current-price {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: #fff;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
-.vip-discount-tag {
-  font-size: 0.72rem;
-  color: #38bdf8;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+.btn-preorder {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid #383838;
+  border-radius: 8px;
+  padding: 7px 18px;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-preorder:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Waitlist Form & VIP Boarding Pass */

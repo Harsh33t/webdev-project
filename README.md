@@ -128,14 +128,14 @@ The new **Merchandise section ([`merchandise.html`](merchandise.html))** provide
 - Minimalist typography strictly matching the site's dark cosmic theme.
 
 ### 2. Curated Merchandise Preview Grid
-- 6 curated product cards with bespoke vector SVG artwork and specifications:
-  1. **Apollo 11 Translunar Flight Hoodie** ($58.00 • VIP: $46.40)
-  2. **Deep Space Vacuum Insulated Thermal Flask** ($32.00 • VIP: $25.60)
-  3. **Solar Explorer Woven Mission Patch Set** ($42.00 • VIP: $33.60)
-  4. **James Webb NIRCam Deep Field Desk Mat** ($28.00 • VIP: $22.40)
-  5. **Campo del Cielo Meteorite Titanium Pendant** ($79.00 • VIP: $63.20)
-  6. **Voyager Golden Record Brass Coaster Set** ($36.00 • VIP: $28.80)
-- **Quick Action:** Clicking **"PRE-REGISTER"** on any card smooth-scrolls to the form and auto-selects that item in the dropdown.
+- 6 curated product cards with realistic mockups and clean minimalist styling matching the design mockup:
+  1. **Lunar Bomber Jacket** ($119.00) - Lightweight space-inspired bomber.
+  2. **Saturn Orbit Hoodie** ($69.00) - Premium cotton hoodie with orbital design.
+  3. **Lunar Phase T-Shirt** ($39.00) - Minimal moon phase graphic tee.
+  4. **Astronaut Tee** ($39.00) - Classic tee for space enthusiasts.
+  5. **Andromeda Hoodie** ($69.00) - Cozy hoodie featuring the Andromeda Galaxy.
+  6. **Explorer Jacket** ($129.00) - All-weather jacket built for explorers.
+- **Quick Action:** Clicking **"Pre-order"** on any card smooth-scrolls to the form and auto-selects that item in the dropdown.
 
 ### 3. VIP Early Access / Waitlist Form & Boarding Pass
 - Client-side validation for name, email, merchandise item, quantity, and consent.
