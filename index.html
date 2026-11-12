@@ -8,8 +8,23 @@
 <body>
     <nav class="navbar">
         <div class="logo"><h2>Solar Explorer</h2></div>
-        <div class="nav-links"><a href="index.html" class="active">Home</a><a href="sun.html">The Sun</a><a href="extreme.html">Extreme Space</a><a href="missions.html">Missions</a><a href="fun-space.html">Fun Space</a><a href="satellites.html">Satellites</a><a href="merchandise.html">Merchandise</a><a href="feedback.html">Feedback</a></div>
+        <div class="nav-links"><a href="index.html" class="active">Home</a><a href="sun.html">The Sun</a><a href="extreme.html">Extreme Space</a><a href="missions.html">Missions</a><a href="fun-space.html">Fun Space</a><a href="satellites.html">Satellites</a><a href="merchandise.html">Merchandise</a><a href="feedback.html">Feedback</a><a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a></div>
     </nav>
+
+    <!-- CELESTIAL OPERATIONS TICKER (REAL-TIME STREAM) -->
+    <div class="celestial-ticker-strip" aria-label="Live Mission Operations Ticker">
+        <div class="ticker-content" id="celestial-ticker-content">
+            <span class="ticker-item"><span class="ticker-dot live-green"></span> <strong>MISSION TIME (UTC):</strong> <span id="ticker-utc">--:--:-- UTC</span></span>
+            <span class="ticker-sep">&bull;</span>
+            <span class="ticker-item"><strong>ISS TELEMETRY:</strong> <span id="ticker-iss">Connecting to orbital sensor...</span></span>
+            <span class="ticker-sep">&bull;</span>
+            <span class="ticker-item"><strong>SOLAR WIND:</strong> <span id="ticker-wind">425 km/s (Nominal)</span></span>
+            <span class="ticker-sep">&bull;</span>
+            <span class="ticker-item"><strong>EARTH HELIOCENTRIC VELOCITY:</strong> 29.78 km/s</span>
+            <span class="ticker-sep">&bull;</span>
+            <span class="ticker-item"><strong>DATABASE STATUS:</strong> <span id="ticker-db">Mongoose ODM / Dual Storage Active</span></span>
+        </div>
+    </div>
 
     <section class="hero-landing">
         <h1>SOLAR EXPLORER</h1>
@@ -23,6 +38,17 @@
             </form>
             <p id="planet-search-msg" class="search-feedback" aria-live="polite"></p>
         </div>
+
+        <!-- DAILY COSMIC DISCOVERY CARD -->
+        <div class="daily-discovery-card" id="daily-discovery-card">
+            <div class="discovery-header">
+                <span class="discovery-badge">DAILY COSMIC FACT</span>
+                <span class="discovery-source" id="discovery-source">NASA Astrophysics Data System</span>
+            </div>
+            <h3 id="discovery-title" class="discovery-title">Neutron Star Density</h3>
+            <p id="discovery-text" class="discovery-text">A single teaspoon of neutron star matter would weigh approximately 6 billion tons on Earth due to extreme gravitational collapse.</p>
+        </div>
+
         <a href="#planet-mercury" class="hero-scroll-hint" aria-label="Scroll to explore planets"><span>SCROLL TO EXPLORE</span><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></a>
     </section>
 

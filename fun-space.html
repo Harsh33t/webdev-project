@@ -8,7 +8,7 @@
 <body>
     <nav class="navbar">
         <div class="logo"><h2>Solar Explorer</h2></div>
-        <div class="nav-links"><a href="index.html">Home</a><a href="sun.html">The Sun</a><a href="extreme.html">Extreme Space</a><a href="missions.html">Missions</a><a href="fun-space.html" class="active">Fun Space</a><a href="satellites.html">Satellites</a><a href="merchandise.html">Merchandise</a><a href="feedback.html">Feedback</a></div>
+        <div class="nav-links"><a href="index.html">Home</a><a href="sun.html">The Sun</a><a href="extreme.html">Extreme Space</a><a href="missions.html">Missions</a><a href="fun-space.html" class="active">Fun Space</a><a href="satellites.html">Satellites</a><a href="merchandise.html">Merchandise</a><a href="feedback.html">Feedback</a><a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a></div>
     </nav>
 
     <header class="page-header">
@@ -140,6 +140,54 @@
         </section>
 
     </main>
+
+    <!-- ========================================================
+         FEATURE: COSMIC ASTROPHYSICS CHALLENGE (A3 INTERACTIVE QUIZ)
+         ======================================================== -->
+    <section class="cosmic-quiz-section" id="cosmic-quiz-section" aria-label="Cosmic Astrophysics Quiz">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <div class="quiz-badge">A3 INTERACTIVE FULL-STACK ASSESSMENT</div>
+                <h2>Cosmic Astrophysics Challenge</h2>
+                <p>Test your knowledge of stellar mechanics, orbital physics, and astrophysics. Compete for rank on the global mission leaderboard!</p>
+            </div>
+
+            <!-- Quiz Play Area -->
+            <div class="quiz-card-box">
+                <div id="quiz-meta-bar" class="quiz-meta-bar">
+                    <span id="quiz-progress-label">Question 1 of 5</span>
+                    <span id="quiz-timer-label">500 Total Points Available</span>
+                </div>
+
+                <div id="quiz-question-container" class="quiz-question-wrap" aria-live="polite">
+                    <div class="quiz-loading">Initializing Cosmic Quiz Engine...</div>
+                </div>
+
+                <!-- Submit & Navigation Controls -->
+                <div class="quiz-controls-row">
+                    <input type="text" id="quiz-player-name" placeholder="Enter Explorer Call-sign / Name" class="quiz-name-input">
+                    <button type="button" id="quiz-submit-btn" class="btn">SUBMIT TRANSMISSION</button>
+                    <button type="button" id="quiz-reset-btn" class="btn btn-secondary">RESTART</button>
+                </div>
+
+                <!-- Quiz Results / Certificate Display -->
+                <div id="quiz-result-target" class="quiz-result-wrap" style="display:none;" aria-live="polite">
+                    <!-- Populated dynamically by script.js -->
+                </div>
+            </div>
+
+            <!-- Quiz Leaderboard Table -->
+            <div class="quiz-leaderboard-card">
+                <div class="lb-header">
+                    <h3>Galactic Flight Director Leaderboard</h3>
+                    <span class="lb-pill">Database Verified</span>
+                </div>
+                <div id="quiz-leaderboard-target" class="table-responsive">
+                    <!-- Dynamically populated from GET /api/quiz/leaderboard -->
+                </div>
+            </div>
+        </div>
+    </section>
 
     <div style="text-align:center;margin:40px 0 60px"><a href="index.html" class="btn">BACK TO HOME</a></div>
     <footer><p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p></footer>

@@ -18,6 +18,7 @@
             <a href="satellites.html">Satellites</a>
             <a href="merchandise.html">Merchandise</a>
             <a href="feedback.html">Feedback</a>
+            <a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a>
         </div>
     </nav>
 
@@ -107,6 +108,39 @@
             </div>
         </section>
     </main>
+
+    <!-- LIVE COSMIC RADIATION & SPACE WEATHER TELEMETRY -->
+    <section class="extreme-weather-section">
+        <div class="sw-extreme-container">
+            <div class="sw-header">
+                <span class="live-pulse-dot"></span>
+                <h2>HELIOSPHERIC BOUNDARY &bull; REAL-TIME RADIATION MONITOR</h2>
+            </div>
+            <p class="sw-desc">Live streaming telemetry monitoring galactic cosmic ray flux, solar wind velocity, and magnetospheric disturbance.</p>
+            <div class="sw-metrics-grid">
+                <div class="sw-metric-box">
+                    <span class="sw-lbl">GEOMAGNETIC KP INDEX</span>
+                    <span class="sw-val gold" id="sw-kp">2.33 Kp</span>
+                    <span class="sw-sub" id="sw-activity">Quiet Conditions</span>
+                </div>
+                <div class="sw-metric-box">
+                    <span class="sw-lbl">SOLAR WIND SHOCK</span>
+                    <span class="sw-val cyan" id="sw-wind">425 km/s</span>
+                    <span class="sw-sub">Interplanetary Plasma Flow</span>
+                </div>
+                <div class="sw-metric-box">
+                    <span class="sw-lbl">SOLAR X-RAY EMISSION</span>
+                    <span class="sw-val" id="sw-flare">Class C1.4</span>
+                    <span class="sw-sub">Coronal Stability Normal</span>
+                </div>
+                <div class="sw-metric-box">
+                    <span class="sw-lbl">RADIO BLACKOUT STATUS</span>
+                    <span class="sw-val green" id="sw-radio">None (R0)</span>
+                    <span class="sw-sub">All High Frequencies Clear</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="extreme-fact-section">
         <div class="fact-card">

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "QS-1",
+    "playerName": "Commander Shepard",
+    "score": 500,
+    "totalQuestions": 5,
+    "rankTitle": "Chief Galactic Astronomer",
+    "category": "Cosmic Astrophysics",
+    "completedAt": "2026-11-12T10:29:35.808Z"
+  },
+  {
+    "id": "QS-2",
+    "playerName": "Neil Armstrong",
+    "score": 400,
+    "totalQuestions": 5,
+    "rankTitle": "Senior Flight Director",
+    "category": "Cosmic Astrophysics",
+    "completedAt": "2026-11-12T10:29:35.809Z"
+  },
+  {
+    "id": "QS-1794479480519",
+    "playerName": "Evaluator Professor",
+    "score": 500,
+    "totalQuestions": 5,
+    "rankTitle": "Chief Galactic Astrophysicist",
+    "category": "Cosmic Astrophysics",
+    "completedAt": "2026-11-12T10:31:20.519Z"
+  }
+]

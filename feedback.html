@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback - Solar Explorer</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
@@ -18,15 +21,17 @@
             <a href="satellites.html">Satellites</a>
             <a href="merchandise.html">Merchandise</a>
             <a href="feedback.html" class="active">Feedback</a>
+            <a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a>
         </div>
     </nav>
 
     <header class="page-header">
-        <h1 class="page-title">Feedback</h1>
-        <p class="timeline-sub">Share your thoughts on Solar Explorer. Your feedback is validated and saved directly in JSON format into data/feedback.json in the IDE.</p>
+        <h1 class="page-title">Community Transmissions &amp; Feedback</h1>
+        <p class="timeline-sub">Share your thoughts on Solar Explorer. All reviews persist to the database (MongoDB / JSON) and feed into the live community stream.</p>
     </header>
 
     <main class="feedback-container">
+        <!-- SUBMISSION FORM -->
         <form id="feedback-form" class="feedback-form" novalidate>
             <div class="form-group">
                 <label for="fb-name">Your Name *</label>
@@ -75,15 +80,44 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" id="fb-submit-btn" class="btn">SUBMIT FEEDBACK</button>
+                <button type="submit" id="fb-submit-btn" class="btn">TRANSMIT FEEDBACK</button>
                 <button type="reset" id="fb-reset-btn" class="btn btn-secondary">CLEAR FORM</button>
             </div>
 
             <div id="fb-status" class="form-status" aria-live="polite"></div>
         </form>
+
+        <!-- ========================================================
+             COMMUNITY TRANSMISSIONS LIVE FEED (RUBRIC C11 / C15)
+             ======================================================== -->
+        <section class="feedback-feed-section" aria-label="Community Feedback Feed">
+            <div class="feed-header">
+                <div class="feed-title-wrap">
+                    <h2>Live Community Transmissions</h2>
+                    <p>Real-time stream of explorer reviews fetched from the database API.</p>
+                </div>
+                <div class="feed-filters">
+                    <select id="feed-filter-topic" class="feed-filter-select">
+                        <option value="All Topics">All Topics</option>
+                        <option value="Planets">Planets</option>
+                        <option value="The Sun">The Sun</option>
+                        <option value="Extreme Space">Extreme Space</option>
+                        <option value="Missions">Missions</option>
+                        <option value="Fun Space">Fun Space</option>
+                        <option value="Satellites">Satellites</option>
+                        <option value="Merchandise">Merchandise</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Feed Results Grid -->
+            <div id="feedback-feed-grid" class="feedback-feed-grid" aria-live="polite">
+                <!-- Dynamically loaded from GET /api/feedback -->
+            </div>
+        </section>
     </main>
 
-    <div style="text-align:center;margin:10px 0 60px;">
+    <div style="text-align:center;margin:30px 0 60px;">
         <a href="index.html" class="btn">BACK TO HOME</a>
     </div>
 

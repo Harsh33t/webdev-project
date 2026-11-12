@@ -1,0 +1,22 @@
+[
+  {
+    "id": "SAT-1",
+    "noradId": 25544,
+    "name": "International Space Station (ISS)",
+    "category": "Space Station",
+    "orbitType": "LEO",
+    "notes": "Primary manned orbital laboratory",
+    "spottedAt": "2026-11-12T10:29:35.805Z",
+    "observerLocation": "Global Ground Station"
+  },
+  {
+    "id": "SAT-2",
+    "noradId": 20580,
+    "name": "Hubble Space Telescope",
+    "category": "Space Telescope",
+    "orbitType": "LEO",
+    "notes": "Flagship optical observatory",
+    "spottedAt": "2026-11-12T10:29:35.807Z",
+    "observerLocation": "Global Ground Station"
+  }
+]

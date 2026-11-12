@@ -1,0 +1,29 @@
+{
+  "name": "webdev-project",
+  "version": "1.0.0",
+  "description": "A responsive, high-performance, and educational web portal exploring our Solar System, planetary science, space missions, satellite tracking, and official space merchandise.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harsh33t/webdev-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Harsh33t/webdev-project/issues"
+  },
+  "homepage": "https://github.com/Harsh33t/webdev-project#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "mongoose": "^9.12.1"
+  }
+}

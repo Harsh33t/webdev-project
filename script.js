@@ -52,10 +52,74 @@ async function sendToBackendApi(endpoint, payload) {
 }
 
 /**
- * Solar Explorer - Interactive JavaScript Logic (Second Evaluation)
+ * Generic GET Fetcher with multi-origin fallback
+ */
+async function fetchFromBackendApi(endpoint) {
+    const targets = [];
+    if (typeof window !== 'undefined' && window.location && window.location.port === '3000') {
+        targets.push(endpoint);
+    }
+    targets.push('http://localhost:3000' + endpoint);
+    targets.push('http://127.0.0.1:3000' + endpoint);
+    targets.push(endpoint);
+
+    for (const url of targets) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            const res = await fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                headers: { 'Accept': 'application/json' },
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (res.ok) {
+                return await res.json();
+            }
+        } catch {}
+    }
+    return null;
+}
+
+/**
+ * Generic DELETE Fetcher with multi-origin fallback
+ */
+async function deleteFromBackendApi(endpoint) {
+    const targets = [];
+    if (typeof window !== 'undefined' && window.location && window.location.port === '3000') {
+        targets.push(endpoint);
+    }
+    targets.push('http://localhost:3000' + endpoint);
+    targets.push('http://127.0.0.1:3000' + endpoint);
+    targets.push(endpoint);
+
+    for (const url of targets) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            const res = await fetch(url, {
+                method: 'DELETE',
+                mode: 'cors',
+                headers: { 'Accept': 'application/json' },
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (res.ok) {
+                return await res.json();
+            }
+        } catch {}
+    }
+    return null;
+}
+
+/**
+ * Solar Explorer - Interactive JavaScript Logic (A3 Full-Stack Evaluation)
  * Contains planet search, age/weight calculators, timeline search,
  * random facts, CelesTrak API catalogue retrieval, feedback export,
- * and merchandise waitlist VIP drop system.
+ * merchandise waitlist VIP drop system, real-time satellite telemetry,
+ * ground pass prediction, personal watchlist CRUD, community review stream,
+ * order lookup, cosmic quiz, space weather monitor, and celestial operations ticker.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -68,6 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initFeedbackForm();
     initMerchandisePage();
     initScrollReveal();
+
+    // A3 Full-Stack Evaluation Features
+    initLiveTelemetry();
+    initPassPrediction();
+    initSatelliteWatchlist();
+    initCommunityReviews();
+    initMerchLookup();
+    initBatchTracker();
+    initCosmicQuiz();
+    initSpaceWeather();
+    initCelestialTicker();
+    initDailyFact();
 });
 
 /* ========================================================
@@ -877,4 +953,788 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+
+/* ========================================================
+   A3 FEATURE 1: REAL-TIME ISS TELEMETRY & RADAR CANVAS
+   ======================================================== */
+function initLiveTelemetry() {
+    const latEl = document.getElementById('iss-lat');
+    const lonEl = document.getElementById('iss-lon');
+    const altEl = document.getElementById('iss-alt');
+    const velEl = document.getElementById('iss-vel');
+    const visEl = document.getElementById('iss-visibility');
+    const updatedEl = document.getElementById('iss-updated');
+    const providerEl = document.getElementById('hud-provider');
+    const canvas = document.getElementById('iss-radar-canvas');
+
+    if (!latEl || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const trail = [];
+    let currentPos = null;
+    let pulseRadius = 6;
+    let pulseGrowing = true;
+
+    async function fetchTelemetry() {
+        try {
+            const data = await fetchFromBackendApi('/api/satellites/telemetry/iss');
+            if (data && data.success) {
+                latEl.textContent = `${data.latitude >= 0 ? '+' : ''}${data.latitude.toFixed(4)}°`;
+                lonEl.textContent = `${data.longitude >= 0 ? '+' : ''}${data.longitude.toFixed(4)}°`;
+                altEl.textContent = `${data.altitudeKm} km`;
+                velEl.textContent = `${Number(data.velocityKmh).toLocaleString()} km/h`;
+                if (visEl) visEl.textContent = (data.visibility || 'Daylight').toUpperCase();
+                if (updatedEl) updatedEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+                if (providerEl) providerEl.textContent = `PROVIDER: ${data.provider.toUpperCase()}`;
+
+                currentPos = { lat: data.latitude, lon: data.longitude };
+                trail.push({ ...currentPos, time: Date.now() });
+                if (trail.length > 30) trail.shift();
+            }
+        } catch (e) {
+            console.warn('Telemetry fetch error:', e);
+        }
+    }
+
+    // Canvas Projection: Converts lat/lon to canvas (x, y)
+    function project(lat, lon, width, height) {
+        const x = ((lon + 180) / 360) * width;
+        const y = ((90 - lat) / 180) * height;
+        return { x, y };
+    }
+
+    function drawRadar() {
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // Dark Cosmic Background
+        ctx.fillStyle = '#0b0d17';
+        ctx.fillRect(0, 0, w, h);
+
+        // Coordinate Grid
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+
+        // Longitude lines (every 30 deg)
+        for (let l = -180; l <= 180; l += 30) {
+            const x = ((l + 180) / 360) * w;
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, h);
+            ctx.stroke();
+        }
+
+        // Latitude lines (every 30 deg)
+        for (let b = -90; b <= 90; b += 30) {
+            const y = ((90 - b) / 180) * h;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+        }
+
+        // Equator Highlight
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, h / 2);
+        ctx.lineTo(w, h / 2);
+        ctx.stroke();
+
+        // Prime Meridian Highlight
+        ctx.beginPath();
+        ctx.moveTo(w / 2, 0);
+        ctx.lineTo(w / 2, h);
+        ctx.stroke();
+
+        // Approximate Continental Coastline Silhouettes (stylized vector polygons)
+        ctx.fillStyle = '#111827';
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+
+        // Eurasia / Africa outline approximation
+        ctx.beginPath();
+        const p1 = project(55, 10, w, h);
+        ctx.arc(p1.x, p1.y, 45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        const pAfrica = project(5, 20, w, h);
+        ctx.beginPath();
+        ctx.arc(pAfrica.x, pAfrica.y, 40, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Americas outline approximation
+        const pNA = project(45, -100, w, h);
+        ctx.beginPath();
+        ctx.arc(pNA.x, pNA.y, 45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        const pSA = project(-15, -60, w, h);
+        ctx.beginPath();
+        ctx.arc(pSA.x, pSA.y, 35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Australia outline approximation
+        const pAus = project(-25, 135, w, h);
+        ctx.beginPath();
+        ctx.arc(pAus.x, pAus.y, 25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Orbital Inclination Limit lines (±51.64 degrees for ISS)
+        const yTop = ((90 - 51.64) / 180) * h;
+        const yBot = ((90 - (-51.64)) / 180) * h;
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.25)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(0, yTop);
+        ctx.lineTo(w, yTop);
+        ctx.moveTo(0, yBot);
+        ctx.lineTo(w, yBot);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Theoretical Sinusoidal Orbit Track
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let x = 0; x < w; x += 4) {
+            const lon = (x / w) * 360 - 180;
+            const lat = 51.64 * Math.sin((lon * Math.PI) / 180 + (currentPos ? currentPos.lon * 0.01 : 0));
+            const pt = project(lat, lon, w, h);
+            if (x === 0) ctx.moveTo(pt.x, pt.y);
+            else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.stroke();
+
+        // Historical Trail Breadcrumbs
+        trail.forEach((pos, idx) => {
+            const pt = project(pos.lat, pos.lon, w, h);
+            const alpha = (idx + 1) / trail.length;
+            ctx.fillStyle = `rgba(34, 197, 94, ${alpha * 0.7})`;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // Current ISS Position Marker
+        if (currentPos) {
+            const pt = project(currentPos.lat, currentPos.lon, w, h);
+
+            // Pulsating Signal Ring
+            if (pulseGrowing) {
+                pulseRadius += 0.25;
+                if (pulseRadius >= 14) pulseGrowing = false;
+            } else {
+                pulseRadius -= 0.25;
+                if (pulseRadius <= 6) pulseGrowing = true;
+            }
+
+            ctx.strokeStyle = 'rgba(34, 197, 94, 0.6)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, pulseRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Center Solid Beacon
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Reticle Target Lines
+            ctx.strokeStyle = '#22c55e';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(pt.x - 8, pt.y);
+            ctx.lineTo(pt.x - 14, pt.y);
+            ctx.moveTo(pt.x + 8, pt.y);
+            ctx.lineTo(pt.x + 14, pt.y);
+            ctx.moveTo(pt.x, pt.y - 8);
+            ctx.lineTo(pt.x, pt.y - 14);
+            ctx.moveTo(pt.x, pt.y + 8);
+            ctx.lineTo(pt.x, pt.y + 14);
+            ctx.stroke();
+
+            // Label
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = 'bold 11px "JetBrains Mono", monospace';
+            ctx.fillText(`ISS [${currentPos.lat.toFixed(1)}°, ${currentPos.lon.toFixed(1)}°]`, pt.x + 10, pt.y - 10);
+        }
+
+        requestAnimationFrame(drawRadar);
+    }
+
+    fetchTelemetry();
+    drawRadar();
+    setInterval(fetchTelemetry, 5000);
+}
+
+/* ========================================================
+   A3 FEATURE 2: GROUND STATION PASS PREDICTION CALCULATOR
+   ======================================================== */
+function initPassPrediction() {
+    const computeBtn = document.getElementById('compute-passes-btn');
+    const resultsContainer = document.getElementById('pass-results-container');
+    const latInput = document.getElementById('pass-lat');
+    const lonInput = document.getElementById('pass-lon');
+    const presetBtns = document.querySelectorAll('.station-preset-btn');
+
+    if (!computeBtn || !resultsContainer) return;
+
+    presetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lat = btn.getAttribute('data-lat');
+            const lon = btn.getAttribute('data-lon');
+            if (latInput) latInput.value = lat;
+            if (lonInput) lonInput.value = lon;
+            fetchPasses(lat, lon);
+        });
+    });
+
+    computeBtn.addEventListener('click', () => {
+        const lat = latInput ? latInput.value.trim() : 28.6139;
+        const lon = lonInput ? lonInput.value.trim() : 77.2090;
+        fetchPasses(lat, lon);
+    });
+
+    async function fetchPasses(lat, lon) {
+        resultsContainer.innerHTML = '<div class="loading-spinner">Computing orbital pass trajectory...</div>';
+        try {
+            const data = await fetchFromBackendApi(`/api/satellites/25544/passes?lat=${lat}&lon=${lon}`);
+            if (data && data.success && Array.isArray(data.passes)) {
+                resultsContainer.innerHTML = data.passes.map(p => `
+                    <div class="pass-card">
+                        <div class="pass-card-header">
+                            <span class="pass-badge">PASS #${p.passNumber}</span>
+                            <span class="pass-elevation">${p.maxElevationDeg}° Max Elevation</span>
+                        </div>
+                        <div class="pass-time-row">
+                            <span class="lbl">AOS (Rise Time):</span>
+                            <span class="val">${new Date(p.riseTimeUtc).toLocaleTimeString()} UTC</span>
+                        </div>
+                        <div class="pass-time-row">
+                            <span class="lbl">TCA (Max Elevation):</span>
+                            <span class="val">${new Date(p.maxElevationTimeUtc).toLocaleTimeString()} UTC</span>
+                        </div>
+                        <div class="pass-time-row">
+                            <span class="lbl">Duration:</span>
+                            <span class="val">${Math.floor(p.durationSeconds / 60)}m ${p.durationSeconds % 60}s</span>
+                        </div>
+                        <div class="pass-time-row">
+                            <span class="lbl">Trajectory:</span>
+                            <span class="val text-cyan">${p.approachDirection}</span>
+                        </div>
+                        <div class="pass-status-tag ${p.maxElevationDeg > 60 ? 'pass-opt' : 'pass-day'}">
+                            ${escapeHtml(p.visibilityStatus)}
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                resultsContainer.innerHTML = '<div class="error-msg">Unable to predict orbital passes at this time.</div>';
+            }
+        } catch (err) {
+            resultsContainer.innerHTML = '<div class="error-msg">Network error contacting ground station API.</div>';
+        }
+    }
+
+    // Initial load
+    fetchPasses(28.6139, 77.2090);
+}
+
+/* ========================================================
+   A3 FEATURE 3: PERSONAL SATELLITE WATCHLIST (CRUD DATABASE)
+   ======================================================== */
+function initSatelliteWatchlist() {
+    const display = document.getElementById('watchlist-display');
+    const toggleBtn = document.getElementById('toggle-add-sat-btn');
+    const formBox = document.getElementById('add-sat-form-box');
+    const form = document.getElementById('add-sat-form');
+    const cancelBtn = document.getElementById('cancel-add-sat-btn');
+
+    if (!display) return;
+
+    if (toggleBtn && formBox) {
+        toggleBtn.addEventListener('click', () => {
+            const isHidden = formBox.style.display === 'none';
+            formBox.style.display = isHidden ? 'block' : 'none';
+            toggleBtn.textContent = isHidden ? 'CLOSE FORM' : '+ ADD TO WATCHLIST';
+        });
+    }
+
+    if (cancelBtn && formBox) {
+        cancelBtn.addEventListener('click', () => {
+            formBox.style.display = 'none';
+            if (toggleBtn) toggleBtn.textContent = '+ ADD TO WATCHLIST';
+        });
+    }
+
+    async function loadWatchlist() {
+        display.innerHTML = '<div class="loading-spinner">Loading satellite watchlist from database...</div>';
+        try {
+            const res = await fetchFromBackendApi('/api/satellites/watchlist');
+            if (res && res.success && Array.isArray(res.data)) {
+                if (res.data.length === 0) {
+                    display.innerHTML = '<p class="empty-state">No satellites in your watchlist. Click "+ ADD TO WATCHLIST" above to track one.</p>';
+                    return;
+                }
+                display.innerHTML = res.data.map(sat => `
+                    <div class="sat-watchlist-card" data-norad="${sat.noradId}">
+                        <div class="wl-card-top">
+                            <span class="norad-pill">NORAD ${sat.noradId}</span>
+                            <span class="orbit-badge">${escapeHtml(sat.orbitType || 'LEO')}</span>
+                        </div>
+                        <h3 class="sat-name">${escapeHtml(sat.name)}</h3>
+                        <div class="sat-cat">${escapeHtml(sat.category || 'Observatory')}</div>
+                        <p class="sat-notes">${escapeHtml(sat.notes || 'Tracked by Ground Station')}</p>
+                        <div class="wl-card-footer">
+                            <span class="spotted-date">Logged: ${new Date(sat.spottedAt || Date.now()).toLocaleDateString()}</span>
+                            <button type="button" class="btn btn-sm btn-delete-sat" data-id="${sat.noradId}">REMOVE</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Attach delete handlers
+                display.querySelectorAll('.btn-delete-sat').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.getAttribute('data-id');
+                        btn.textContent = 'Removing...';
+                        btn.disabled = true;
+                        await deleteFromBackendApi(`/api/satellites/watchlist/${id}`);
+                        loadWatchlist();
+                    });
+                });
+            } else {
+                display.innerHTML = '<p class="error-msg">Failed to load watchlist from server.</p>';
+            }
+        } catch {
+            display.innerHTML = '<p class="error-msg">Connection error querying satellite database.</p>';
+        }
+    }
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const norad = document.getElementById('sat-norad').value;
+            const name = document.getElementById('sat-name').value;
+            const category = document.getElementById('sat-category').value;
+            const orbitType = document.getElementById('sat-orbit').value;
+            const notes = document.getElementById('sat-notes').value;
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'SAVING...';
+            }
+
+            await sendToBackendApi('/api/satellites/watchlist', {
+                noradId: norad,
+                name: name,
+                category: category,
+                orbitType: orbitType,
+                notes: notes
+            });
+
+            form.reset();
+            if (formBox) formBox.style.display = 'none';
+            if (toggleBtn) toggleBtn.textContent = '+ ADD TO WATCHLIST';
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'SAVE TO DATABASE';
+            }
+            loadWatchlist();
+        });
+    }
+
+    loadWatchlist();
+}
+
+/* ========================================================
+   A3 FEATURE 4: COMMUNITY REVIEWS LIVE STREAM (feedback.html)
+   ======================================================== */
+function initCommunityReviews() {
+    const feedGrid = document.getElementById('feedback-feed-grid');
+    const filterTopic = document.getElementById('feed-filter-topic');
+
+    if (!feedGrid) return;
+
+    async function loadReviews(topic = '') {
+        feedGrid.innerHTML = '<div class="loading-spinner">Retrieving community transmissions...</div>';
+        try {
+            const url = topic && topic !== 'All Topics' ? `/api/feedback?topic=${encodeURIComponent(topic)}` : '/api/feedback';
+            const res = await fetchFromBackendApi(url);
+            if (res && res.success && Array.isArray(res.data)) {
+                if (res.data.length === 0) {
+                    feedGrid.innerHTML = '<p class="empty-state">No transmissions logged yet. Be the first explorer to transmit feedback!</p>';
+                    return;
+                }
+                feedGrid.innerHTML = res.data.map(item => `
+                    <div class="feedback-feed-card">
+                        <div class="ffc-header">
+                            <div>
+                                <span class="ffc-name">${escapeHtml(item.name)}</span>
+                                <span class="ffc-topic-tag">${escapeHtml(item.topic)}</span>
+                            </div>
+                            <span class="ffc-rating">&#9733; ${item.rating}/5</span>
+                        </div>
+                        <p class="ffc-body">${escapeHtml(item.feedback)}</p>
+                        <div class="ffc-footer">
+                            <span class="ffc-date">${new Date(item.createdAt || item.submittedAt || Date.now()).toLocaleDateString()}</span>
+                            <span class="ffc-verified">&#10003; Database Verified</span>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                feedGrid.innerHTML = '<p class="error-msg">Failed to retrieve feedback transmissions.</p>';
+            }
+        } catch {
+            feedGrid.innerHTML = '<p class="error-msg">Error communicating with feedback service.</p>';
+        }
+    }
+
+    if (filterTopic) {
+        filterTopic.addEventListener('change', (e) => {
+            loadReviews(e.target.value);
+        });
+    }
+
+    loadReviews();
+}
+
+/* ========================================================
+   A3 FEATURE 5: MERCHANDISE ORDER STATUS LOOKUP & BATCH TRACKER
+   ======================================================== */
+function initBatchTracker() {
+    const countsEl = document.getElementById('batch-meter-counts');
+    const fillEl = document.getElementById('batch-progress-fill');
+
+    if (!countsEl && !fillEl) return;
+
+    fetchFromBackendApi('/api/merchandise/stats').then(res => {
+        if (res && res.success && res.data) {
+            const { totalAllocated, remainingCapacity, percentClaimed } = res.data;
+            if (countsEl) {
+                countsEl.textContent = `${totalAllocated} Allocated &bull; ${remainingCapacity} Units Remaining`;
+            }
+            if (fillEl) {
+                fillEl.style.width = `${Math.min(100, Math.max(12, percentClaimed))}%`;
+            }
+        }
+    });
+}
+
+function initMerchLookup() {
+    const form = document.getElementById('order-lookup-form');
+    const input = document.getElementById('lookup-id-input');
+    const target = document.getElementById('lookup-result-target');
+
+    if (!form || !input || !target) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const query = input.value.trim();
+        if (!query) return;
+
+        target.style.display = 'block';
+        target.innerHTML = '<div class="loading-spinner">Querying mission registry...</div>';
+
+        try {
+            const res = await fetchFromBackendApi(`/api/merchandise/${encodeURIComponent(query)}`);
+            if (res && res.success && res.data) {
+                const order = res.data;
+                target.innerHTML = `
+                    <div class="order-found-card">
+                        <div class="ofc-header">
+                            <div>
+                                <span class="ofc-badge">VIP PRE-ORDER VERIFIED</span>
+                                <h3 class="ofc-id">${escapeHtml(order.vipPassId || order.id)}</h3>
+                            </div>
+                            <span class="badge badge-success">${escapeHtml(order.status || 'confirmed').toUpperCase()}</span>
+                        </div>
+                        <div class="ofc-grid">
+                            <div><strong>Explorer:</strong> ${escapeHtml(order.name)}</div>
+                            <div><strong>Registered Email:</strong> ${escapeHtml(order.email)}</div>
+                            <div><strong>Gear Item:</strong> ${escapeHtml(order.product)}</div>
+                            <div><strong>Size &amp; Qty:</strong> ${escapeHtml(order.size || 'M')} &bull; ${order.quantity || 1} Unit(s)</div>
+                            <div><strong>VIP Perk:</strong> ${escapeHtml(order.discount || '20% VIP Early Bird Locked')}</div>
+                            <div><strong>Registration Date:</strong> ${new Date(order.registeredAt || Date.now()).toLocaleDateString()}</div>
+                        </div>
+                        <div class="ofc-actions">
+                            <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-preorder" data-id="${order.vipPassId || order.id}">CANCEL REGISTRATION</button>
+                        </div>
+                    </div>
+                `;
+
+                const cancelBtn = target.querySelector('#btn-cancel-preorder');
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', async () => {
+                        if (confirm('Are you sure you want to cancel this VIP pre-order reservation?')) {
+                            cancelBtn.disabled = true;
+                            cancelBtn.textContent = 'Cancelling...';
+                            await deleteFromBackendApi(`/api/merchandise/${order.vipPassId || order.id}`);
+                            target.innerHTML = '<div class="form-status success" style="display:block;">Your pre-order has been cancelled and removed from the database.</div>';
+                            initBatchTracker();
+                        }
+                    });
+                }
+            } else {
+                target.innerHTML = `<div class="error-msg">No pre-order registration found for identifier: "<strong>${escapeHtml(query)}</strong>". Please double check your VIP Pass ID.</div>`;
+            }
+        } catch {
+            target.innerHTML = '<div class="error-msg">Error querying merchandise database.</div>';
+        }
+    });
+}
+
+/* ========================================================
+   A3 FEATURE 6: COSMIC ASTROPHYSICS QUIZ & LEADERBOARD
+   ======================================================== */
+function initCosmicQuiz() {
+    const container = document.getElementById('quiz-question-container');
+    const submitBtn = document.getElementById('quiz-submit-btn');
+    const resetBtn = document.getElementById('quiz-reset-btn');
+    const nameInput = document.getElementById('quiz-player-name');
+    const resultTarget = document.getElementById('quiz-result-target');
+    const lbTarget = document.getElementById('quiz-leaderboard-target');
+
+    if (!container || !submitBtn) return;
+
+    let questions = [];
+    const answers = {};
+
+    async function loadQuiz() {
+        container.innerHTML = '<div class="quiz-loading">Fetching astrophysics challenge pool...</div>';
+        try {
+            const data = await fetchFromBackendApi('/api/quiz');
+            if (data && data.success && Array.isArray(data.questions)) {
+                questions = data.questions;
+                renderQuestions();
+            } else {
+                container.innerHTML = '<div class="error-msg">Failed to load quiz pool.</div>';
+            }
+        } catch {
+            container.innerHTML = '<div class="error-msg">Error contacting quiz service.</div>';
+        }
+    }
+
+    function renderQuestions() {
+        container.innerHTML = questions.map((q, idx) => `
+            <div class="quiz-q-block" data-qid="${q.id}">
+                <div class="quiz-q-title"><strong>${idx + 1}.</strong> ${escapeHtml(q.question)}</div>
+                <div class="quiz-options-list">
+                    ${q.options.map((opt, optIdx) => `
+                        <label class="quiz-opt-label">
+                            <input type="radio" name="quiz_q_${q.id}" value="${optIdx}">
+                            <span>${escapeHtml(opt)}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+
+        // Attach change listeners to save answers
+        container.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const qBlock = e.target.closest('.quiz-q-block');
+                const qid = qBlock.getAttribute('data-qid');
+                answers[qid] = parseInt(e.target.value, 10);
+            });
+        });
+    }
+
+    async function loadLeaderboard() {
+        if (!lbTarget) return;
+        lbTarget.innerHTML = '<div class="loading-spinner">Loading high score telemetry...</div>';
+        try {
+            const res = await fetchFromBackendApi('/api/quiz/leaderboard');
+            if (res && res.success && Array.isArray(res.data)) {
+                lbTarget.innerHTML = `
+                    <table class="ssr-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Explorer</th>
+                                <th>Score</th>
+                                <th>Honorific Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${res.data.map((item, idx) => `
+                                <tr>
+                                    <td><strong>#${idx + 1}</strong></td>
+                                    <td>${escapeHtml(item.playerName)}</td>
+                                    <td><span class="score-highlight">${item.score} pts</span></td>
+                                    <td><span class="rank-tag">${escapeHtml(item.rankTitle)}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+        } catch {
+            lbTarget.innerHTML = '<div class="error-msg">Leaderboard telemetry unavailable.</div>';
+        }
+    }
+
+    submitBtn.addEventListener('click', async () => {
+        const playerName = nameInput ? nameInput.value.trim() : 'Explorer';
+        if (Object.keys(answers).length < questions.length) {
+            alert(`Please answer all ${questions.length} questions before transmitting!`);
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'EVALUATING...';
+
+        try {
+            const res = await sendToBackendApi('/api/quiz/submit', {
+                playerName: playerName,
+                answers: answers
+            });
+
+            if (res && res.success && res.data) {
+                const result = res.data;
+                resultTarget.style.display = 'block';
+                resultTarget.innerHTML = `
+                    <div class="quiz-certificate-card">
+                        <div class="cert-header">
+                            <span class="cert-seal">&#127942;</span>
+                            <h2>ASTROPHYSICS CERTIFICATION</h2>
+                            <p class="cert-sub">Solar Explorer Flight Operations Board</p>
+                        </div>
+                        <div class="cert-body">
+                            <p>This certifies that Explorer <strong>${escapeHtml(playerName)}</strong> achieved a score of:</p>
+                            <div class="cert-score">${result.score} / ${result.maxScore} PTS</div>
+                            <div class="cert-rank-title">Rank Conferred: <span>${escapeHtml(result.rankTitle)}</span></div>
+                            <p class="cert-verified">&#10003; Authenticated and stored in mission database.</p>
+                        </div>
+                        <div class="cert-review-list">
+                            <h4>Detailed Question Review:</h4>
+                            ${result.review.map(r => `
+                                <div class="review-item ${r.isCorrect ? 'rev-correct' : 'rev-wrong'}">
+                                    <div class="rev-q"><strong>${r.isCorrect ? '✓' : '✗'}</strong> ${escapeHtml(r.question)}</div>
+                                    <div class="rev-ans">Your Answer: <em>${escapeHtml(r.userAnswer)}</em> &bull; Correct: <strong>${escapeHtml(r.correctAnswer)}</strong></div>
+                                    <div class="rev-exp">${escapeHtml(r.explanation)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                resultTarget.scrollIntoView({ behavior: 'smooth' });
+                loadLeaderboard();
+            }
+        } catch (err) {
+            alert('Error evaluating quiz submission.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'SUBMIT TRANSMISSION';
+        }
+    });
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            for (const k in answers) delete answers[k];
+            if (nameInput) nameInput.value = '';
+            if (resultTarget) {
+                resultTarget.style.display = 'none';
+                resultTarget.innerHTML = '';
+            }
+            renderQuestions();
+        });
+    }
+
+    loadQuiz();
+    loadLeaderboard();
+}
+
+/* ========================================================
+   A3 FEATURE 7: SPACE WEATHER & SOLAR ACTIVITY MONITOR
+   ======================================================== */
+function initSpaceWeather() {
+    const kpEl = document.getElementById('sw-kp');
+    const windEl = document.getElementById('sw-wind');
+    const flareEl = document.getElementById('sw-flare');
+    const radioEl = document.getElementById('sw-radio');
+    const activityEl = document.getElementById('sw-activity');
+    const updatedEl = document.getElementById('sw-updated');
+
+    if (!kpEl && !windEl) return;
+
+    async function loadWeather() {
+        try {
+            const data = await fetchFromBackendApi('/api/space-weather');
+            if (data && data.success) {
+                if (kpEl) kpEl.textContent = `${data.kpIndex} Kp`;
+                if (windEl) windEl.textContent = `${data.solarWindSpeedKms} km/s`;
+                if (flareEl) flareEl.textContent = data.xrayFlareStatus || 'Class C1.4';
+                if (radioEl) radioEl.textContent = data.radioBlackoutScale || 'None (R0)';
+                if (activityEl) activityEl.textContent = data.geomagneticActivity || 'Quiet (Nominal)';
+                if (updatedEl) updatedEl.textContent = `Synchronized with NOAA Space Weather Center: ${new Date().toLocaleTimeString()}`;
+            }
+        } catch {}
+    }
+
+    loadWeather();
+    setInterval(loadWeather, 30000); // 30s refresh
+}
+
+/* ========================================================
+   A3 FEATURE 8: CELESTIAL OPERATIONS TICKER & DAILY FACT
+   ======================================================== */
+function initCelestialTicker() {
+    const utcEl = document.getElementById('ticker-utc');
+    const issEl = document.getElementById('ticker-iss');
+    const windEl = document.getElementById('ticker-wind');
+    const dbEl = document.getElementById('ticker-db');
+
+    if (utcEl) {
+        function updateClock() {
+            const now = new Date();
+            utcEl.textContent = now.toUTCString().replace('GMT', 'UTC');
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+
+    if (issEl || windEl) {
+        fetchFromBackendApi('/api/satellites/telemetry/iss').then(res => {
+            if (res && res.success && issEl) {
+                issEl.textContent = `Lat ${res.latitude.toFixed(2)}°, Lon ${res.longitude.toFixed(2)}° (${res.altitudeKm} km @ ${Math.round(res.velocityKmh)} km/h)`;
+            }
+        });
+
+        fetchFromBackendApi('/api/space-weather').then(res => {
+            if (res && res.success && windEl) {
+                windEl.textContent = `${res.solarWindSpeedKms} km/s &bull; Kp ${res.kpIndex} (${res.geomagneticActivity})`;
+            }
+        });
+
+        fetchFromBackendApi('/api/telemetry').then(res => {
+            if (res && res.success && dbEl) {
+                dbEl.textContent = `${res.database.mode.toUpperCase()} Active (${res.metrics.totalFeedbacks} reviews, ${res.metrics.totalMerchOrders} orders)`;
+            }
+        });
+    }
+}
+
+function initDailyFact() {
+    const titleEl = document.getElementById('discovery-title');
+    const textEl = document.getElementById('discovery-text');
+    const sourceEl = document.getElementById('discovery-source');
+
+    if (!titleEl || !textEl) return;
+
+    fetchFromBackendApi('/api/daily-fact').then(res => {
+        if (res && res.success && res.fact) {
+            titleEl.textContent = res.fact.title;
+            textEl.textContent = res.fact.fact;
+            if (sourceEl) sourceEl.textContent = res.fact.source;
+        }
+    });
 }

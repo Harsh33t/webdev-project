@@ -8,7 +8,7 @@
 <body>
     <nav class="navbar">
         <div class="logo"><h2>Solar Explorer</h2></div>
-        <div class="nav-links"><a href="index.html">Home</a><a href="sun.html" class="active">The Sun</a><a href="extreme.html">Extreme Space</a><a href="missions.html">Missions</a><a href="fun-space.html">Fun Space</a><a href="satellites.html">Satellites</a><a href="merchandise.html">Merchandise</a><a href="feedback.html">Feedback</a></div>
+        <div class="nav-links"><a href="index.html">Home</a><a href="sun.html" class="active">The Sun</a><a href="extreme.html">Extreme Space</a><a href="missions.html">Missions</a><a href="fun-space.html">Fun Space</a><a href="satellites.html">Satellites</a><a href="merchandise.html">Merchandise</a><a href="feedback.html">Feedback</a><a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a></div>
     </nav>
 
     <div class="sun-split-layout">
@@ -31,6 +31,39 @@
                     <div><strong>99.86%</strong><span>SOLAR SYSTEM MASS</span></div>
                     <div><strong>8M 20S</strong><span>LIGHT TO EARTH</span></div>
                 </div>
+            </section>
+
+            <!-- LIVE SPACE WEATHER & SOLAR ACTIVITY TELEMETRY -->
+            <section class="sun-block space-weather-block" id="space-weather-widget">
+                <div class="sw-header">
+                    <span class="live-pulse-dot"></span>
+                    <h2 class="sec-title">LIVE SOLAR TELEMETRY &bull; NOAA SWPC FEED</h2>
+                </div>
+                <p class="sun-desc">Real-time space weather data fetched from the Space Weather Prediction Center API.</p>
+                
+                <div class="sw-metrics-grid">
+                    <div class="sw-metric-box">
+                        <span class="sw-lbl">PLANETARY K-INDEX</span>
+                        <span class="sw-val gold" id="sw-kp">2.33 Kp</span>
+                        <span class="sw-sub" id="sw-activity">Quiet (Nominal)</span>
+                    </div>
+                    <div class="sw-metric-box">
+                        <span class="sw-lbl">SOLAR WIND SPEED</span>
+                        <span class="sw-val cyan" id="sw-wind">425 km/s</span>
+                        <span class="sw-sub">Interplanetary Plasma Stream</span>
+                    </div>
+                    <div class="sw-metric-box">
+                        <span class="sw-lbl">X-RAY FLARE LEVEL</span>
+                        <span class="sw-val" id="sw-flare">Class C1.4</span>
+                        <span class="sw-sub">Background Flux</span>
+                    </div>
+                    <div class="sw-metric-box">
+                        <span class="sw-lbl">RADIO BLACKOUT</span>
+                        <span class="sw-val green" id="sw-radio">None (R0)</span>
+                        <span class="sw-sub">HF Comms Operational</span>
+                    </div>
+                </div>
+                <div class="sw-timestamp" id="sw-updated">Synchronized with NOAA Space Weather Center: Just now</div>
             </section>
 
             <section class="sun-block">

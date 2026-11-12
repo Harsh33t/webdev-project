@@ -18,6 +18,7 @@
             <a href="satellites.html">Satellites</a>
             <a href="merchandise.html" class="active">Merchandise</a>
             <a href="feedback.html">Feedback</a>
+            <a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a>
         </div>
     </nav>
 
@@ -54,6 +55,22 @@
 
             <div class="merch-hero-cta">
                 <a href="#waitlist-section" class="btn">JOIN EARLY ACCESS WAITLIST</a>
+                <a href="#order-lookup-section" class="btn btn-secondary">CHECK MY ORDER STATUS</a>
+            </div>
+
+            <!-- Batch 01 Allocation Tracker -->
+            <div class="batch-meter-wrap" id="batch-meter-box">
+                <div class="batch-meter-header">
+                    <span class="meter-title">&#9679; BATCH 01 PRODUCTION ALLOCATION</span>
+                    <span class="meter-counts" id="batch-meter-counts">Loading reservations...</span>
+                </div>
+                <div class="batch-progress-bar">
+                    <div class="batch-progress-fill" id="batch-progress-fill" style="width: 15%;"></div>
+                </div>
+                <div class="batch-meta-sub">
+                    <span>Capped at 500 VIP Collector Units</span>
+                    <span class="gold-text">Includes 20% Early Bird Discount</span>
+                </div>
             </div>
         </div>
     </header>
@@ -245,6 +262,30 @@
                 <!-- Interactive Boarding Pass (Rendered via DOM upon submit) -->
                 <div id="boarding-pass-target" class="boarding-pass-wrap" style="display:none;" aria-live="polite">
                     <!-- Populated dynamically by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================
+             ORDER STATUS & VIP PASS LOOKUP (RUBRIC C11)
+             ======================================================== -->
+        <section class="order-lookup-section" id="order-lookup-section" aria-label="Pre-Order Status Lookup">
+            <div class="lookup-card">
+                <div class="lookup-header">
+                    <h2>Track Your Pre-Order Registration</h2>
+                    <p>Enter your VIP Pass ID (e.g., <code>VIP-ORBIT-1042</code>) or Order ID to verify registration status from the server database.</p>
+                </div>
+
+                <form id="order-lookup-form" class="lookup-form" onsubmit="return false;">
+                    <div class="lookup-input-row">
+                        <label for="lookup-id-input" class="sr-only">Enter VIP Pass ID or Order ID</label>
+                        <input type="text" id="lookup-id-input" placeholder="Enter VIP Pass ID (e.g. VIP-ORBIT-1042)..." required autocomplete="off">
+                        <button type="submit" id="lookup-submit-btn" class="btn">CHECK STATUS</button>
+                    </div>
+                </form>
+
+                <div id="lookup-result-target" class="lookup-result-box" style="display:none;" aria-live="polite">
+                    <!-- Populated dynamically by script.js -->
                 </div>
             </div>
         </section>

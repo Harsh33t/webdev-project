@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Satellite Explorer - Solar Explorer</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
@@ -18,18 +21,117 @@
             <a href="satellites.html" class="active">Satellites</a>
             <a href="merchandise.html">Merchandise</a>
             <a href="feedback.html">Feedback</a>
+            <a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a>
         </div>
     </nav>
 
     <header class="page-header">
         <h1 class="page-title">Satellite Explorer</h1>
-        <p class="timeline-sub">An educational guide to artificial orbiters, scientific observatories, and humanity's orbital infrastructure.</p>
+        <p class="timeline-sub">Real-time orbital tracking, ground station pass predictions, and humanity's space infrastructure.</p>
         <div class="satellite-search-box">
             <label for="satellite-search-input" class="sr-only">Search educational satellite topics</label>
             <input type="text" id="satellite-search-input" placeholder="Search satellite topics (e.g. Communication, GPS, Hubble, ISS)..." autocomplete="off">
         </div>
     </header>
 
+    <!-- ========================================================
+         FEATURE A: LIVE ORBITAL TELEMETRY HUD & RADAR CANVAS
+         ======================================================== -->
+    <section class="telemetry-hud-section" aria-label="Real-time ISS Orbital Telemetry">
+        <div class="hud-container">
+            <div class="hud-header">
+                <div class="hud-title-wrap">
+                    <span class="live-pulse-dot"></span>
+                    <h2>INTERNATIONAL SPACE STATION &bull; LIVE TELEMETRY</h2>
+                </div>
+                <div class="hud-provider-tag" id="hud-provider">STREAM: CONNECTING...</div>
+            </div>
+
+            <!-- Telemetry Metrics Grid -->
+            <div class="hud-metrics-grid">
+                <div class="hud-metric-card">
+                    <span class="hud-label">LATITUDE</span>
+                    <span class="hud-value gold" id="iss-lat">--.----°</span>
+                    <span class="hud-sub">Orbital Inclination 51.64°</span>
+                </div>
+                <div class="hud-metric-card">
+                    <span class="hud-label">LONGITUDE</span>
+                    <span class="hud-value gold" id="iss-lon">--.----°</span>
+                    <span class="hud-sub">Ground Velocity Vector</span>
+                </div>
+                <div class="hud-metric-card">
+                    <span class="hud-label">ALTITUDE</span>
+                    <span class="hud-value cyan" id="iss-alt">---.- km</span>
+                    <span class="hud-sub">Low Earth Orbit (LEO)</span>
+                </div>
+                <div class="hud-metric-card">
+                    <span class="hud-label">VELOCITY</span>
+                    <span class="hud-value green" id="iss-vel">-----.-- km/h</span>
+                    <span class="hud-sub">Mach 22.5 Orbital Speed</span>
+                </div>
+                <div class="hud-metric-card">
+                    <span class="hud-label">SOLAR STATE</span>
+                    <span class="hud-value" id="iss-visibility">DAYLIGHT</span>
+                    <span class="hud-sub" id="iss-updated">Updated: Just now</span>
+                </div>
+            </div>
+
+            <!-- 2D Ground Track Canvas Radar -->
+            <div class="radar-canvas-container">
+                <div class="canvas-header-bar">
+                    <span class="canvas-title">&#9678; GLOBAL ORBITAL PROJECTION RADAR</span>
+                    <span class="canvas-legend">
+                        <span class="leg-item"><span class="dot-iss"></span> ISS Current Position</span>
+                        <span class="leg-item"><span class="line-equator"></span> Equator / Prime Meridian</span>
+                    </span>
+                </div>
+                <canvas id="iss-radar-canvas" width="800" height="400" aria-label="Live Ground Track Map"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         FEATURE B: GROUND STATION PASS PREDICTION CALCULATOR
+         ======================================================== -->
+    <section class="pass-calc-section" aria-label="Satellite Pass Prediction">
+        <div class="pass-calc-container">
+            <div class="pass-calc-header">
+                <h2>Ground Station Pass Predictor</h2>
+                <p>Calculate upcoming visible and radio passes of the ISS over your geographic coordinates.</p>
+            </div>
+
+            <div class="pass-calc-form">
+                <div class="preset-buttons">
+                    <span class="preset-label">Ground Stations:</span>
+                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="28.6139" data-lon="77.2090">New Delhi (Alpha)</button>
+                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="29.5593" data-lon="-95.0900">NASA Houston</button>
+                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="51.5074" data-lon="-0.1278">London (Greenwich)</button>
+                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="35.6762" data-lon="139.6503">Tokyo (JAXA)</button>
+                </div>
+
+                <div class="coord-inputs-row">
+                    <div class="coord-group">
+                        <label for="pass-lat">Latitude (° N/S)</label>
+                        <input type="number" id="pass-lat" step="0.0001" value="28.6139" placeholder="e.g. 28.6139">
+                    </div>
+                    <div class="coord-group">
+                        <label for="pass-lon">Longitude (° E/W)</label>
+                        <input type="number" id="pass-lon" step="0.0001" value="77.2090" placeholder="e.g. 77.2090">
+                    </div>
+                    <button type="button" id="compute-passes-btn" class="btn calc-btn">PREDICT NEXT PASSES</button>
+                </div>
+            </div>
+
+            <!-- Pass Prediction Results Grid -->
+            <div id="pass-results-container" class="pass-results-grid" aria-live="polite">
+                <!-- Populated dynamically by script.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         EDUCATIONAL SATELLITE DIRECTORY (Existing 8 Cards)
+         ======================================================== -->
     <main class="planets-container">
         <!-- 01. Artificial Satellites -->
         <div class="planet-card">
@@ -87,6 +189,72 @@
             <p>Spacecraft such as SOHO and Solar Orbiter monitoring coronal mass ejections, solar flare cycles, and the interplanetary solar wind.</p>
         </div>
     </main>
+
+    <!-- ========================================================
+         FEATURE C: PERSONAL SATELLITE WATCHLIST (CRUD DATABASE)
+         ======================================================== -->
+    <section class="watchlist-section" aria-label="Personal Satellite Watchlist">
+        <div class="watchlist-container">
+            <div class="watchlist-header">
+                <div class="wl-title-wrap">
+                    <h2>Personal Orbital Watchlist &bull; Database Sync</h2>
+                    <p>Track your custom satellites. All records persist to the server database (MongoDB / JSON storage).</p>
+                </div>
+                <button type="button" id="toggle-add-sat-btn" class="btn btn-secondary">+ ADD TO WATCHLIST</button>
+            </div>
+
+            <!-- Add Satellite Modal / Expandable Form -->
+            <div id="add-sat-form-box" class="add-sat-box" style="display:none;">
+                <form id="add-sat-form" class="add-sat-form">
+                    <div class="form-row-3col">
+                        <div class="form-group">
+                            <label for="sat-norad">NORAD ID *</label>
+                            <input type="number" id="sat-norad" placeholder="e.g. 50463" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sat-name">Satellite Name *</label>
+                            <input type="text" id="sat-name" placeholder="e.g. James Webb Space Telescope" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sat-category">Mission Category</label>
+                            <select id="sat-category">
+                                <option value="Scientific Observatory">Scientific Observatory</option>
+                                <option value="Space Station">Space Station</option>
+                                <option value="Communications">Communications</option>
+                                <option value="Earth Observation">Earth Observation</option>
+                                <option value="Navigation Constellation">Navigation Constellation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label for="sat-orbit">Orbit Type</label>
+                            <select id="sat-orbit">
+                                <option value="LEO">LEO (Low Earth Orbit)</option>
+                                <option value="MEO">MEO (Medium Earth Orbit)</option>
+                                <option value="GEO">GEO (Geostationary Orbit)</option>
+                                <option value="Halo L2">Lagrange L2 Halo Orbit</option>
+                                <option value="Polar">Sun-Synchronous Polar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sat-notes">Observation Notes</label>
+                            <input type="text" id="sat-notes" placeholder="e.g. Ground station tracking target">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">SAVE TO DATABASE</button>
+                        <button type="button" id="cancel-add-sat-btn" class="btn btn-secondary">CANCEL</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Active Watchlist Table/Grid -->
+            <div id="watchlist-display" class="watchlist-cards-grid">
+                <!-- Dynamically populated from GET /api/satellites/watchlist -->
+            </div>
+        </div>
+    </section>
 
     <!-- Feature G: External API Integration (CelesTrak SATCAT) -->
     <section class="satcat-section">
