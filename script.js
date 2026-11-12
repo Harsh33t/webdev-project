@@ -1197,7 +1197,7 @@ function initLiveTelemetry() {
             ctx.fill();
 
             // Reticle Target Lines
-            ctx.strokeStyle = '#22c55e';
+            ctx.strokeStyle = '#ffffff';
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(pt.x - 8, pt.y);
@@ -1277,7 +1277,7 @@ function initPassPrediction() {
                         </div>
                         <div class="pass-time-row">
                             <span class="lbl">Trajectory:</span>
-                            <span class="val text-cyan">${p.approachDirection}</span>
+                            <span class="val">${p.approachDirection}</span>
                         </div>
                         <div class="pass-status-tag ${p.maxElevationDeg > 60 ? 'pass-opt' : 'pass-day'}">
                             ${escapeHtml(p.visibilityStatus)}

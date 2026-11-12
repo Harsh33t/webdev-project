@@ -168,3 +168,4 @@ orderSchema.virtual('itemCount').get(function() {
 });
 
 module.exports = mongoose.model('Order', orderSchema);
+

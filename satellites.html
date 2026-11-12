@@ -3,11 +3,462 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Satellite Explorer - Solar Explorer</title>
+    <title>Satellite Observatory - Solar Explorer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ── Satellite Observatory Page Styles ── */
+        .sat-obs-header {
+            padding: 80px 24px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .sat-obs-title {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0 0 10px;
+        }
+        .sat-obs-sub {
+            color: #888888;
+            font-size: 1.05rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.5px;
+            margin-bottom: 28px;
+        }
+        .sat-search-row {
+            display: flex;
+            gap: 12px;
+            max-width: 560px;
+        }
+        .sat-search-row input {
+            flex: 1;
+            padding: 12px 16px;
+            background: #0d0d0d;
+            border: 1px solid #222222;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .sat-search-row input:focus { border-color: #555555; }
+        .sat-search-row input::placeholder { color: #555; }
+
+        /* ── Gallery Grid ── */
+        .sat-gallery-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+        .sat-section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            color: #555555;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 10px;
+        }
+        .sat-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2px;
+        }
+        .sat-card {
+            background: #080808;
+            border: 1px solid #1a1a1a;
+            overflow: hidden;
+            cursor: default;
+            transition: border-color 0.25s, transform 0.25s;
+            position: relative;
+        }
+        .sat-card:hover {
+            border-color: #333333;
+            transform: translateY(-2px);
+        }
+        .sat-card-img-wrap {
+            position: relative;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            background: #030303;
+        }
+        .sat-card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(10%);
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+        .sat-card:hover .sat-card-img-wrap img {
+            transform: scale(1.03);
+            filter: grayscale(0%);
+        }
+        .sat-card-category {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: #aaaaaa;
+            background: rgba(0,0,0,0.75);
+            padding: 4px 8px;
+            text-transform: uppercase;
+            border: 1px solid #222;
+        }
+        .sat-card-body {
+            padding: 20px 20px 18px;
+        }
+        .sat-card-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            margin: 0 0 4px;
+        }
+        .sat-card-agency {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #666666;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .sat-card-desc {
+            font-size: 0.88rem;
+            color: #999999;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+        .sat-card-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding-top: 12px;
+            border-top: 1px solid #1a1a1a;
+        }
+        .sat-meta-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: #888888;
+            letter-spacing: 0.5px;
+        }
+        .sat-meta-chip strong {
+            color: #cccccc;
+            font-weight: 600;
+        }
+        .sat-track-btn {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 7px 16px;
+            border: 1px solid #333333;
+            color: #cccccc;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            background: transparent;
+            cursor: pointer;
+        }
+        .sat-track-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        /* ── Live ISS Tracking HUD ── */
+        .sat-tracking-section {
+            background: #050505;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+            padding: 50px 24px;
+            margin-bottom: 0;
+        }
+        .sat-tracking-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hud-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .hud-title-block h2 {
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-transform: uppercase;
+            margin: 0 0 4px;
+        }
+        .hud-title-block p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #555555;
+            letter-spacing: 1px;
+        }
+        .hud-live-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 2px;
+            color: #888888;
+            border: 1px solid #222222;
+            padding: 5px 12px;
+            text-transform: uppercase;
+        }
+        .hud-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 2px;
+            margin-bottom: 24px;
+        }
+        .hud-metric-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .hud-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: #666666;
+            text-transform: uppercase;
+        }
+        .hud-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .hud-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: #555555;
+        }
+        /* Radar Canvas */
+        .radar-canvas-container {
+            background: #030303;
+            border: 1px solid #1a1a1a;
+            overflow: hidden;
+        }
+        .canvas-header-bar {
+            padding: 10px 16px;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .canvas-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #666666;
+            text-transform: uppercase;
+        }
+        .canvas-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .leg-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: #555555;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dot-iss {
+            width: 8px; height: 8px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .line-equator {
+            width: 16px; height: 1px;
+            background: #444444;
+            display: inline-block;
+        }
+        #iss-radar-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 380px;
+        }
+
+        /* ── Pass Prediction Section ── */
+        .sat-pass-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 24px;
+        }
+        .pass-calc-container {
+            background: #080808;
+            border: 1px solid #1a1a1a;
+            padding: 32px;
+        }
+        .pass-calc-header h2 {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 0 0 6px;
+            color: #ffffff;
+        }
+        .pass-calc-header p {
+            color: #777777;
+            font-size: 0.88rem;
+            margin-bottom: 24px;
+        }
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .preset-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #666666;
+            letter-spacing: 1px;
+        }
+        .station-preset-btn {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        .coord-inputs-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .coord-group { flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 6px; }
+        .coord-group label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #666666; letter-spacing: 0.5px; }
+        .coord-group input { padding: 12px 14px; background: #0d0d0d; border: 1px solid #222222; color: #ffffff; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; outline: none; }
+        .coord-group input:focus { border-color: #555555; }
+        .calc-btn { padding: 12px 24px; font-size: 0.8rem; letter-spacing: 2px; white-space: nowrap; }
+        .pass-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2px;
+            margin-top: 24px;
+        }
+
+        /* ── Watchlist Section ── */
+        .sat-watchlist-section {
+            background: #050505;
+            border-top: 1px solid #1a1a1a;
+            padding: 50px 24px;
+        }
+        .sat-watchlist-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .watchlist-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .wl-title-wrap h2 { font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin: 0 0 4px; }
+        .wl-title-wrap p { color: #666666; font-size: 0.85rem; }
+        .watchlist-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2px;
+            margin-top: 16px;
+        }
+        .add-sat-box {
+            background: #0a0a0a;
+            border: 1px solid #1f1f1f;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        .add-sat-form .form-row-3col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .add-sat-form .form-row-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .add-sat-form .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .add-sat-form label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #666666; letter-spacing: 0.5px; }
+        .add-sat-form input, .add-sat-form select {
+            padding: 10px 14px;
+            background: #0d0d0d;
+            border: 1px solid #222222;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .add-sat-form input:focus, .add-sat-form select:focus { border-color: #555555; }
+        .add-sat-form select option { background: #0d0d0d; }
+        .form-actions { display: flex; gap: 12px; }
+
+        /* ── CelesTrak Section ── */
+        .satcat-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+        .satcat-box {
+            background: #080808;
+            border: 1px solid #1a1a1a;
+            padding: 32px;
+        }
+        .satcat-header h2 { font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin: 0 0 8px; }
+        .satcat-header p { color: #777777; font-size: 0.88rem; margin-bottom: 20px; }
+        .satcat-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+        #api-sat-filter { flex: 1; min-width: 240px; padding: 10px 14px; background: #0d0d0d; border: 1px solid #222222; color: #ffffff; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; outline: none; }
+        #api-sat-filter:focus { border-color: #555555; }
+        .satcat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2px; margin-top: 16px; }
+        .calc-msg { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #555555; padding: 16px 0; }
+
+        /* ── Empty state for watchlist ── */
+        .wl-empty {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #444444;
+            padding: 32px 0;
+            letter-spacing: 1px;
+        }
+        .sat-card[data-search-hidden="true"] { display: none; }
+        
+        /* search empty */
+        .sat-search-empty {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #444444;
+            padding: 40px 0;
+            letter-spacing: 1px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -25,184 +476,359 @@
         </div>
     </nav>
 
-    <header class="page-header">
-        <h1 class="page-title">Satellite Explorer</h1>
-        <p class="timeline-sub">Real-time orbital tracking, ground station pass predictions, and humanity's space infrastructure.</p>
-        <div class="satellite-search-box">
-            <label for="satellite-search-input" class="sr-only">Search educational satellite topics</label>
-            <input type="text" id="satellite-search-input" placeholder="Search satellite topics (e.g. Communication, GPS, Hubble, ISS)..." autocomplete="off">
+    <!-- ── Observatory Header ── -->
+    <header class="sat-obs-header">
+        <div class="planet-meta-tag" style="margin-bottom:12px;">SATELLITE OBSERVATORY • ORBITAL DATABASE</div>
+        <h1 class="sat-obs-title">Satellite Observatory</h1>
+        <p class="sat-obs-sub">Humanity's fleet of eyes in the sky — real-time tracking, orbital data, and mission profiles.</p>
+        <div class="sat-search-row">
+            <input type="text" id="satellite-search-input" placeholder="Search satellites (e.g. JWST, Hubble, ISS, GPS, Sentinel)..." autocomplete="off" aria-label="Search satellite gallery">
         </div>
+        <p id="sat-search-empty" class="sat-search-empty" aria-live="polite">No satellites match your search.</p>
     </header>
 
-    <!-- ========================================================
-         FEATURE A: LIVE ORBITAL TELEMETRY HUD & RADAR CANVAS
-         ======================================================== -->
-    <section class="telemetry-hud-section" aria-label="Real-time ISS Orbital Telemetry">
-        <div class="hud-container">
-            <div class="hud-header">
-                <div class="hud-title-wrap">
-                    <h2>INTERNATIONAL SPACE STATION &bull; LIVE TELEMETRY</h2>
+    <!-- ══════════════════════════════════════
+         SATELLITE GALLERY
+    ══════════════════════════════════════ -->
+    <section class="sat-gallery-section" aria-label="Satellite Gallery">
+        <div class="sat-section-label">▸ Spacecraft Gallery • 12 Active Satellites</div>
+        <div class="sat-gallery-grid" id="sat-gallery-grid">
+
+            <!-- 01 — ISS -->
+            <article class="sat-card" data-name="international space station iss leo crewed" data-category="Space Station">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Space Station</div>
+                    <img src="images/satellites/sat-iss.jpg" alt="International Space Station in Low Earth Orbit" loading="lazy" onerror="this.src='images/apollo.svg';this.style.padding='40px';this.style.objectFit='contain'">
                 </div>
-                <div class="hud-provider-tag" id="hud-provider">STREAM: CONNECTING...</div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">International Space Station</h3>
+                    <div class="sat-card-agency">NASA / ESA / JAXA / ROSCOSMOS</div>
+                    <p class="sat-card-desc">The largest crewed spacecraft ever constructed, spanning 109 metres — the size of an American football field. Continuously inhabited since November 2000, it completes 15.5 orbits of Earth every 24 hours at 27,600 km/h.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>LEO 408 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>1998</strong></div>
+                        <div class="sat-meta-chip">NORAD <strong>25544</strong></div>
+                    </div>
+                    <a href="#live-iss-hud" class="sat-track-btn" onclick="document.getElementById('live-iss-hud').scrollIntoView({behavior:'smooth'}); return false;">▸ Track Live</a>
+                </div>
+            </article>
+
+            <!-- 02 — JWST -->
+            <article class="sat-card" data-name="james webb space telescope jwst infrared observatory nasa esa" data-category="Observatory">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Deep Space Observatory</div>
+                    <img src="images/satellites/sat-jwst.jpg" alt="James Webb Space Telescope golden mirror" loading="lazy" onerror="this.src='images/jwst.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">James Webb Space Telescope</h3>
+                    <div class="sat-card-agency">NASA / ESA / CSA</div>
+                    <p class="sat-card-desc">Mankind's most powerful space telescope, its 6.5-metre gold-beryllium mirror array peers 13.5 billion years into the past to observe the first galaxies formed after the Big Bang, stationed 1.5 million km from Earth.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>Halo L2</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2021</strong></div>
+                        <div class="sat-meta-chip">NORAD <strong>50463</strong></div>
+                    </div>
+                    <a href="https://www.jwst.nasa.gov/" target="_blank" rel="noopener" class="sat-track-btn">▸ Mission Site</a>
+                </div>
+            </article>
+
+            <!-- 03 — Hubble -->
+            <article class="sat-card" data-name="hubble space telescope hst optical ultraviolet nasa esa leo" data-category="Observatory">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Optical Observatory</div>
+                    <img src="images/satellites/sat-hubble.jpg" alt="Hubble Space Telescope orbiting above Earth" loading="lazy" onerror="this.src='images/hubble.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">Hubble Space Telescope</h3>
+                    <div class="sat-card-agency">NASA / ESA</div>
+                    <p class="sat-card-desc">Orbiting since 1990 at 540 km altitude, Hubble has executed over 1.5 million observations and produced more than 19,000 peer-reviewed papers. Its imagery of deep fields revealed a universe containing over two trillion galaxies.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>LEO 540 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>1990</strong></div>
+                        <div class="sat-meta-chip">NORAD <strong>20580</strong></div>
+                    </div>
+                    <a href="https://hubblesite.org/" target="_blank" rel="noopener" class="sat-track-btn">▸ Mission Site</a>
+                </div>
+            </article>
+
+            <!-- 04 — GPS Block III -->
+            <article class="sat-card" data-name="gps block iii navigation constellation gnss timing us air force" data-category="Navigation">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Navigation</div>
+                    <img src="images/satellites/sat-gps.jpg" alt="GPS Block III navigation satellite in orbit" loading="lazy" onerror="this.src='images/voyager.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">GPS Block III</h3>
+                    <div class="sat-card-agency">US Space Force / Lockheed Martin</div>
+                    <p class="sat-card-desc">Third-generation navigation satellite of the Global Positioning System constellation. Delivers atomic-clock timing signals with 3× improved accuracy over previous blocks and an anti-jamming M-code signal for military operations.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>MEO 20,200 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2018</strong></div>
+                        <div class="sat-meta-chip">PERIOD <strong>12 hours</strong></div>
+                    </div>
+                    <a href="https://www.gps.gov/" target="_blank" rel="noopener" class="sat-track-btn">▸ GPS Official</a>
+                </div>
+            </article>
+
+            <!-- 05 — Sentinel-2 -->
+            <article class="sat-card" data-name="sentinel 2 esa earth observation copernicus multispectral imaging" data-category="Earth Observation">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Earth Observation</div>
+                    <img src="images/satellites/sat-sentinel.jpg" alt="Sentinel-2 ESA Earth observation satellite" loading="lazy" onerror="this.src='images/earth.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">Sentinel-2</h3>
+                    <div class="sat-card-agency">ESA / Copernicus Programme</div>
+                    <p class="sat-card-desc">Twin Earth-imaging satellites providing 10-metre multispectral optical imagery across 13 spectral bands every 5 days. Monitors agriculture, deforestation, disaster response, coastal changes, and urban growth globally.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>Polar SSO 786 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2015/2017</strong></div>
+                        <div class="sat-meta-chip">RESOLUTION <strong>10 m</strong></div>
+                    </div>
+                    <a href="https://sentinel.esa.int/" target="_blank" rel="noopener" class="sat-track-btn">▸ Copernicus</a>
+                </div>
+            </article>
+
+            <!-- 06 — Starlink -->
+            <article class="sat-card" data-name="starlink spacex leo broadband internet mega constellation" data-category="Communications">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Communications</div>
+                    <img src="images/satellites/sat-starlink.jpg" alt="Starlink flat-panel satellite constellation" loading="lazy" onerror="this.src='images/voyager.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">Starlink Constellation</h3>
+                    <div class="sat-card-agency">SpaceX</div>
+                    <p class="sat-card-desc">World's largest satellite constellation with over 6,000 flat-panel broadband satellites in Low Earth Orbit, delivering sub-20ms latency internet globally. Each satellite weighs 295 kg with a single deployable solar array.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>LEO 340–570 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2019–</strong></div>
+                        <div class="sat-meta-chip">COUNT <strong>6,000+</strong></div>
+                    </div>
+                    <a href="https://www.starlink.com/" target="_blank" rel="noopener" class="sat-track-btn">▸ Starlink</a>
+                </div>
+            </article>
+
+            <!-- 07 — GOES-18 -->
+            <article class="sat-card" data-name="goes 18 noaa geostationary weather satellite earth imaging" data-category="Weather">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Weather</div>
+                    <img src="images/satellites/sat-goes.jpg" alt="GOES-18 geostationary weather satellite" loading="lazy" onerror="this.src='images/chandrayaan.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">GOES-18 (GOES-West)</h3>
+                    <div class="sat-card-agency">NOAA / NASA</div>
+                    <p class="sat-card-desc">Advanced geostationary weather satellite observing the Western Hemisphere from 35,786 km altitude. Captures full-disc Earth imagery every 10 minutes in 16 spectral bands, enabling real-time hurricane, storm, and wildfire tracking.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>GEO 35,786 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2022</strong></div>
+                        <div class="sat-meta-chip">POSITION <strong>137.2°W</strong></div>
+                    </div>
+                    <a href="https://www.nesdis.noaa.gov/" target="_blank" rel="noopener" class="sat-track-btn">▸ NOAA NESDIS</a>
+                </div>
+            </article>
+
+            <!-- 08 — Landsat-9 -->
+            <article class="sat-card" data-name="landsat 9 usgs nasa earth observation land imaging" data-category="Earth Observation">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Earth Observation</div>
+                    <img src="images/satellites/sat-landsat.jpg" alt="Landsat-9 NASA Earth observation satellite" loading="lazy" onerror="this.src='images/earth.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">Landsat-9</h3>
+                    <div class="sat-card-agency">NASA / USGS</div>
+                    <p class="sat-card-desc">The latest in the 50-year Landsat Earth observation program. OLI-2 instrument captures 11 spectral bands at 30-metre resolution, contributing to the world's longest continuous land surface record for climate and resource science.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>Polar SSO 705 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2021</strong></div>
+                        <div class="sat-meta-chip">REVISIT <strong>16 days</strong></div>
+                    </div>
+                    <a href="https://landsat.gsfc.nasa.gov/" target="_blank" rel="noopener" class="sat-track-btn">▸ Landsat Site</a>
+                </div>
+            </article>
+
+            <!-- 09 — Chandra -->
+            <article class="sat-card" data-name="chandra x-ray observatory nasa deep space high energy astrophysics" data-category="Observatory">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">X-ray Observatory</div>
+                    <img src="images/satellites/sat-chandra.jpg" alt="Chandra X-ray Observatory with four solar panel wings" loading="lazy" onerror="this.src='images/hubble.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">Chandra X-ray Observatory</h3>
+                    <div class="sat-card-agency">NASA / CXC / SAO</div>
+                    <p class="sat-card-desc">NASA's flagship X-ray space telescope occupying a highly elliptical orbit reaching 1/3 of the way to the Moon. Its nested iridium-coated mirror arrays resolve X-ray emission from black hole accretion disks, supernova remnants, and galaxy clusters.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>HEO 134,500 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>1999</strong></div>
+                        <div class="sat-meta-chip">NORAD <strong>25867</strong></div>
+                    </div>
+                    <a href="https://chandra.harvard.edu/" target="_blank" rel="noopener" class="sat-track-btn">▸ Chandra Center</a>
+                </div>
+            </article>
+
+            <!-- 10 — TESS -->
+            <article class="sat-card" data-name="tess transiting exoplanet survey satellite nasa planet hunting" data-category="Observatory">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Exoplanet Hunter</div>
+                    <img src="images/satellites/sat-tess.jpg" alt="TESS Transiting Exoplanet Survey Satellite" loading="lazy" onerror="this.src='images/jwst.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">TESS — Transiting Exoplanet Survey</h3>
+                    <div class="sat-card-agency">NASA / MIT</div>
+                    <p class="sat-card-desc">Four wide-field cameras scan 85% of the sky for transiting exoplanets orbiting nearby bright stars. TESS has discovered 7,000+ exoplanet candidates including habitable-zone terrestrial worlds, orbiting in a unique 2:1 resonance orbit with the Moon.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>Lunar Resonance HEO</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2018</strong></div>
+                        <div class="sat-meta-chip">FOV <strong>2,300 sq° per sector</strong></div>
+                    </div>
+                    <a href="https://tess.mit.edu/" target="_blank" rel="noopener" class="sat-track-btn">▸ TESS Mission</a>
+                </div>
+            </article>
+
+            <!-- 11 — Cassini -->
+            <article class="sat-card" data-name="cassini saturn probe spacecraft esa nasa jpl grand finale" data-category="Deep Space Probe">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Deep Space Probe</div>
+                    <img src="images/satellites/sat-cassini.jpg" alt="Cassini spacecraft near Saturn" loading="lazy" onerror="this.src='images/voyager.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">Cassini-Huygens</h3>
+                    <div class="sat-card-agency">NASA / ESA / ASI</div>
+                    <p class="sat-card-desc">Flagship mission orbiting Saturn for 13 years, discovering ocean plumes on Enceladus, methane lakes on Titan, and mapping Saturn's ring system in unprecedented detail. Concluded with a planned Grand Finale atmospheric dive in 2017.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">TARGET <strong>Saturn System</strong></div>
+                        <div class="sat-meta-chip">ACTIVE <strong>1997–2017</strong></div>
+                        <div class="sat-meta-chip">STATUS <strong>Mission Complete</strong></div>
+                    </div>
+                    <a href="https://solarsystem.nasa.gov/missions/cassini/" target="_blank" rel="noopener" class="sat-track-btn">▸ Mission Archive</a>
+                </div>
+            </article>
+
+            <!-- 12 — GRACE-FO -->
+            <article class="sat-card" data-name="grace fo gravity recovery earth science polar orbit twin satellites" data-category="Earth Observation">
+                <div class="sat-card-img-wrap">
+                    <div class="sat-card-category">Gravity Science</div>
+                    <img src="images/satellites/sat-grace.jpg" alt="GRACE-FO twin gravity recovery satellites" loading="lazy" onerror="this.src='images/earth.svg';this.style.padding='40px';this.style.objectFit='contain'">
+                </div>
+                <div class="sat-card-body">
+                    <h3 class="sat-card-name">GRACE-FO</h3>
+                    <div class="sat-card-agency">NASA / GFZ Potsdam / DLR</div>
+                    <p class="sat-card-desc">Twin satellites flying 220 km apart, measuring micro-variations in Earth's gravitational field via laser ranging interferometry. Maps glacial melting, groundwater depletion, and sea level change with millimetre-precision monthly gravity maps.</p>
+                    <div class="sat-card-meta">
+                        <div class="sat-meta-chip">ORBIT <strong>Polar LEO 490 km</strong></div>
+                        <div class="sat-meta-chip">LAUNCHED <strong>2018</strong></div>
+                        <div class="sat-meta-chip">SEPARATION <strong>220 km</strong></div>
+                    </div>
+                    <a href="https://gracefo.jpl.nasa.gov/" target="_blank" rel="noopener" class="sat-track-btn">▸ GRACE-FO Site</a>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════
+         LIVE ISS TELEMETRY HUD
+    ══════════════════════════════════════ -->
+    <section class="sat-tracking-section" id="live-iss-hud" aria-label="Live ISS Orbital Telemetry">
+        <div class="sat-tracking-inner">
+            <div class="sat-section-label" style="margin-bottom:20px;">▸ Live Tracking • ISS Real-Time Telemetry</div>
+            <div class="hud-header-row">
+                <div class="hud-title-block">
+                    <h2>International Space Station • Live Telemetry</h2>
+                    <p>Position data refreshed every 5 seconds from open orbit API</p>
+                </div>
+                <div class="hud-live-badge" id="hud-provider">● Stream: Connecting...</div>
             </div>
 
-            <!-- Telemetry Metrics Grid -->
             <div class="hud-metrics-grid">
                 <div class="hud-metric-card">
-                    <span class="hud-label">LATITUDE</span>
+                    <span class="hud-label">Latitude</span>
                     <span class="hud-value" id="iss-lat">--.----°</span>
                     <span class="hud-sub">Orbital Inclination 51.64°</span>
                 </div>
                 <div class="hud-metric-card">
-                    <span class="hud-label">LONGITUDE</span>
+                    <span class="hud-label">Longitude</span>
                     <span class="hud-value" id="iss-lon">--.----°</span>
                     <span class="hud-sub">Ground Velocity Vector</span>
                 </div>
                 <div class="hud-metric-card">
-                    <span class="hud-label">ALTITUDE</span>
+                    <span class="hud-label">Altitude</span>
                     <span class="hud-value" id="iss-alt">---.- km</span>
                     <span class="hud-sub">Low Earth Orbit (LEO)</span>
                 </div>
                 <div class="hud-metric-card">
-                    <span class="hud-label">VELOCITY</span>
+                    <span class="hud-label">Velocity</span>
                     <span class="hud-value" id="iss-vel">-----.-- km/h</span>
                     <span class="hud-sub">Mach 22.5 Orbital Speed</span>
                 </div>
                 <div class="hud-metric-card">
-                    <span class="hud-label">SOLAR STATE</span>
+                    <span class="hud-label">Solar State</span>
                     <span class="hud-value" id="iss-visibility">DAYLIGHT</span>
-                    <span class="hud-sub" id="iss-updated">Updated: Just now</span>
+                    <span class="hud-sub" id="iss-updated">Updated: Connecting...</span>
                 </div>
             </div>
 
-            <!-- 2D Ground Track Canvas Radar -->
             <div class="radar-canvas-container">
                 <div class="canvas-header-bar">
-                    <span class="canvas-title">&#9678; GLOBAL ORBITAL PROJECTION RADAR</span>
+                    <span class="canvas-title">&#9678; Global Orbital Projection Radar</span>
                     <span class="canvas-legend">
                         <span class="leg-item"><span class="dot-iss"></span> ISS Current Position</span>
                         <span class="leg-item"><span class="line-equator"></span> Equator / Prime Meridian</span>
                     </span>
                 </div>
-                <canvas id="iss-radar-canvas" width="800" height="400" aria-label="Live Ground Track Map"></canvas>
+                <canvas id="iss-radar-canvas" width="1200" height="400" aria-label="Live ISS Ground Track Map"></canvas>
             </div>
         </div>
     </section>
 
-    <!-- ========================================================
-         FEATURE B: GROUND STATION PASS PREDICTION CALCULATOR
-         ======================================================== -->
-    <section class="pass-calc-section" aria-label="Satellite Pass Prediction">
+    <!-- ══════════════════════════════════════
+         PASS PREDICTION CALCULATOR
+    ══════════════════════════════════════ -->
+    <section class="sat-pass-section" aria-label="ISS Pass Prediction">
+        <div class="sat-section-label">▸ Ground Station Pass Predictor</div>
         <div class="pass-calc-container">
             <div class="pass-calc-header">
-                <h2>Ground Station Pass Predictor</h2>
-                <p>Calculate upcoming visible and radio passes of the ISS over your geographic coordinates.</p>
+                <h2>Predict Next ISS Passes</h2>
+                <p>Calculate upcoming visible and radio passes over your geographic coordinates.</p>
             </div>
 
-            <div class="pass-calc-form">
-                <div class="preset-buttons">
-                    <span class="preset-label">Ground Stations:</span>
-                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="28.6139" data-lon="77.2090">New Delhi (Alpha)</button>
-                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="29.5593" data-lon="-95.0900">NASA Houston</button>
-                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="51.5074" data-lon="-0.1278">London (Greenwich)</button>
-                    <button type="button" class="btn btn-sm station-preset-btn" data-lat="35.6762" data-lon="139.6503">Tokyo (JAXA)</button>
+            <div class="preset-buttons">
+                <span class="preset-label">Presets:</span>
+                <button type="button" class="btn btn-sm station-preset-btn" data-lat="28.6139" data-lon="77.2090">New Delhi</button>
+                <button type="button" class="btn btn-sm station-preset-btn" data-lat="29.5593" data-lon="-95.0900">NASA Houston</button>
+                <button type="button" class="btn btn-sm station-preset-btn" data-lat="51.5074" data-lon="-0.1278">London (Greenwich)</button>
+                <button type="button" class="btn btn-sm station-preset-btn" data-lat="35.6762" data-lon="139.6503">Tokyo (JAXA)</button>
+            </div>
+
+            <div class="coord-inputs-row">
+                <div class="coord-group">
+                    <label for="pass-lat">Latitude (° N/S)</label>
+                    <input type="number" id="pass-lat" step="0.0001" value="28.6139" placeholder="e.g. 28.6139">
                 </div>
-
-                <div class="coord-inputs-row">
-                    <div class="coord-group">
-                        <label for="pass-lat">Latitude (° N/S)</label>
-                        <input type="number" id="pass-lat" step="0.0001" value="28.6139" placeholder="e.g. 28.6139">
-                    </div>
-                    <div class="coord-group">
-                        <label for="pass-lon">Longitude (° E/W)</label>
-                        <input type="number" id="pass-lon" step="0.0001" value="77.2090" placeholder="e.g. 77.2090">
-                    </div>
-                    <button type="button" id="compute-passes-btn" class="btn calc-btn">PREDICT NEXT PASSES</button>
+                <div class="coord-group">
+                    <label for="pass-lon">Longitude (° E/W)</label>
+                    <input type="number" id="pass-lon" step="0.0001" value="77.2090" placeholder="e.g. 77.2090">
                 </div>
+                <button type="button" id="compute-passes-btn" class="btn calc-btn">Predict Passes</button>
             </div>
 
-            <!-- Pass Prediction Results Grid -->
-            <div id="pass-results-container" class="pass-results-grid" aria-live="polite">
-                <!-- Populated dynamically by script.js -->
-            </div>
+            <div id="pass-results-container" class="pass-results-grid" aria-live="polite"></div>
         </div>
     </section>
 
-    <!-- ========================================================
-         EDUCATIONAL SATELLITE DIRECTORY (Existing 8 Cards)
-         ======================================================== -->
-    <main class="planets-container">
-        <!-- 01. Artificial Satellites -->
-        <div class="planet-card">
-            <img src="images/earth.svg" alt="Artificial Satellite Orbit">
-            <h3>Artificial Satellites</h3>
-            <p>Human-made machines launched into orbit around Earth or other celestial bodies to gather data, relay communications, and observe the universe.</p>
-        </div>
-
-        <!-- 02. Communication Satellites -->
-        <div class="planet-card">
-            <img src="images/voyager.svg" alt="Communication Satellites">
-            <h3>Communication Satellites</h3>
-            <p>Stationed primarily in Geostationary Orbit (35,786 km) or mega-constellations in LEO, relaying voice, television, and broadband internet data globally.</p>
-        </div>
-
-        <!-- 03. Navigation Satellites -->
-        <div class="planet-card">
-            <img src="images/apollo.svg" alt="Navigation Satellites">
-            <h3>Navigation Satellites</h3>
-            <p>Constellations such as GPS, Galileo, and NavIC transmit precise atomic-clock timing signals to compute exact geographic position and altitude on Earth.</p>
-        </div>
-
-        <!-- 04. Earth Observation & Weather -->
-        <div class="planet-card">
-            <img src="images/earth.svg" alt="Weather Satellites">
-            <h3>Weather &amp; Earth Observation</h3>
-            <p>Equipped with multispectral imagers and radiometers to track tropical cyclones, map polar ice changes, monitor forest cover, and forecast meteorology.</p>
-        </div>
-
-        <!-- 05. Hubble Space Telescope -->
-        <div class="planet-card">
-            <img src="images/hubble.svg" alt="Hubble Space Telescope">
-            <h3>Hubble Space Telescope</h3>
-            <p>Deployed in 1990 into Low Earth Orbit (540 km), Hubble observes in ultraviolet, visible, and near-infrared light free from atmospheric distortion.</p>
-        </div>
-
-        <!-- 06. James Webb Space Telescope -->
-        <div class="planet-card">
-            <img src="images/jwst.svg" alt="James Webb Space Telescope">
-            <h3>James Webb (JWST)</h3>
-            <p>Stationed 1.5 million km away at Sun-Earth Lagrange Point 2, featuring a 6.5-meter gold-plated mirror to peer into the universe's first light.</p>
-        </div>
-
-        <!-- 07. International Space Station -->
-        <div class="planet-card">
-            <img src="images/apollo.svg" alt="International Space Station">
-            <h3>Space Stations (ISS &amp; Tiangong)</h3>
-            <p>Habitable orbital laboratories continuously crewed in low Earth orbit, conducting microgravity biology, physics, and materials research.</p>
-        </div>
-
-        <!-- 08. Solar Observatories -->
-        <div class="planet-card">
-            <img src="images/chandrayaan.svg" alt="Solar Observatories">
-            <h3>Solar Observatories</h3>
-            <p>Spacecraft such as SOHO and Solar Orbiter monitoring coronal mass ejections, solar flare cycles, and the interplanetary solar wind.</p>
-        </div>
-    </main>
-
-    <!-- ========================================================
-         FEATURE C: PERSONAL SATELLITE WATCHLIST (CRUD DATABASE)
-         ======================================================== -->
-    <section class="watchlist-section" aria-label="Personal Satellite Watchlist">
-        <div class="watchlist-container">
+    <!-- ══════════════════════════════════════
+         PERSONAL SATELLITE WATCHLIST
+    ══════════════════════════════════════ -->
+    <section class="sat-watchlist-section" aria-label="Personal Satellite Watchlist">
+        <div class="sat-watchlist-inner">
+            <div class="sat-section-label">▸ Personal Orbital Watchlist • Database Sync</div>
             <div class="watchlist-header">
                 <div class="wl-title-wrap">
-                    <h2>Personal Orbital Watchlist &bull; Database Sync</h2>
-                    <p>Track your custom satellites. All records persist to the server database (MongoDB / JSON storage).</p>
+                    <h2>My Satellite Watchlist</h2>
+                    <p>Add and track custom satellites. All records persist to server database.</p>
                 </div>
-                <button type="button" id="toggle-add-sat-btn" class="btn btn-secondary">+ ADD TO WATCHLIST</button>
+                <button type="button" id="toggle-add-sat-btn" class="btn btn-secondary">+ Add Satellite</button>
             </div>
 
-            <!-- Add Satellite Modal / Expandable Form -->
             <div id="add-sat-form-box" class="add-sat-box" style="display:none;">
                 <form id="add-sat-form" class="add-sat-form">
                     <div class="form-row-3col">
@@ -222,6 +848,8 @@
                                 <option value="Communications">Communications</option>
                                 <option value="Earth Observation">Earth Observation</option>
                                 <option value="Navigation Constellation">Navigation Constellation</option>
+                                <option value="Deep Space Probe">Deep Space Probe</option>
+                                <option value="Weather">Weather</option>
                             </select>
                         </div>
                     </div>
@@ -234,6 +862,7 @@
                                 <option value="GEO">GEO (Geostationary Orbit)</option>
                                 <option value="Halo L2">Lagrange L2 Halo Orbit</option>
                                 <option value="Polar">Sun-Synchronous Polar</option>
+                                <option value="HEO">HEO (Highly Elliptical Orbit)</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -242,40 +871,39 @@
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn">SAVE TO DATABASE</button>
-                        <button type="button" id="cancel-add-sat-btn" class="btn btn-secondary">CANCEL</button>
+                        <button type="submit" class="btn">Save to Database</button>
+                        <button type="button" id="cancel-add-sat-btn" class="btn btn-secondary">Cancel</button>
                     </div>
                 </form>
             </div>
 
-            <!-- Active Watchlist Table/Grid -->
             <div id="watchlist-display" class="watchlist-cards-grid">
                 <!-- Dynamically populated from GET /api/satellites/watchlist -->
             </div>
         </div>
     </section>
 
-    <!-- Feature G: External API Integration (CelesTrak SATCAT) -->
-    <section class="satcat-section">
+    <!-- ══════════════════════════════════════
+         CELESTRAK SATELLITE CATALOGUE
+    ══════════════════════════════════════ -->
+    <section class="satcat-section" aria-label="CelesTrak Satellite Catalogue">
+        <div class="sat-section-label">▸ External Satellite Catalogue • CelesTrak SATCAT</div>
         <div class="satcat-box">
             <div class="satcat-header">
                 <h2>CelesTrak Satellite Catalogue</h2>
-                <p>Retrieve official satellite catalog records from CelesTrak's SATCAT query database via live fetch request. This feature accesses registered orbital payloads and stations (catalogue data, not live orbital tracking positions).</p>
+                <p>Retrieve official satellite catalog records from CelesTrak's SATCAT query database via live fetch request. Access registered orbital payloads and stations — catalogue data, not live position tracking.</p>
             </div>
-
             <div class="satcat-actions">
-                <button id="fetch-satcat-btn" class="btn" type="button">LOAD SATELLITE CATALOGUE</button>
-                <input type="text" id="api-sat-filter" placeholder="Filter retrieved records by name, owner, or ID..." style="display:none;" autocomplete="off">
+                <button id="fetch-satcat-btn" class="btn" type="button">Load Satellite Catalogue</button>
+                <input type="text" id="api-sat-filter" placeholder="Filter by name, owner, or ID..." style="display:none;" autocomplete="off">
             </div>
-
             <div id="api-status-msg" class="calc-msg" aria-live="polite">Click the button above to load satellite records from CelesTrak.</div>
-
             <div id="satcat-results-grid" class="satcat-grid"></div>
         </div>
     </section>
 
     <div style="text-align:center;margin:20px 0 60px;">
-        <a href="index.html" class="btn">BACK TO HOME</a>
+        <a href="index.html" class="btn">Back to Home</a>
     </div>
 
     <footer>
@@ -283,5 +911,25 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // ── Satellite Gallery Search ──
+        (function() {
+            const input = document.getElementById('satellite-search-input');
+            const cards = document.querySelectorAll('.sat-card');
+            const emptyMsg = document.getElementById('sat-search-empty');
+            if (!input) return;
+            input.addEventListener('input', function() {
+                const q = this.value.trim().toLowerCase();
+                let visible = 0;
+                cards.forEach(card => {
+                    const name = (card.dataset.name || '') + ' ' + (card.dataset.category || '');
+                    const show = !q || name.includes(q);
+                    card.setAttribute('data-search-hidden', show ? 'false' : 'true');
+                    if (show) visible++;
+                });
+                if (emptyMsg) emptyMsg.style.display = (q && visible === 0) ? 'block' : 'none';
+            });
+        })();
+    </script>
 </body>
 </html>

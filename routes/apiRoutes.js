@@ -671,8 +671,8 @@ router.delete('/satellites/watchlist/:noradId', async (req, res) => {
     }
 });
 
-// GET /api/satellites/:id/passes - Compute ground station pass predictions
-router.get('/satellites/:id/passes', (req, res) => {
+// Handler for ground station pass predictions
+const handlePassPrediction = (req, res) => {
     const lat = parseFloat(req.query.lat) || 28.6139; // Default: New Delhi / Ground Station Alpha
     const lon = parseFloat(req.query.lon) || 77.2090;
     const noradId = parseInt(req.params.id, 10) || 25544;
@@ -709,7 +709,10 @@ router.get('/satellites/:id/passes', (req, res) => {
         count: passes.length,
         passes: passes
     });
-});
+};
+
+router.get('/satellites/passes', handlePassPrediction);
+router.get('/satellites/:id/passes', handlePassPrediction);
 
 // ====================================================
 // 4. COSMIC QUIZ ENDPOINTS
