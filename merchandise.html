@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Merchandise - Solar Explorer</title>
+    <title>Space Merchandise Store - Solar Explorer</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
@@ -22,159 +25,184 @@
         </div>
     </nav>
 
-    <!-- Merchandise Hero & 19-Day Coming Soon Countdown -->
-    <header class="merch-hero">
-        <div class="merch-hero-content">
-            <h1 class="page-title merch-hero-title">SPACE MERCHANDISE</h1>
-            <p class="timeline-sub merch-hero-sub">
-                Launching an exclusive collection of engineered apparel and gear for space lovers.
-            </p>
-
-            <!-- Launch Countdown Clock: 19 Days -->
-            <div class="countdown-container" aria-label="Official Launch Countdown">
-                <div class="countdown-card">
-                    <span class="countdown-val" id="cd-days">19</span>
-                    <span class="countdown-lbl">DAYS</span>
-                </div>
-                <div class="countdown-sep">:</div>
-                <div class="countdown-card">
-                    <span class="countdown-val" id="cd-hours">08</span>
-                    <span class="countdown-lbl">HOURS</span>
-                </div>
-                <div class="countdown-sep">:</div>
-                <div class="countdown-card">
-                    <span class="countdown-val" id="cd-minutes">45</span>
-                    <span class="countdown-lbl">MINUTES</span>
-                </div>
-                <div class="countdown-sep">:</div>
-                <div class="countdown-card">
-                    <span class="countdown-val" id="cd-seconds">12</span>
-                    <span class="countdown-lbl">SECONDS</span>
-                </div>
-            </div>
-
-            <div class="merch-hero-cta">
-                <a href="#waitlist-section" class="btn">JOIN EARLY ACCESS WAITLIST</a>
-                <a href="#order-lookup-section" class="btn btn-secondary">CHECK MY ORDER STATUS</a>
-            </div>
-
-            <!-- Batch 01 Allocation Tracker -->
-            <div class="batch-meter-wrap" id="batch-meter-box">
-                <div class="batch-meter-header">
-                    <span class="meter-title">&#9679; BATCH 01 PRODUCTION ALLOCATION</span>
-                    <span class="meter-counts" id="batch-meter-counts">Loading reservations...</span>
-                </div>
-                <div class="batch-progress-bar">
-                    <div class="batch-progress-fill" id="batch-progress-fill" style="width: 15%;"></div>
-                </div>
-                <div class="batch-meta-sub">
-                    <span>Capped at 500 VIP Collector Units</span>
-                    <span class="gold-text">Includes 20% Early Bird Discount</span>
-                </div>
-            </div>
+    <!-- Minimalist Store Hero Header (No Countdown Clock) -->
+    <header class="page-header merch-clean-header">
+        <h1 class="page-title">Space Merchandise</h1>
+        <p class="timeline-sub">Engineered technical apparel and collectibles for space explorers. Direct order checkout with instant email confirmation.</p>
+        <div class="merch-hero-quick-actions">
+            <a href="#store-catalog" class="btn">EXPLORE COLLECTION</a>
+            <a href="#order-lookup-section" class="btn btn-secondary">TRACK AN ORDER</a>
         </div>
     </header>
 
-    <main class="merch-main-container">
+    <main class="merch-main-container" id="store-catalog">
 
         <!-- ========================================================
-             MERCHANDISE SHOWCASE: Curated Space Collection
+             MERCHANDISE CATALOG: 6 Premium Space Items
              ======================================================== -->
-        <section class="merch-showcase-section" aria-labelledby="showcase-heading">
-            <div class="section-title-wrap">
-                <h2 id="showcase-heading" class="sec-headline">UPCOMING MERCHANDISE PREVIEW</h2>
-                <p class="sec-desc">Engineered with premium materials and astronomical accuracy. Select any item below to pre-register.</p>
-            </div>
-
-            <!-- Products Grid: Exact Replica of Mockup -->
+        <section class="merch-showcase-section" aria-label="Official Space Merchandise Store">
+            
             <div class="merch-grid" id="merch-grid">
 
                 <!-- Product 1: Lunar Bomber Jacket -->
-                <article class="merch-card" data-product-id="lunar-bomber" data-product-name="Lunar Bomber Jacket">
+                <article class="merch-card" data-product-id="lunar-bomber" data-product-name="Lunar Bomber Jacket" data-price="119.00" data-img="images/merch/lunar-bomber.png">
                     <div class="merch-visual">
                         <img src="images/merch/lunar-bomber.png" alt="Lunar Bomber Jacket" class="merch-img" loading="lazy">
                     </div>
                     <div class="merch-details">
+                        <span class="merch-category">TECHNICAL OUTERWEAR</span>
                         <h3 class="merch-name">Lunar Bomber Jacket</h3>
-                        <p class="merch-desc">Lightweight space-inspired bomber.</p>
+                        <p class="merch-desc">Lightweight space-inspired bomber with weather-resistant shell.</p>
+                        
+                        <!-- Segmented Size Selector -->
+                        <div class="merch-size-selector" aria-label="Select size">
+                            <button type="button" class="size-pill" data-size="S">S</button>
+                            <button type="button" class="size-pill active" data-size="M">M</button>
+                            <button type="button" class="size-pill" data-size="L">L</button>
+                            <button type="button" class="size-pill" data-size="XL">XL</button>
+                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
+                        </div>
+
                         <div class="merch-price-row">
                             <span class="current-price">$119.00</span>
-                            <button type="button" class="btn-preorder" data-item="Lunar Bomber Jacket">Pre-order</button>
+                            <button type="button" class="btn-buy-instant" data-item="Lunar Bomber Jacket" data-id="lunar-bomber" data-price="119.00" data-img="images/merch/lunar-bomber.png">
+                                Buy Now
+                            </button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Product 2: Saturn Orbit Hoodie -->
-                <article class="merch-card" data-product-id="saturn-hoodie" data-product-name="Saturn Orbit Hoodie">
+                <article class="merch-card" data-product-id="saturn-hoodie" data-product-name="Saturn Orbit Hoodie" data-price="69.00" data-img="images/merch/saturn-hoodie.png">
                     <div class="merch-visual">
                         <img src="images/merch/saturn-hoodie.png" alt="Saturn Orbit Hoodie" class="merch-img" loading="lazy">
                     </div>
                     <div class="merch-details">
+                        <span class="merch-category">HEAVYWEIGHT FLEECE</span>
                         <h3 class="merch-name">Saturn Orbit Hoodie</h3>
-                        <p class="merch-desc">Premium cotton hoodie with orbital design.</p>
+                        <p class="merch-desc">Premium cotton hoodie featuring monochromatic orbital ring print.</p>
+                        
+                        <div class="merch-size-selector" aria-label="Select size">
+                            <button type="button" class="size-pill" data-size="S">S</button>
+                            <button type="button" class="size-pill active" data-size="M">M</button>
+                            <button type="button" class="size-pill" data-size="L">L</button>
+                            <button type="button" class="size-pill" data-size="XL">XL</button>
+                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
+                        </div>
+
                         <div class="merch-price-row">
                             <span class="current-price">$69.00</span>
-                            <button type="button" class="btn-preorder" data-item="Saturn Orbit Hoodie">Pre-order</button>
+                            <button type="button" class="btn-buy-instant" data-item="Saturn Orbit Hoodie" data-id="saturn-hoodie" data-price="69.00" data-img="images/merch/saturn-hoodie.png">
+                                Buy Now
+                            </button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Product 3: Lunar Phase T-Shirt -->
-                <article class="merch-card" data-product-id="lunar-tshirt" data-product-name="Lunar Phase T-Shirt">
+                <article class="merch-card" data-product-id="lunar-tee" data-product-name="Lunar Phase T-Shirt" data-price="39.00" data-img="images/merch/lunar-tee.png">
                     <div class="merch-visual">
-                        <img src="images/merch/lunar-tshirt.png" alt="Lunar Phase T-Shirt" class="merch-img" loading="lazy">
+                        <img src="images/merch/lunar-tee.png" alt="Lunar Phase T-Shirt" class="merch-img" loading="lazy">
                     </div>
                     <div class="merch-details">
+                        <span class="merch-category">COTTON ESSENTIAL</span>
                         <h3 class="merch-name">Lunar Phase T-Shirt</h3>
-                        <p class="merch-desc">Minimal moon phase graphic tee.</p>
+                        <p class="merch-desc">Minimalist high-contrast moon phase graphic print on combed jersey.</p>
+                        
+                        <div class="merch-size-selector" aria-label="Select size">
+                            <button type="button" class="size-pill" data-size="S">S</button>
+                            <button type="button" class="size-pill active" data-size="M">M</button>
+                            <button type="button" class="size-pill" data-size="L">L</button>
+                            <button type="button" class="size-pill" data-size="XL">XL</button>
+                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
+                        </div>
+
                         <div class="merch-price-row">
                             <span class="current-price">$39.00</span>
-                            <button type="button" class="btn-preorder" data-item="Lunar Phase T-Shirt">Pre-order</button>
+                            <button type="button" class="btn-buy-instant" data-item="Lunar Phase T-Shirt" data-id="lunar-tee" data-price="39.00" data-img="images/merch/lunar-tee.png">
+                                Buy Now
+                            </button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Product 4: Astronaut Tee -->
-                <article class="merch-card" data-product-id="astronaut-tee" data-product-name="Astronaut Tee">
+                <article class="merch-card" data-product-id="astronaut-tee" data-product-name="Astronaut Tee" data-price="39.00" data-img="images/merch/astronaut-tee.png">
                     <div class="merch-visual">
                         <img src="images/merch/astronaut-tee.png" alt="Astronaut Tee" class="merch-img" loading="lazy">
                     </div>
                     <div class="merch-details">
+                        <span class="merch-category">GRAPHIC ESSENTIAL</span>
                         <h3 class="merch-name">Astronaut Tee</h3>
-                        <p class="merch-desc">Classic tee for space enthusiasts.</p>
+                        <p class="merch-desc">Classic graphic crewneck celebrating human space exploration.</p>
+                        
+                        <div class="merch-size-selector" aria-label="Select size">
+                            <button type="button" class="size-pill" data-size="S">S</button>
+                            <button type="button" class="size-pill active" data-size="M">M</button>
+                            <button type="button" class="size-pill" data-size="L">L</button>
+                            <button type="button" class="size-pill" data-size="XL">XL</button>
+                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
+                        </div>
+
                         <div class="merch-price-row">
                             <span class="current-price">$39.00</span>
-                            <button type="button" class="btn-preorder" data-item="Astronaut Tee">Pre-order</button>
+                            <button type="button" class="btn-buy-instant" data-item="Astronaut Tee" data-id="astronaut-tee" data-price="39.00" data-img="images/merch/astronaut-tee.png">
+                                Buy Now
+                            </button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Product 5: Andromeda Hoodie -->
-                <article class="merch-card" data-product-id="andromeda-hoodie" data-product-name="Andromeda Hoodie">
+                <article class="merch-card" data-product-id="andromeda-hoodie" data-product-name="Andromeda Hoodie" data-price="69.00" data-img="images/merch/andromeda-hoodie.png">
                     <div class="merch-visual">
                         <img src="images/merch/andromeda-hoodie.png" alt="Andromeda Hoodie" class="merch-img" loading="lazy">
                     </div>
                     <div class="merch-details">
+                        <span class="merch-category">HEAVYWEIGHT FLEECE</span>
                         <h3 class="merch-name">Andromeda Hoodie</h3>
-                        <p class="merch-desc">Cozy hoodie featuring the Andromeda Galaxy.</p>
+                        <p class="merch-desc">Deep-black fleece showcasing the Andromeda Galaxy core.</p>
+                        
+                        <div class="merch-size-selector" aria-label="Select size">
+                            <button type="button" class="size-pill" data-size="S">S</button>
+                            <button type="button" class="size-pill active" data-size="M">M</button>
+                            <button type="button" class="size-pill" data-size="L">L</button>
+                            <button type="button" class="size-pill" data-size="XL">XL</button>
+                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
+                        </div>
+
                         <div class="merch-price-row">
                             <span class="current-price">$69.00</span>
-                            <button type="button" class="btn-preorder" data-item="Andromeda Hoodie">Pre-order</button>
+                            <button type="button" class="btn-buy-instant" data-item="Andromeda Hoodie" data-id="andromeda-hoodie" data-price="69.00" data-img="images/merch/andromeda-hoodie.png">
+                                Buy Now
+                            </button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Product 6: Explorer Jacket -->
-                <article class="merch-card" data-product-id="explorer-jacket" data-product-name="Explorer Jacket">
+                <article class="merch-card" data-product-id="explorer-jacket" data-product-name="Explorer Jacket" data-price="129.00" data-img="images/merch/explorer-jacket.png">
                     <div class="merch-visual">
                         <img src="images/merch/explorer-jacket.png" alt="Explorer Jacket" class="merch-img" loading="lazy">
                     </div>
                     <div class="merch-details">
+                        <span class="merch-category">TECHNICAL OUTERWEAR</span>
                         <h3 class="merch-name">Explorer Jacket</h3>
-                        <p class="merch-desc">All-weather jacket built for explorers.</p>
+                        <p class="merch-desc">All-weather technical jacket built with stormproof hardware.</p>
+                        
+                        <div class="merch-size-selector" aria-label="Select size">
+                            <button type="button" class="size-pill" data-size="S">S</button>
+                            <button type="button" class="size-pill active" data-size="M">M</button>
+                            <button type="button" class="size-pill" data-size="L">L</button>
+                            <button type="button" class="size-pill" data-size="XL">XL</button>
+                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
+                        </div>
+
                         <div class="merch-price-row">
                             <span class="current-price">$129.00</span>
-                            <button type="button" class="btn-preorder" data-item="Explorer Jacket">Pre-order</button>
+                            <button type="button" class="btn-buy-instant" data-item="Explorer Jacket" data-id="explorer-jacket" data-price="129.00" data-img="images/merch/explorer-jacket.png">
+                                Buy Now
+                            </button>
                         </div>
                     </div>
                 </article>
@@ -183,103 +211,19 @@
         </section>
 
         <!-- ========================================================
-             PRE-REGISTRATION & EARLY ACCESS WAITLIST FORM
+             ORDER STATUS & TRACKING LOOKUP (RUBRIC C11)
              ======================================================== -->
-        <section id="waitlist-section" class="waitlist-section" aria-labelledby="waitlist-heading">
-            <div class="section-title-wrap">
-                <h2 id="waitlist-heading" class="sec-headline">JOIN THE LAUNCH WAITLIST</h2>
-                <p class="sec-desc">Submit your details to secure guaranteed first-batch allocation and early access notifications.</p>
-            </div>
-
-            <div class="waitlist-form-container">
-                <form id="merch-waitlist-form" class="feedback-form" novalidate>
-                    <div class="form-group">
-                        <label for="wl-name">Full Name *</label>
-                        <input type="text" id="wl-name" name="name" placeholder="e.g., Alex Vance" required autocomplete="name">
-                        <span class="field-error" id="err-wl-name" aria-live="polite"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="wl-email">Email Address *</label>
-                        <input type="email" id="wl-email" name="email" placeholder="alex@domain.com" required autocomplete="email">
-                        <span class="field-error" id="err-wl-email" aria-live="polite"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="wl-product">Merchandise of Interest *</label>
-                        <select id="wl-product" name="product" required>
-                            <option value="">-- Choose your desired space gear --</option>
-                            <option value="Entire Launch Collector Bundle (All 6 Items)">Entire Launch Collector Bundle (All 6 Items)</option>
-                            <option value="Lunar Bomber Jacket">Lunar Bomber Jacket ($119.00)</option>
-                            <option value="Saturn Orbit Hoodie">Saturn Orbit Hoodie ($69.00)</option>
-                            <option value="Lunar Phase T-Shirt">Lunar Phase T-Shirt ($39.00)</option>
-                            <option value="Astronaut Tee">Astronaut Tee ($39.00)</option>
-                            <option value="Andromeda Hoodie">Andromeda Hoodie ($69.00)</option>
-                            <option value="Explorer Jacket">Explorer Jacket ($129.00)</option>
-                        </select>
-                        <span class="field-error" id="err-wl-product" aria-live="polite"></span>
-                    </div>
-
-                    <div class="form-row-2col">
-                        <div class="form-group">
-                            <label for="wl-size">Apparel Size *</label>
-                            <select id="wl-size" name="size" required>
-                                <option value="Medium">Medium (M)</option>
-                                <option value="Small">Small (S)</option>
-                                <option value="Large">Large (L)</option>
-                                <option value="XL">Extra Large (XL)</option>
-                                <option value="2XL">Double Extra Large (2XL)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="wl-qty">Desired Quantity *</label>
-                            <input type="number" id="wl-qty" name="quantity" min="1" max="10" value="1" required>
-                            <span class="field-error" id="err-wl-qty" aria-live="polite"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="wl-wishlist">What custom space gear should we launch next?</label>
-                        <textarea id="wl-wishlist" name="wishlist" rows="3" placeholder="e.g. Space Desk Mat, Mars Rover Hoodie, Celestial Pin Set..."></textarea>
-                    </div>
-
-                    <div class="form-group checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="wl-notify" name="notify" checked required>
-                            <span>Yes, notify me via email the minute this collection drops with my pre-order link. *</span>
-                        </label>
-                        <span class="field-error" id="err-wl-notify" aria-live="polite"></span>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" id="wl-submit-btn" class="btn">PRE-ORDER NOW</button>
-                        <button type="reset" id="wl-reset-btn" class="btn btn-secondary">RESET</button>
-                    </div>
-
-                    <div id="wl-status" class="form-status" aria-live="polite"></div>
-                </form>
-
-                <!-- Interactive Boarding Pass (Rendered via DOM upon submit) -->
-                <div id="boarding-pass-target" class="boarding-pass-wrap" style="display:none;" aria-live="polite">
-                    <!-- Populated dynamically by JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================================
-             ORDER STATUS & VIP PASS LOOKUP (RUBRIC C11)
-             ======================================================== -->
-        <section class="order-lookup-section" id="order-lookup-section" aria-label="Pre-Order Status Lookup">
+        <section class="order-lookup-section" id="order-lookup-section" aria-label="Order Status Lookup">
             <div class="lookup-card">
                 <div class="lookup-header">
-                    <h2>Track Your Pre-Order Registration</h2>
-                    <p>Enter your VIP Pass ID (e.g., <code>VIP-ORBIT-1042</code>) or Order ID to verify registration status from the server database.</p>
+                    <h2>Track Your Order Status</h2>
+                    <p>Enter your Order ID (e.g. <code>ORD-2026-1042</code>) to check live fulfillment status and dispatch telemetry from the server database.</p>
                 </div>
 
                 <form id="order-lookup-form" class="lookup-form" onsubmit="return false;">
                     <div class="lookup-input-row">
-                        <label for="lookup-id-input" class="sr-only">Enter VIP Pass ID or Order ID</label>
-                        <input type="text" id="lookup-id-input" placeholder="Enter VIP Pass ID (e.g. VIP-ORBIT-1042)..." required autocomplete="off">
+                        <label for="lookup-id-input" class="sr-only">Enter Order ID</label>
+                        <input type="text" id="lookup-id-input" placeholder="Enter Order ID (e.g. ORD-2026-1042)..." required autocomplete="off">
                         <button type="submit" id="lookup-submit-btn" class="btn">CHECK STATUS</button>
                     </div>
                 </form>
@@ -291,6 +235,166 @@
         </section>
 
     </main>
+
+    <!-- ========================================================
+         SLIDE-OVER EXPRESS CHECKOUT DRAWER (MINIMALIST E-COMMERCE)
+         ======================================================== -->
+    <div id="checkout-drawer" class="checkout-drawer-overlay" aria-hidden="true">
+        <div class="checkout-drawer-backdrop" id="drawer-backdrop"></div>
+        <aside class="checkout-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+            
+            <!-- Drawer Header -->
+            <div class="drawer-header">
+                <div class="drawer-header-left">
+                    <span class="drawer-subtitle">SOLAR EXPLORER STORE</span>
+                    <h2 id="drawer-title" class="drawer-title">EXPRESS CHECKOUT</h2>
+                </div>
+                <button type="button" id="drawer-close-btn" class="drawer-close" aria-label="Close Checkout">&times;</button>
+            </div>
+
+            <!-- VIEW 1: Checkout Form Flow -->
+            <div id="drawer-form-view" class="drawer-content-flow">
+                <!-- Mini-Cart Item Summary -->
+                <div class="drawer-item-card">
+                    <img id="drawer-item-img" src="images/merch/lunar-bomber.png" alt="Selected Product" class="drawer-item-thumb">
+                    <div class="drawer-item-info">
+                        <h4 id="drawer-item-name" class="drawer-item-title">Lunar Bomber Jacket</h4>
+                        <div class="drawer-item-meta">
+                            <span id="drawer-item-size-badge" class="spec-badge">SIZE: M</span>
+                            <span id="drawer-item-unit-price" class="drawer-item-price">$119.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Minimalist Quantity Stepper Capsule -->
+                    <div class="qty-capsule" aria-label="Quantity selector">
+                        <button type="button" class="qty-btn" id="qty-minus" aria-label="Decrease quantity">&#8722;</button>
+                        <span class="qty-val" id="drawer-item-qty">1</span>
+                        <button type="button" class="qty-btn" id="qty-plus" aria-label="Increase quantity">&#43;</button>
+                    </div>
+                </div>
+
+                <!-- Customer Delivery Form -->
+                <form id="drawer-checkout-form" class="drawer-form" novalidate>
+                    <div class="drawer-form-header-row">
+                        <span class="section-label">SHIPPING DESTINATION</span>
+                        <button type="button" id="btn-demo-autofill" class="btn-text-link">⚡ Autofill Demo Details</button>
+                    </div>
+
+                    <div class="drawer-form-group">
+                        <label for="chk-name">FULL NAME</label>
+                        <input type="text" id="chk-name" name="name" placeholder="Commander Alex Vance" required autocomplete="name">
+                    </div>
+
+                    <div class="drawer-form-group">
+                        <label for="chk-email">EMAIL ADDRESS (RECEIVES INVOICE EMAIL)</label>
+                        <input type="email" id="chk-email" name="email" placeholder="alex.vance@cosmos.io" required autocomplete="email">
+                    </div>
+
+                    <div class="drawer-form-group">
+                        <label for="chk-address">STREET ADDRESS</label>
+                        <input type="text" id="chk-address" name="address" placeholder="450 Orbital Launch Complex" required autocomplete="street-address">
+                    </div>
+
+                    <div class="drawer-form-row-2">
+                        <div class="drawer-form-group">
+                            <label for="chk-city">CITY</label>
+                            <input type="text" id="chk-city" name="city" placeholder="Cape Canaveral" required>
+                        </div>
+                        <div class="drawer-form-group">
+                            <label for="chk-zip">ZIP / POSTAL CODE</label>
+                            <input type="text" id="chk-zip" name="zip" placeholder="32920" required>
+                        </div>
+                    </div>
+
+                    <!-- Payment Simulation Strip -->
+                    <div class="payment-method-strip">
+                        <div class="payment-method-pill active">
+                            <span class="payment-dot"></span>
+                            <span class="payment-title">Instant Demo Pay</span>
+                            <span class="payment-badge">Simulated Checkout</span>
+                        </div>
+                    </div>
+
+                    <!-- Price Calculations -->
+                    <div class="drawer-price-breakdown">
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span id="price-subtotal">$119.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Complimentary Orbital Shipping</span>
+                            <span class="text-green">FREE</span>
+                        </div>
+                        <div class="price-row total-row">
+                            <span>Total Due</span>
+                            <span id="price-total" class="price-total-val">$119.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Instant Pay CTA Button -->
+                    <button type="submit" id="btn-submit-order" class="btn-instant-pay">
+                        <span class="btn-pay-text" id="btn-pay-text">COMPLETE ORDER &bull; $119.00</span>
+                        <span class="btn-spinner" id="btn-pay-spinner" style="display:none;" aria-hidden="true"></span>
+                    </button>
+                    <div class="payment-footnote">&#128274; Simulated order routing with live automated email dispatch.</div>
+                </form>
+            </div>
+
+            <!-- VIEW 2: Order Receipt (Post-Purchase Success) -->
+            <div id="drawer-receipt-view" class="drawer-receipt-flow" style="display: none;">
+                <div class="receipt-success-icon">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="8 12 11 15 16 9"></polyline>
+                    </svg>
+                </div>
+                
+                <span class="receipt-status-tag">ORDER CONFIRMED</span>
+                <h3 class="receipt-title">PAYMENT PROCESSED SUCCESSFULLY</h3>
+                <p class="receipt-desc">Your order has been routed to the fulfillment queue and a full confirmation email has been dispatched.</p>
+
+                <div class="receipt-order-card">
+                    <div class="receipt-id-row">
+                        <span class="receipt-id-lbl">ORDER NUMBER</span>
+                        <div class="receipt-id-val-wrap">
+                            <code id="receipt-order-id" class="receipt-order-id">ORD-2026-7429</code>
+                            <button type="button" id="btn-copy-receipt-id" class="btn-copy-small" title="Copy Order ID">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="receipt-specs">
+                        <div class="receipt-spec-line">
+                            <span class="spec-k">Item:</span>
+                            <span class="spec-v" id="receipt-item-name">Lunar Bomber Jacket</span>
+                        </div>
+                        <div class="receipt-spec-line">
+                            <span class="spec-k">Configuration:</span>
+                            <span class="spec-v" id="receipt-item-config">Size M &bull; Qty 1</span>
+                        </div>
+                        <div class="receipt-spec-line">
+                            <span class="spec-k">Total Paid:</span>
+                            <span class="spec-v font-bold" id="receipt-total-paid">$119.00</span>
+                        </div>
+                        <div class="receipt-spec-line">
+                            <span class="spec-k">Estimated Delivery:</span>
+                            <span class="spec-v" id="receipt-dispatch">4 Business Days</span>
+                        </div>
+                        <div class="receipt-spec-line">
+                            <span class="spec-k">Shipping Destination:</span>
+                            <span class="spec-v" id="receipt-shipping-dest">Alex Vance</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="receipt-actions">
+                    <a id="btn-view-receipt-email" href="#" target="_blank" class="btn-receipt-primary" style="text-align:center;text-decoration:none;display:block;">VIEW EMAIL RECEIPT (HTML)</a>
+                    <button type="button" id="btn-receipt-track" class="btn-receipt-secondary">TRACK IN ORDER LOOKUP</button>
+                    <button type="button" id="btn-receipt-continue" class="btn-receipt-secondary">CONTINUE SHOPPING</button>
+                </div>
+            </div>
+
+        </aside>
+    </div>
 
     <div style="text-align:center;margin:30px 0 60px;">
         <a href="index.html" class="btn">BACK TO HOME</a>

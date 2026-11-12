@@ -666,245 +666,293 @@ function initFeedbackForm() {
 }
 
 /* ========================================================
-   Feature K — Space Merchandise Countdown & Waitlist (merchandise.html)
+   Feature K — Space Merchandise Express Checkout & E-Commerce Store (merchandise.html)
    ======================================================== */
 const MERCH_WAITLIST_STORAGE_KEY = 'solarExplorerMerchandiseWaitlist';
+const MERCH_ORDERS_STORAGE_KEY = 'solarExplorerOrders';
 
 function initMerchandisePage() {
-    const merchForm = document.getElementById('merch-waitlist-form');
-    const daysEl = document.getElementById('cd-days');
+    const catalog = document.getElementById('store-catalog');
+    const drawer = document.getElementById('checkout-drawer');
+    if (!catalog && !drawer) return;
 
-    if (!merchForm && !daysEl) return;
-
-    /* 1. Launch Countdown Timer: 19 Days */
-    const hoursEl = document.getElementById('cd-hours');
-    const minutesEl = document.getElementById('cd-minutes');
-    const secondsEl = document.getElementById('cd-seconds');
-
-    if (daysEl && hoursEl && minutesEl && secondsEl) {
-        let remainingSeconds = 19 * 86400 + 8 * 3600 + 45 * 60 + 12;
-
-        function updateCountdown() {
-            if (remainingSeconds > 0) remainingSeconds--;
-            const d = Math.floor(remainingSeconds / 86400);
-            const h = Math.floor((remainingSeconds % 86400) / 3600);
-            const m = Math.floor((remainingSeconds % 3600) / 60);
-            const s = remainingSeconds % 60;
-
-            daysEl.textContent = String(d).padStart(2, '0');
-            hoursEl.textContent = String(h).padStart(2, '0');
-            minutesEl.textContent = String(m).padStart(2, '0');
-            secondsEl.textContent = String(s).padStart(2, '0');
-        }
-
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-    }
-
-
-    /* 3. Card Pre-Register Quick Button */
-    const interestButtons = document.querySelectorAll('.btn-preorder, .btn-interest');
-    const productSelect = document.getElementById('wl-product');
-    const waitlistSection = document.getElementById('waitlist-section');
-
-    if (interestButtons.length > 0 && productSelect) {
-        interestButtons.forEach((btn) => {
-            btn.addEventListener('click', () => {
-                const itemTitle = btn.getAttribute('data-item');
-
-                for (let i = 0; i < productSelect.options.length; i++) {
-                    if (productSelect.options[i].text.includes(itemTitle)) {
-                        productSelect.selectedIndex = i;
-                        break;
-                    }
-                }
-
-                if (waitlistSection) {
-                    waitlistSection.scrollIntoView({ behavior: 'smooth' });
-                }
-
-                const nameInput = document.getElementById('wl-name');
-                if (nameInput) nameInput.focus();
-            });
-        });
-    }
-
-    /* 4. Waitlist Form Submission & JSON Storage */
-    if (merchForm) {
-        const nameInput = document.getElementById('wl-name');
-        const emailInput = document.getElementById('wl-email');
-        const itemSelect = document.getElementById('wl-product');
-        const sizeSelect = document.getElementById('wl-size');
-        const qtyInput = document.getElementById('wl-qty');
-        const wishlistInput = document.getElementById('wl-wishlist');
-        const notifyCheck = document.getElementById('wl-notify');
-        const statusBox = document.getElementById('wl-status');
-        const passTarget = document.getElementById('boarding-pass-target');
-
-        const errName = document.getElementById('err-wl-name');
-        const errEmail = document.getElementById('err-wl-email');
-        const errProduct = document.getElementById('err-wl-product');
-        const errQty = document.getElementById('err-wl-qty');
-        const errNotify = document.getElementById('err-wl-notify');
-
-        function clearWlErrors() {
-            if (errName) errName.textContent = '';
-            if (errEmail) errEmail.textContent = '';
-            if (errProduct) errProduct.textContent = '';
-            if (errQty) errQty.textContent = '';
-            if (errNotify) errNotify.textContent = '';
-            if (statusBox) {
-                statusBox.className = 'form-status';
-                statusBox.style.display = 'none';
-                statusBox.textContent = '';
+    // 1. Size Pill Selectors on Product Cards
+    const sizePills = document.querySelectorAll('.merch-card .size-pill');
+    sizePills.forEach(pill => {
+        pill.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const parent = pill.closest('.merch-size-selector');
+            if (parent) {
+                parent.querySelectorAll('.size-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
             }
-        }
-
-        merchForm.addEventListener('reset', () => {
-            clearWlErrors();
-            if (passTarget) passTarget.style.display = 'none';
         });
+    });
 
-        merchForm.addEventListener('submit', (e) => {
+    // 2. Cart & Drawer State
+    let currentCart = {
+        id: 'lunar-bomber',
+        name: 'Lunar Bomber Jacket',
+        price: 119.00,
+        img: 'images/merch/lunar-bomber.png',
+        size: 'M',
+        qty: 1
+    };
+
+    const drawerBackdrop = document.getElementById('drawer-backdrop');
+    const drawerCloseBtn = document.getElementById('drawer-close-btn');
+    const drawerFormView = document.getElementById('drawer-form-view');
+    const drawerReceiptView = document.getElementById('drawer-receipt-view');
+
+    function openCheckoutDrawer(item) {
+        currentCart = { ...item, qty: 1 };
+        updateDrawerUI();
+        if (drawerFormView) drawerFormView.style.display = 'flex';
+        if (drawerReceiptView) drawerReceiptView.style.display = 'none';
+        if (drawer) {
+            drawer.classList.add('open');
+            drawer.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeCheckoutDrawer() {
+        if (drawer) {
+            drawer.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+    }
+
+    function updateDrawerUI() {
+        const imgEl = document.getElementById('drawer-item-img');
+        const nameEl = document.getElementById('drawer-item-name');
+        const sizeEl = document.getElementById('drawer-item-size-badge');
+        const unitPriceEl = document.getElementById('drawer-item-unit-price');
+        const qtyEl = document.getElementById('drawer-item-qty');
+        const subtotalEl = document.getElementById('price-subtotal');
+        const totalEl = document.getElementById('price-total');
+        const btnPayText = document.getElementById('btn-pay-text');
+
+        const total = (currentCart.price * currentCart.qty).toFixed(2);
+
+        if (imgEl) imgEl.src = currentCart.img;
+        if (nameEl) nameEl.textContent = currentCart.name;
+        if (sizeEl) sizeEl.textContent = `SIZE: ${currentCart.size}`;
+        if (unitPriceEl) unitPriceEl.textContent = `$${currentCart.price.toFixed(2)}`;
+        if (qtyEl) qtyEl.textContent = String(currentCart.qty);
+        if (subtotalEl) subtotalEl.textContent = `$${total}`;
+        if (totalEl) totalEl.textContent = `$${total}`;
+        if (btnPayText) btnPayText.textContent = `COMPLETE ORDER • $${total}`;
+    }
+
+    // 3. Buy Now Instant Trigger
+    const buyButtons = document.querySelectorAll('.btn-buy-instant');
+    buyButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const card = btn.closest('.merch-card');
+            const id = btn.getAttribute('data-id') || (card ? card.getAttribute('data-product-id') : 'space-gear');
+            const name = btn.getAttribute('data-item') || (card ? card.getAttribute('data-product-name') : 'Space Gear');
+            const price = parseFloat(btn.getAttribute('data-price') || (card ? card.getAttribute('data-price') : '49.00'));
+            const img = btn.getAttribute('data-img') || (card ? card.getAttribute('data-img') : 'images/merch/lunar-bomber.png');
+
+            let size = 'M';
+            if (card) {
+                const activePill = card.querySelector('.size-pill.active');
+                if (activePill) size = activePill.getAttribute('data-size') || 'M';
+            }
+
+            openCheckoutDrawer({ id, name, price, img, size });
+        });
+    });
+
+    // 4. Quantity Stepper
+    const qtyMinus = document.getElementById('qty-minus');
+    const qtyPlus = document.getElementById('qty-plus');
+    if (qtyMinus) {
+        qtyMinus.addEventListener('click', () => {
+            if (currentCart.qty > 1) {
+                currentCart.qty--;
+                updateDrawerUI();
+            }
+        });
+    }
+    if (qtyPlus) {
+        qtyPlus.addEventListener('click', () => {
+            if (currentCart.qty < 10) {
+                currentCart.qty++;
+                updateDrawerUI();
+            }
+        });
+    }
+
+    // 5. Close Drawer Handlers
+    if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeCheckoutDrawer);
+    if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeCheckoutDrawer);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) {
+            closeCheckoutDrawer();
+        }
+    });
+
+    // 6. Demo Autofill Handler
+    const btnAutofill = document.getElementById('btn-demo-autofill');
+    if (btnAutofill) {
+        btnAutofill.addEventListener('click', () => {
+            const chkName = document.getElementById('chk-name');
+            const chkEmail = document.getElementById('chk-email');
+            const chkAddress = document.getElementById('chk-address');
+            const chkCity = document.getElementById('chk-city');
+            const chkZip = document.getElementById('chk-zip');
+            if (chkName) chkName.value = 'Commander Alex Vance';
+            if (chkEmail) chkEmail.value = 'alex.vance@cosmos.io';
+            if (chkAddress) chkAddress.value = '450 Orbital Launch Complex';
+            if (chkCity) chkCity.value = 'Cape Canaveral';
+            if (chkZip) chkZip.value = '32920';
+        });
+    }
+
+    // 7. Express Order Checkout Submission
+    const checkoutForm = document.getElementById('drawer-checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            clearWlErrors();
+            const name = (document.getElementById('chk-name')?.value || '').trim();
+            const email = (document.getElementById('chk-email')?.value || '').trim();
+            const address = (document.getElementById('chk-address')?.value || '').trim();
+            const city = (document.getElementById('chk-city')?.value || '').trim();
+            const zip = (document.getElementById('chk-zip')?.value || '').trim();
 
-            let isValid = true;
-            const nameVal = nameInput ? nameInput.value.trim() : '';
-            const emailVal = emailInput ? emailInput.value.trim() : '';
-            const productVal = itemSelect ? itemSelect.value : '';
-            const sizeVal = sizeSelect ? sizeSelect.value : 'N/A';
-            const qtyVal = qtyInput ? parseInt(qtyInput.value, 10) : 1;
-            const wishlistVal = wishlistInput ? wishlistInput.value.trim() : '';
-            const notifyVal = notifyCheck ? notifyCheck.checked : false;
-
-            if (!nameVal) {
-                if (errName) errName.textContent = 'Please enter your full name.';
-                isValid = false;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailVal) {
-                if (errEmail) errEmail.textContent = 'Please enter your email.';
-                isValid = false;
-            } else if (!emailRegex.test(emailVal)) {
-                if (errEmail) errEmail.textContent = 'Please enter a valid email format.';
-                isValid = false;
-            }
-
-            if (!productVal) {
-                if (errProduct) errProduct.textContent = 'Please select a merchandise item of interest.';
-                isValid = false;
-            }
-
-            if (isNaN(qtyVal) || qtyVal < 1 || qtyVal > 10) {
-                if (errQty) errQty.textContent = 'Please enter a quantity between 1 and 10.';
-                isValid = false;
-            }
-
-            if (!notifyVal) {
-                if (errNotify) errNotify.textContent = 'Please confirm early launch notification consent.';
-                isValid = false;
-            }
-
-            if (!isValid) {
-                if (statusBox) {
-                    statusBox.textContent = 'Please fix the highlighted errors before submitting.';
-                    statusBox.className = 'form-status error';
-                    statusBox.style.display = 'block';
-                }
+            if (!name || !email || !address || !city || !zip) {
+                alert('Please enter all shipping destination details.');
                 return;
             }
 
-            const recordId = 'MERCH-' + Date.now();
-            const vipPassCode = 'VIP-ORBIT-' + Math.floor(1000 + Math.random() * 9000);
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please provide a valid email address to receive your order invoice.');
+                return;
+            }
 
-            const waitlistRecord = {
-                id: recordId,
-                vipPassId: vipPassCode,
-                name: nameVal,
-                email: emailVal,
-                product: productVal,
-                size: sizeVal,
-                quantity: qtyVal,
-                suggestions: wishlistVal || 'None provided',
-                discount: '20% VIP DISCOUNT',
-                registeredAt: new Date().toISOString()
+            const submitBtn = document.getElementById('btn-submit-order');
+            const spinner = document.getElementById('btn-pay-spinner');
+            const btnText = document.getElementById('btn-pay-text');
+            if (submitBtn) submitBtn.disabled = true;
+            if (spinner) spinner.style.display = 'inline-block';
+            if (btnText) btnText.textContent = 'ROUTING ORDER & DISPATCHING EMAIL...';
+
+            const orderPayload = {
+                customer: { name, email, address, city, zip },
+                items: [
+                    {
+                        productId: currentCart.id,
+                        title: currentCart.name,
+                        size: currentCart.size,
+                        quantity: currentCart.qty,
+                        price: currentCart.price,
+                        image: currentCart.img
+                    }
+                ],
+                total: currentCart.price * currentCart.qty,
+                shippingMethod: 'orbital_express',
+                paymentMethod: 'simulated_express'
             };
 
-            // Save to localStorage in JSON format
-            let waitlist = [];
             try {
-                const raw = localStorage.getItem(MERCH_WAITLIST_STORAGE_KEY);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    if (Array.isArray(parsed)) waitlist = parsed;
+                const res = await sendToBackendApi('/api/orders', orderPayload);
+                const order = (res && res.data) ? res.data : {
+                    orderId: 'ORD-2026-' + Math.floor(1000 + Math.random() * 9000),
+                    trackingNumber: 'TRK-SOLAR-' + Math.floor(100000 + Math.random() * 900000),
+                    status: 'confirmed'
+                };
+
+                // Update receipt view
+                const rId = document.getElementById('receipt-order-id');
+                const rItem = document.getElementById('receipt-item-name');
+                const rConfig = document.getElementById('receipt-item-config');
+                const rTotal = document.getElementById('receipt-total-paid');
+                const rDest = document.getElementById('receipt-shipping-dest');
+                const rEmailLink = document.getElementById('btn-view-receipt-email');
+
+                if (rId) rId.textContent = order.orderId;
+                if (rItem) rItem.textContent = currentCart.name;
+                if (rConfig) rConfig.textContent = `Size ${currentCart.size} • Qty ${currentCart.qty}`;
+                if (rTotal) rTotal.textContent = `$${(currentCart.price * currentCart.qty).toFixed(2)}`;
+                if (rDest) rDest.textContent = `${name}, ${city}`;
+                if (rEmailLink) {
+                    rEmailLink.href = `/api/orders/${encodeURIComponent(order.orderId)}/receipt`;
                 }
-                waitlist.push(waitlistRecord);
-                localStorage.setItem(MERCH_WAITLIST_STORAGE_KEY, JSON.stringify(waitlist));
+
+                // Cache in localStorage
+                try {
+                    const existing = JSON.parse(localStorage.getItem(MERCH_ORDERS_STORAGE_KEY) || '[]');
+                    existing.unshift({
+                        orderId: order.orderId,
+                        trackingNumber: order.trackingNumber,
+                        customer: { name, email, address, city, zip },
+                        items: orderPayload.items,
+                        total: orderPayload.total,
+                        createdAt: new Date().toISOString()
+                    });
+                    localStorage.setItem(MERCH_ORDERS_STORAGE_KEY, JSON.stringify(existing.slice(0, 50)));
+                } catch (cacheErr) {
+                    console.warn('LocalStorage order save failed:', cacheErr);
+                }
+
+                // Flip view
+                if (drawerFormView) drawerFormView.style.display = 'none';
+                if (drawerReceiptView) drawerReceiptView.style.display = 'flex';
+
             } catch (err) {
-                console.warn('Waitlist localStorage failed:', err);
-                waitlist = [waitlistRecord];
+                console.error('Order creation error:', err);
+                alert('Order could not be routed. Please try again.');
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+                if (spinner) spinner.style.display = 'none';
+                if (btnText) btnText.textContent = `COMPLETE ORDER • $${(currentCart.price * currentCart.qty).toFixed(2)}`;
             }
-
-            // IDE DevTools Console Inspection Log
-            console.log('[Solar Explorer Merchandise] Waitlist saved to localStorage["' + MERCH_WAITLIST_STORAGE_KEY + '"] in JSON format:', waitlistRecord);
-            console.log('[Solar Explorer Merchandise] Total waitlist reservations:', waitlist);
-
-            // Direct Server API Persistence (writes directly into data/merchandise.json in IDE workspace)
-            sendToBackendApi('/api/merchandise', waitlistRecord).then(result => {
-                if (statusBox) {
-                    if (result.success) {
-                        statusBox.textContent = `Success! VIP Pre-order confirmed (ID: ${recordId}) & saved directly into data/merchandise.json in the IDE!`;
-                    } else {
-                        statusBox.textContent = `Success! VIP Pre-order confirmed (ID: ${recordId}) & saved to localStorage (run 'node server.js' to write directly to data/merchandise.json in IDE).`;
-                    }
-                    statusBox.className = 'form-status success';
-                    statusBox.style.display = 'block';
-                }
-            });
-
-            // Render Digital VIP Boarding Pass
-            if (passTarget) {
-                passTarget.innerHTML = `
-                    <div class="boarding-pass-card">
-                        <div class="bp-header">
-                            <div>
-                                <div class="bp-logo-title">SOLAR EXPLORER VIP LAUNCH PASS</div>
-                                <span style="font-size:0.75rem;color:#94a3b8;letter-spacing:1px;">OFFICIAL MERCHANDISE DROP 01 &bull; Q4 2026</span>
-                            </div>
-                            <div class="bp-pass-id">${escapeHtml(vipPassCode)}</div>
-                        </div>
-                        <div class="bp-grid">
-                            <div>
-                                <span class="bp-item-label">Explorer / Name</span>
-                                <div class="bp-item-val">${escapeHtml(nameVal)}</div>
-                            </div>
-                            <div>
-                                <span class="bp-item-label">Reserved Item</span>
-                                <div class="bp-item-val">${escapeHtml(productVal)}</div>
-                            </div>
-                            <div>
-                                <span class="bp-item-label">Size &bull; Quantity</span>
-                                <div class="bp-item-val">${escapeHtml(sizeVal)} &bull; ${escapeHtml(String(qtyVal))} Unit(s)</div>
-                            </div>
-                            <div>
-                                <span class="bp-item-label">Record Storage ID</span>
-                                <div class="bp-item-val" style="font-family:'Consolas',monospace;font-size:0.85rem;color:#38bdf8;">${escapeHtml(recordId)}</div>
-                            </div>
-                        </div>
-                        <div class="bp-footer">
-                            <span class="bp-discount-badge">✓ 20% EARLY BIRD DISCOUNT CODE LOCKED</span>
-                            <span>Direct IDE File: <code>data/merchandise.json</code></span>
-                        </div>
-                    </div>
-                `;
-                passTarget.style.display = 'block';
-                passTarget.scrollIntoView({ behavior: 'smooth' });
-            }
-
-            merchForm.reset();
         });
+    }
+
+    // 8. Receipt Action Buttons
+    const btnCopyId = document.getElementById('btn-copy-receipt-id');
+    if (btnCopyId) {
+        btnCopyId.addEventListener('click', () => {
+            const idEl = document.getElementById('receipt-order-id');
+            if (idEl) {
+                navigator.clipboard.writeText(idEl.textContent.trim()).then(() => {
+                    const original = btnCopyId.textContent;
+                    btnCopyId.textContent = 'COPIED!';
+                    setTimeout(() => { btnCopyId.textContent = original; }, 2000);
+                });
+            }
+        });
+    }
+
+    const btnTrack = document.getElementById('btn-receipt-track');
+    if (btnTrack) {
+        btnTrack.addEventListener('click', () => {
+            const idEl = document.getElementById('receipt-order-id');
+            const orderId = idEl ? idEl.textContent.trim() : '';
+            closeCheckoutDrawer();
+            const lookupSection = document.getElementById('order-lookup-section');
+            const lookupInput = document.getElementById('lookup-id-input');
+            const lookupForm = document.getElementById('order-lookup-form');
+            if (lookupSection) lookupSection.scrollIntoView({ behavior: 'smooth' });
+            if (lookupInput && orderId) {
+                lookupInput.value = orderId;
+                if (lookupForm) {
+                    setTimeout(() => {
+                        lookupForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                    }, 400);
+                }
+            }
+        });
+    }
+
+    const btnContinue = document.getElementById('btn-receipt-continue');
+    if (btnContinue) {
+        btnContinue.addEventListener('click', closeCheckoutDrawer);
     }
 }
 
@@ -1010,11 +1058,11 @@ function initLiveTelemetry() {
         const h = canvas.height;
 
         // Dark Cosmic Background
-        ctx.fillStyle = '#0b0d17';
+        ctx.fillStyle = '#050505';
         ctx.fillRect(0, 0, w, h);
 
         // Coordinate Grid
-        ctx.strokeStyle = '#1e293b';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
         ctx.lineWidth = 1;
 
         // Longitude lines (every 30 deg)
@@ -1036,7 +1084,7 @@ function initLiveTelemetry() {
         }
 
         // Equator Highlight
-        ctx.strokeStyle = '#334155';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(0, h / 2);
@@ -1050,8 +1098,8 @@ function initLiveTelemetry() {
         ctx.stroke();
 
         // Approximate Continental Coastline Silhouettes (stylized vector polygons)
-        ctx.fillStyle = '#111827';
-        ctx.strokeStyle = '#1e293b';
+        ctx.fillStyle = '#0d0d0d';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
         ctx.lineWidth = 1;
 
         // Eurasia / Africa outline approximation
@@ -1090,7 +1138,7 @@ function initLiveTelemetry() {
         // Orbital Inclination Limit lines (±51.64 degrees for ISS)
         const yTop = ((90 - 51.64) / 180) * h;
         const yBot = ((90 - (-51.64)) / 180) * h;
-        ctx.strokeStyle = 'rgba(251, 191, 36, 0.25)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
         ctx.setLineDash([4, 4]);
         ctx.beginPath();
         ctx.moveTo(0, yTop);
@@ -1101,7 +1149,7 @@ function initLiveTelemetry() {
         ctx.setLineDash([]);
 
         // Theoretical Sinusoidal Orbit Track
-        ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         for (let x = 0; x < w; x += 4) {
@@ -1117,7 +1165,7 @@ function initLiveTelemetry() {
         trail.forEach((pos, idx) => {
             const pt = project(pos.lat, pos.lon, w, h);
             const alpha = (idx + 1) / trail.length;
-            ctx.fillStyle = `rgba(34, 197, 94, ${alpha * 0.7})`;
+            ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.45})`;
             ctx.beginPath();
             ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
             ctx.fill();
@@ -1136,14 +1184,14 @@ function initLiveTelemetry() {
                 if (pulseRadius <= 6) pulseGrowing = true;
             }
 
-            ctx.strokeStyle = 'rgba(34, 197, 94, 0.6)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
             ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.arc(pt.x, pt.y, pulseRadius, 0, Math.PI * 2);
             ctx.stroke();
 
             // Center Solid Beacon
-            ctx.fillStyle = '#22c55e';
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
             ctx.fill();
@@ -1442,10 +1490,53 @@ function initMerchLookup() {
         if (!query) return;
 
         target.style.display = 'block';
-        target.innerHTML = '<div class="loading-spinner">Querying mission registry...</div>';
+        target.innerHTML = '<div style="color:#888888;font-family:\'JetBrains Mono\',monospace;padding:16px;">Querying order and mission registry...</div>';
 
         try {
-            const res = await fetchFromBackendApi(`/api/merchandise/${encodeURIComponent(query)}`);
+            // Check Store Orders first (/api/orders/:id)
+            let res = await fetchFromBackendApi(`/api/orders/${encodeURIComponent(query)}`);
+            if (res && res.success && res.data) {
+                const ord = res.data;
+                const customerName = ord.customer ? ord.customer.name : 'Cosmic Explorer';
+                const customerEmail = ord.customer ? ord.customer.email : 'N/A';
+                const itemName = (ord.items && ord.items[0]) ? ord.items[0].title : 'Solar Explorer Merchandise';
+                const itemSize = (ord.items && ord.items[0]) ? ord.items[0].size : 'M';
+                const itemQty = (ord.items && ord.items[0]) ? ord.items[0].quantity : 1;
+                const total = ord.total ? `$${ord.total.toFixed(2)}` : '$119.00';
+                const tracking = ord.trackingNumber || 'TRK-SOLAR-PENDING';
+                const emailStatus = (ord.notifications && ord.notifications.emailSent) ? 'Dispatched (Delivered)' : 'Logged';
+
+                target.innerHTML = `
+                    <div class="order-found-card">
+                        <div class="ofc-header">
+                            <div>
+                                <span class="ofc-badge">VERIFIED STORE ORDER</span>
+                                <h3 class="ofc-id">${escapeHtml(ord.orderId || query)}</h3>
+                            </div>
+                            <span class="badge badge-success">${escapeHtml((ord.status || 'CONFIRMED').toUpperCase())}</span>
+                        </div>
+                        <div class="ofc-grid">
+                            <div><strong>Recipient:</strong> ${escapeHtml(customerName)}</div>
+                            <div><strong>Email:</strong> ${escapeHtml(customerEmail)}</div>
+                            <div><strong>Item:</strong> ${escapeHtml(itemName)}</div>
+                            <div><strong>Configuration:</strong> Size ${escapeHtml(itemSize)} &bull; ${itemQty} Unit(s)</div>
+                            <div><strong>Order Total:</strong> ${escapeHtml(total)}</div>
+                            <div><strong>Tracking Number:</strong> <code style="color:#fff;">${escapeHtml(tracking)}</code></div>
+                            <div><strong>Confirmation Email:</strong> ${escapeHtml(emailStatus)}</div>
+                            <div><strong>Fulfillment Date:</strong> ${new Date(ord.createdAt || Date.now()).toLocaleDateString()}</div>
+                        </div>
+                        <div class="ofc-actions">
+                            <a href="/api/orders/${encodeURIComponent(ord.orderId || query)}/receipt" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                                VIEW EMAIL INVOICE (HTML)
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Fallback: check legacy pre-order registration (/api/merchandise/:id)
+            res = await fetchFromBackendApi(`/api/merchandise/${encodeURIComponent(query)}`);
             if (res && res.success && res.data) {
                 const order = res.data;
                 target.innerHTML = `
@@ -1465,29 +1556,48 @@ function initMerchLookup() {
                             <div><strong>VIP Perk:</strong> ${escapeHtml(order.discount || '20% VIP Early Bird Locked')}</div>
                             <div><strong>Registration Date:</strong> ${new Date(order.registeredAt || Date.now()).toLocaleDateString()}</div>
                         </div>
-                        <div class="ofc-actions">
-                            <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-preorder" data-id="${order.vipPassId || order.id}">CANCEL REGISTRATION</button>
-                        </div>
                     </div>
                 `;
-
-                const cancelBtn = target.querySelector('#btn-cancel-preorder');
-                if (cancelBtn) {
-                    cancelBtn.addEventListener('click', async () => {
-                        if (confirm('Are you sure you want to cancel this VIP pre-order reservation?')) {
-                            cancelBtn.disabled = true;
-                            cancelBtn.textContent = 'Cancelling...';
-                            await deleteFromBackendApi(`/api/merchandise/${order.vipPassId || order.id}`);
-                            target.innerHTML = '<div class="form-status success" style="display:block;">Your pre-order has been cancelled and removed from the database.</div>';
-                            initBatchTracker();
-                        }
-                    });
-                }
-            } else {
-                target.innerHTML = `<div class="error-msg">No pre-order registration found for identifier: "<strong>${escapeHtml(query)}</strong>". Please double check your VIP Pass ID.</div>`;
+                return;
             }
+
+            // Fallback: Check local storage
+            try {
+                const localOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+                const localMatch = localOrders.find(o => o.orderId === query || o.id === query);
+                if (localMatch) {
+                    target.innerHTML = `
+                        <div class="order-found-card">
+                            <div class="ofc-header">
+                                <div>
+                                    <span class="ofc-badge">CACHED ORDER RECORD</span>
+                                    <h3 class="ofc-id">${escapeHtml(localMatch.orderId || query)}</h3>
+                                </div>
+                                <span class="badge badge-success">CONFIRMED</span>
+                            </div>
+                            <div class="ofc-grid">
+                                <div><strong>Recipient:</strong> ${escapeHtml(localMatch.customer?.name || 'Explorer')}</div>
+                                <div><strong>Email:</strong> ${escapeHtml(localMatch.customer?.email || 'N/A')}</div>
+                                <div><strong>Total:</strong> $${(localMatch.total || 0).toFixed(2)}</div>
+                                <div><strong>Date:</strong> ${new Date(localMatch.createdAt || Date.now()).toLocaleDateString()}</div>
+                            </div>
+                            <div class="ofc-actions">
+                                <a href="/api/orders/${encodeURIComponent(localMatch.orderId)}/receipt" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">
+                                    VIEW EMAIL INVOICE (HTML)
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+            } catch (cacheErr) {
+                console.warn('Local order search fallback failed:', cacheErr);
+            }
+
+            target.innerHTML = `<div class="error-msg" style="color:#888888;padding:16px;">No order or pre-order found for ID: "<strong>${escapeHtml(query)}</strong>". Please double check your order number.</div>`;
+
         } catch {
-            target.innerHTML = '<div class="error-msg">Error querying merchandise database.</div>';
+            target.innerHTML = '<div class="error-msg" style="color:#888888;padding:16px;">Error querying merchandise database.</div>';
         }
     });
 }

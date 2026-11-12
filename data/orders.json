@@ -1,0 +1,42 @@
+[
+  {
+    "id": "ORD-2026-9700",
+    "orderId": "ORD-2026-9700",
+    "customer": {
+      "name": "Commander Test Pilot",
+      "email": "test.pilot@cosmos.org",
+      "address": "100 Orbit Road",
+      "city": "Houston",
+      "state": "TX",
+      "zip": "77058"
+    },
+    "items": [
+      {
+        "productId": "lunar-bomber",
+        "title": "Lunar Bomber Jacket",
+        "price": 119,
+        "size": "L",
+        "quantity": 1,
+        "image": "images/merch/lunar-bomber.png"
+      }
+    ],
+    "totalAmount": 119,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-565N9M",
+    "estimatedDelivery": "2026-11-16T11:11:10.450Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "<2b4a0dc1-56c7-5e3a-4bd3-97cbe5f00fba@solarexplorer.org>",
+      "previewUrl": "https://ethereal.email/message/avWe0Es6EhPCWnPSavWe0xu0HW7UfwrcAAAAAdEjfPcVWqHmQB.1W4Z26Gc",
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-9700.html",
+      "dispatchedAt": "2026-11-12T11:11:14.853Z",
+      "dispatchMode": "ethereal_sandbox"
+    },
+    "createdAt": "2026-11-12T11:11:10.450Z",
+    "updatedAt": "2026-11-12T11:11:14.855Z"
+  }
+]

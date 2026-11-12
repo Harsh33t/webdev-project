@@ -186,3 +186,4 @@ app.use(express.static(__dirname));
 | **MongoDB Operations via Mongoose**| **5%** | Strict Mongoose Schemas, data validation, unique indexes, CRUD operations (`create`, `find`, `delete`), and atomic write verification with JSON dual-storage fallback. |
 | **Innovation & Usability** | **5%** | 19-Day live launch countdown, Digital VIP Boarding Pass generator, ISS telemetry tracker, and interactive planetary physics calculators. |
 | **Total Academic Weightage** | **40%** | Comprehensive full-stack delivery demonstrating end-to-end technical mastery. |
+

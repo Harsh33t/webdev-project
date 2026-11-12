@@ -113,30 +113,25 @@
     <section class="extreme-weather-section">
         <div class="sw-extreme-container">
             <div class="sw-header">
-                <span class="live-pulse-dot"></span>
-                <h2>HELIOSPHERIC BOUNDARY &bull; REAL-TIME RADIATION MONITOR</h2>
+                <h2 class="sec-title">HELIOSPHERIC BOUNDARY &bull; REAL-TIME RADIATION MONITOR</h2>
             </div>
             <p class="sw-desc">Live streaming telemetry monitoring galactic cosmic ray flux, solar wind velocity, and magnetospheric disturbance.</p>
-            <div class="sw-metrics-grid">
-                <div class="sw-metric-box">
-                    <span class="sw-lbl">GEOMAGNETIC KP INDEX</span>
-                    <span class="sw-val gold" id="sw-kp">2.33 Kp</span>
-                    <span class="sw-sub" id="sw-activity">Quiet Conditions</span>
+            <div class="planet-specs sw-specs-list">
+                <div class="spec-row">
+                    <span class="spec-label">Geomagnetic Kp Index</span>
+                    <span class="spec-val"><span id="sw-kp">2.33 Kp</span> &bull; <span id="sw-activity" class="spec-sub">Quiet Conditions</span></span>
                 </div>
-                <div class="sw-metric-box">
-                    <span class="sw-lbl">SOLAR WIND SHOCK</span>
-                    <span class="sw-val cyan" id="sw-wind">425 km/s</span>
-                    <span class="sw-sub">Interplanetary Plasma Flow</span>
+                <div class="spec-row">
+                    <span class="spec-label">Solar Wind Velocity</span>
+                    <span class="spec-val" id="sw-wind">425 km/s</span>
                 </div>
-                <div class="sw-metric-box">
-                    <span class="sw-lbl">SOLAR X-RAY EMISSION</span>
-                    <span class="sw-val" id="sw-flare">Class C1.4</span>
-                    <span class="sw-sub">Coronal Stability Normal</span>
+                <div class="spec-row">
+                    <span class="spec-label">Solar X-Ray Emission</span>
+                    <span class="spec-val" id="sw-flare">Class C1.4</span>
                 </div>
-                <div class="sw-metric-box">
-                    <span class="sw-lbl">RADIO BLACKOUT STATUS</span>
-                    <span class="sw-val green" id="sw-radio">None (R0)</span>
-                    <span class="sw-sub">All High Frequencies Clear</span>
+                <div class="spec-row">
+                    <span class="spec-label">Radio Blackout Status</span>
+                    <span class="spec-val" id="sw-radio">None (R0)</span>
                 </div>
             </div>
         </div>

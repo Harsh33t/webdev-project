@@ -12,6 +12,7 @@ const Feedback = require('../models/Feedback');
 const Merchandise = require('../models/Merchandise');
 const SatelliteTrack = require('../models/SatelliteTrack');
 const QuizScore = require('../models/QuizScore');
+const Order = require('../models/Order');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -20,12 +21,14 @@ const FILE_PATHS = {
     feedback: path.join(DATA_DIR, 'feedback.json'),
     merchandise: path.join(DATA_DIR, 'merchandise.json'),
     satellites: path.join(DATA_DIR, 'satellites.json'),
-    quizscores: path.join(DATA_DIR, 'quizscores.json')
+    quizscores: path.join(DATA_DIR, 'quizscores.json'),
+    orders: path.join(DATA_DIR, 'orders.json')
 };
 
 // Initialize JSON files with defaults if not present
 if (!fs.existsSync(FILE_PATHS.feedback)) fs.writeFileSync(FILE_PATHS.feedback, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.merchandise)) fs.writeFileSync(FILE_PATHS.merchandise, '[]', 'utf8');
+if (!fs.existsSync(FILE_PATHS.orders)) fs.writeFileSync(FILE_PATHS.orders, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.satellites)) {
     fs.writeFileSync(FILE_PATHS.satellites, JSON.stringify([
         {
@@ -310,24 +313,139 @@ const StorageService = {
     },
 
     // ==========================================
-    // 5. AGGREGATE SYSTEM STATS
+    // 5. E-COMMERCE ORDERS OPERATIONS (BUY FLOW)
+    // ==========================================
+    async createOrder(data) {
+        const orderId = data.orderId || ('ORD-2026-' + Math.floor(1000 + Math.random() * 9000));
+        const trackingNum = data.trackingNumber || ('TRK-SOLAR-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+        const nowIso = new Date().toISOString();
+
+        const payload = {
+            id: orderId,
+            orderId: orderId,
+            customer: {
+                name: (data.customer && data.customer.name) ? data.customer.name.trim() : 'Explorer',
+                email: (data.customer && data.customer.email) ? data.customer.email.trim().toLowerCase() : '',
+                address: (data.customer && data.customer.address) ? data.customer.address.trim() : '',
+                city: (data.customer && data.customer.city) ? data.customer.city.trim() : '',
+                state: (data.customer && data.customer.state) ? data.customer.state.trim() : 'CA',
+                zip: (data.customer && data.customer.zip) ? data.customer.zip.trim() : ''
+            },
+            items: (data.items || []).map(i => ({
+                productId: String(i.productId || 'space-merch'),
+                title: String(i.title || 'Space Merchandise Item'),
+                price: Number(i.price || 0),
+                size: i.size || 'M',
+                quantity: Number(i.quantity || 1),
+                image: i.image || 'images/merch/lunar-bomber.png'
+            })),
+            totalAmount: Number(data.totalAmount || 0),
+            shippingFee: 0.00,
+            currency: 'USD',
+            paymentMethod: data.paymentMethod || 'demo_card',
+            paymentStatus: 'paid',
+            orderStatus: 'confirmed',
+            trackingNumber: trackingNum,
+            estimatedDelivery: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
+            emailNotification: data.emailNotification || {
+                dispatched: false,
+                messageId: null,
+                previewUrl: null,
+                receiptFile: null,
+                dispatchedAt: null,
+                dispatchMode: 'pending'
+            },
+            createdAt: nowIso,
+            updatedAt: nowIso
+        };
+
+        if (isMongoActive()) {
+            try {
+                const doc = await Order.create(payload);
+                payload._id = doc._id;
+            } catch (err) {
+                console.warn('[StorageService] Mongo Order error:', err.message);
+            }
+        }
+
+        const list = readJson('orders');
+        list.unshift(payload);
+        writeJson('orders', list);
+        return payload;
+    },
+
+    async getOrderById(id) {
+        if (!id) return null;
+        const q = String(id).trim();
+
+        if (isMongoActive()) {
+            try {
+                const found = await Order.findOne({
+                    $or: [
+                        { orderId: q },
+                        { trackingNumber: q },
+                        ...(q.match(/^[0-9a-fA-F]{24}$/) ? [{ _id: q }] : [])
+                    ]
+                }).lean();
+                if (found) return found;
+            } catch (err) {}
+        }
+
+        const list = readJson('orders');
+        return list.find(o => o.orderId === q || o.id === q || o.trackingNumber === q || String(o._id) === q) || null;
+    },
+
+    async getOrders(filter = {}, limit = 50) {
+        if (isMongoActive()) {
+            try {
+                return await Order.find(filter).sort({ createdAt: -1 }).limit(limit).lean();
+            } catch (err) {}
+        }
+        let list = readJson('orders');
+        if (filter.email) list = list.filter(o => o.customer && o.customer.email.toLowerCase() === filter.email.toLowerCase());
+        return list.slice(0, limit);
+    },
+
+    async updateOrderEmailStatus(orderId, emailMeta) {
+        const q = String(orderId).trim();
+        if (isMongoActive()) {
+            try {
+                await Order.findOneAndUpdate(
+                    { $or: [{ orderId: q }, { id: q }] },
+                    { $set: { emailNotification: emailMeta, updatedAt: new Date().toISOString() } }
+                );
+            } catch (err) {}
+        }
+        const list = readJson('orders');
+        const o = list.find(item => item.orderId === q || item.id === q);
+        if (o) {
+            o.emailNotification = { ...o.emailNotification, ...emailMeta };
+            o.updatedAt = new Date().toISOString();
+            writeJson('orders', list);
+        }
+    },
+
+    // ==========================================
+    // 6. AGGREGATE SYSTEM STATS
     // ==========================================
     async getSystemStats() {
         const feedbacks = await this.getFeedbacks();
         const merch = await this.getMerchandise();
         const satellites = await this.getSatelliteTracks();
         const quizScores = await this.getQuizScores(100);
+        const orders = await this.getOrders({}, 200);
 
         const avgRating = feedbacks.length
             ? (feedbacks.reduce((sum, f) => sum + (Number(f.rating) || 0), 0) / feedbacks.length).toFixed(1)
             : '5.0';
 
-        const remainingCapacity = Math.max(0, 500 - merch.length);
+        const remainingCapacity = Math.max(0, 500 - merch.length - orders.length);
 
         return {
             totalFeedbacks: feedbacks.length,
             averageRating: avgRating,
-            totalMerchOrders: merch.length,
+            totalMerchOrders: merch.length + orders.length,
+            totalOrdersProcessed: orders.length,
             remainingMerchAllocations: remainingCapacity,
             totalSatellitesTracked: satellites.length,
             totalQuizzesTaken: quizScores.length,
@@ -337,3 +455,4 @@ const StorageService = {
 };
 
 module.exports = StorageService;
+

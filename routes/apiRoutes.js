@@ -5,7 +5,10 @@
  */
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const fs = require('fs');
 const StorageService = require('../services/storageService');
+const EmailService = require('../services/emailService');
 const { getDatabaseStatus } = require('../config/db');
 
 // Built-in iconic satellite catalog
@@ -395,6 +398,160 @@ router.delete('/merchandise/:id', async (req, res) => {
 });
 
 // ====================================================
+// 2.5 E-COMMERCE ORDERS & EMAIL DISPATCH ENDPOINTS
+// ====================================================
+
+async function handleOrderPlacement(req, res) {
+    try {
+        const { customer, items, totalAmount, paymentMethod } = req.body;
+
+        if (!customer || typeof customer !== 'object') {
+            return res.status(400).json({
+                success: false,
+                error: 'Customer delivery address and details are required.'
+            });
+        }
+
+        const { name, email, address, city, state, zip } = customer;
+        if (!name || !email || !address || !city) {
+            return res.status(400).json({
+                success: false,
+                error: 'Missing mandatory fields: name, email, street address, and city are required.'
+            });
+        }
+
+        if (!Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'Cart must contain at least one purchased merchandise item.'
+            });
+        }
+
+        const computedSubtotal = items.reduce((sum, i) => sum + (Number(i.price) * Number(i.quantity || 1)), 0);
+        const finalTotal = totalAmount !== undefined ? Number(totalAmount) : (req.body.total !== undefined ? Number(req.body.total) : computedSubtotal);
+
+        // Persist order in Dual Storage (Mongo + data/orders.json)
+        const orderRecord = await StorageService.createOrder({
+            customer: {
+                name: name.trim(),
+                email: email.trim(),
+                address: address.trim(),
+                city: city.trim(),
+                state: (state || 'CA').trim(),
+                zip: (zip || '32920').trim()
+            },
+            items: items.map(i => ({
+                productId: i.productId || 'space-merch',
+                title: i.title || 'Space Merchandise Item',
+                price: Number(i.price || 0),
+                size: i.size || 'M',
+                quantity: Number(i.quantity || 1),
+                image: i.image || 'images/merch/lunar-bomber.png'
+            })),
+            totalAmount: finalTotal,
+            paymentMethod: paymentMethod || 'demo_card'
+        });
+
+        // Trigger email confirmation dispatch
+        const emailResult = await EmailService.sendOrderConfirmation(orderRecord);
+
+        // Update audit metadata
+        await StorageService.updateOrderEmailStatus(orderRecord.orderId, {
+            dispatched: emailResult.success,
+            messageId: emailResult.messageId,
+            previewUrl: emailResult.previewUrl,
+            receiptFile: emailResult.receiptPath,
+            dispatchedAt: new Date().toISOString(),
+            dispatchMode: emailResult.mode
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: 'Order processed successfully! Confirmation email dispatched.',
+            orderId: orderRecord.orderId,
+            trackingNumber: orderRecord.trackingNumber,
+            data: {
+                ...orderRecord,
+                emailNotification: {
+                    dispatched: emailResult.success,
+                    previewUrl: emailResult.previewUrl,
+                    receiptPath: emailResult.receiptPath,
+                    dispatchMode: emailResult.mode
+                }
+            },
+            email: {
+                sent: emailResult.success,
+                previewUrl: emailResult.previewUrl,
+                receiptPath: emailResult.receiptPath,
+                viewReceiptUrl: `/api/orders/${orderRecord.orderId}/receipt`
+            }
+        });
+    } catch (err) {
+        console.error('[API] Error processing order:', err);
+        return res.status(500).json({
+            success: false,
+            error: 'Failed to process checkout transaction',
+            details: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
+    }
+}
+
+// POST /api/orders & POST /api/merchandise/checkout
+router.post('/orders', handleOrderPlacement);
+router.post('/merchandise/checkout', handleOrderPlacement);
+
+// GET /api/orders/:id - Retrieve order status
+router.get('/orders/:id', async (req, res) => {
+    try {
+        const order = await StorageService.getOrderById(req.params.id);
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                error: `Order not found for identifier: ${req.params.id}`
+            });
+        }
+        res.json({ success: true, data: order });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Error querying order' });
+    }
+});
+
+// GET /api/orders - List all orders
+router.get('/orders', async (req, res) => {
+    try {
+        const { email, limit } = req.query;
+        const filter = {};
+        if (email) filter.email = email;
+        const list = await StorageService.getOrders(filter, Number(limit || 50));
+        res.json({ success: true, count: list.length, data: list });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Failed to fetch orders' });
+    }
+});
+
+// GET /api/orders/:id/receipt - Direct in-browser view of the rendered HTML email invoice
+router.get('/orders/:id/receipt', async (req, res) => {
+    try {
+        const order = await StorageService.getOrderById(req.params.id);
+        if (!order) {
+            return res.status(404).send('Order not found');
+        }
+        const safeOrderId = String(order.orderId).replace(/[^a-zA-Z0-9_-]/g, '_');
+        const receiptPath = path.join(EmailService.RECEIPTS_DIR, `receipt-${safeOrderId}.html`);
+
+        if (fs.existsSync(receiptPath)) {
+            return res.sendFile(receiptPath);
+        }
+
+        const html = EmailService.generateCelestialEmailHtml(order);
+        res.setHeader('Content-Type', 'text/html');
+        return res.send(html);
+    } catch (err) {
+        res.status(500).send('Error rendering receipt');
+    }
+});
+
+// ====================================================
 // 3. SATELLITES & LIVE TELEMETRY ENDPOINTS
 // ====================================================
 
@@ -728,3 +885,4 @@ router.get('/telemetry', async (req, res) => {
 });
 
 module.exports = router;
+

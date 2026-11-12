@@ -103,7 +103,9 @@ async function startServer() {
         console.log(`---------------------------------------------------------------`);
         console.log(`💾 Storage Mode: ${dbStatus.mode.toUpperCase()}`);
         console.log(`   ${dbStatus.message}`);
-        console.log(`📁 Local IDE Fallback Paths:`);
+        console.log(`📁 Local IDE Storage Paths:`);
+        console.log(`   - Orders:      data/orders.json`);
+        console.log(`   - Email HTML:  data/email_receipts/`);
         console.log(`   - Feedback:    data/feedback.json`);
         console.log(`   - Merchandise: data/merchandise.json`);
         console.log(`   - Satellites:  data/satellites.json`);

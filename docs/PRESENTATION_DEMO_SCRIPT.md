@@ -102,3 +102,4 @@
 1. **Action:** Switch to terminal / MongoDB Compass / workspace file `data/merchandise.json`.
 2. **Narration:** *"Here is the critical full-stack proof: the record is saved with unique ID `MERCH-...`, complete with schema-validated fields, timestamp, and discount voucher. Both MongoDB and the IDE filesystem confirm zero data loss."*
 3. **Action:** Navigate to `feedback.html`, submit a 5-star review, and show the live DevTools Console log outputting the structured JSON object.
+
