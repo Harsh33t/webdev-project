@@ -5,11 +5,22 @@
  */
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const StorageService = require('../services/storageService');
 const { getDatabaseStatus } = require('../config/db');
 
+// Route for User Dashboard
+router.get(['/user-dashboard', '/dashboard'], (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'user-dashboard.html'));
+});
+
+// Route for Login / Sign Up
+router.get(['/login', '/signup', '/auth'], (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'login.html'));
+});
+
 // Render Server-Side Mission Control & Telemetry Dashboard
-router.get(['/telemetry', '/dashboard'], async (req, res) => {
+router.get('/telemetry', async (req, res) => {
     try {
         const stats = await StorageService.getSystemStats();
         const dbStatus = getDatabaseStatus();

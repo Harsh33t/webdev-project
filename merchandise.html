@@ -21,7 +21,7 @@
             <a href="satellites.html">Satellites</a>
             <a href="merchandise.html" class="active">Merchandise</a>
             <a href="feedback.html">Feedback</a>
-            <a href="/telemetry" class="telemetry-nav-btn">★ Telemetry SSR</a>
+            <a href="user-dashboard.html" id="nav-account-btn">Dashboard</a>
         </div>
     </nav>
 
@@ -43,171 +43,13 @@
         <section class="merch-showcase-section" aria-label="Official Space Merchandise Store">
             
             <div class="merch-grid" id="merch-grid">
-
-                <!-- Product 1: Lunar Bomber Jacket -->
-                <article class="merch-card" data-product-id="lunar-bomber" data-product-name="Lunar Bomber Jacket" data-price="119.00" data-img="images/merch/lunar-bomber.png">
-                    <div class="merch-visual">
-                        <img src="images/merch/lunar-bomber.png" alt="Lunar Bomber Jacket" class="merch-img" loading="lazy">
-                    </div>
-                    <div class="merch-details">
-                        <span class="merch-category">TECHNICAL OUTERWEAR</span>
-                        <h3 class="merch-name">Lunar Bomber Jacket</h3>
-                        <p class="merch-desc">Lightweight space-inspired bomber with weather-resistant shell.</p>
-                        
-                        <!-- Segmented Size Selector -->
-                        <div class="merch-size-selector" aria-label="Select size">
-                            <button type="button" class="size-pill" data-size="S">S</button>
-                            <button type="button" class="size-pill active" data-size="M">M</button>
-                            <button type="button" class="size-pill" data-size="L">L</button>
-                            <button type="button" class="size-pill" data-size="XL">XL</button>
-                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
-                        </div>
-
-                        <div class="merch-price-row">
-                            <span class="current-price">$119.00</span>
-                            <button type="button" class="btn-buy-instant" data-item="Lunar Bomber Jacket" data-id="lunar-bomber" data-price="119.00" data-img="images/merch/lunar-bomber.png">
-                                Buy Now
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Product 2: Saturn Orbit Hoodie -->
-                <article class="merch-card" data-product-id="saturn-hoodie" data-product-name="Saturn Orbit Hoodie" data-price="69.00" data-img="images/merch/saturn-hoodie.png">
-                    <div class="merch-visual">
-                        <img src="images/merch/saturn-hoodie.png" alt="Saturn Orbit Hoodie" class="merch-img" loading="lazy">
-                    </div>
-                    <div class="merch-details">
-                        <span class="merch-category">HEAVYWEIGHT FLEECE</span>
-                        <h3 class="merch-name">Saturn Orbit Hoodie</h3>
-                        <p class="merch-desc">Premium cotton hoodie featuring monochromatic orbital ring print.</p>
-                        
-                        <div class="merch-size-selector" aria-label="Select size">
-                            <button type="button" class="size-pill" data-size="S">S</button>
-                            <button type="button" class="size-pill active" data-size="M">M</button>
-                            <button type="button" class="size-pill" data-size="L">L</button>
-                            <button type="button" class="size-pill" data-size="XL">XL</button>
-                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
-                        </div>
-
-                        <div class="merch-price-row">
-                            <span class="current-price">$69.00</span>
-                            <button type="button" class="btn-buy-instant" data-item="Saturn Orbit Hoodie" data-id="saturn-hoodie" data-price="69.00" data-img="images/merch/saturn-hoodie.png">
-                                Buy Now
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Product 3: Lunar Phase T-Shirt -->
-                <article class="merch-card" data-product-id="lunar-tee" data-product-name="Lunar Phase T-Shirt" data-price="39.00" data-img="images/merch/lunar-tee.png">
-                    <div class="merch-visual">
-                        <img src="images/merch/lunar-tee.png" alt="Lunar Phase T-Shirt" class="merch-img" loading="lazy">
-                    </div>
-                    <div class="merch-details">
-                        <span class="merch-category">COTTON ESSENTIAL</span>
-                        <h3 class="merch-name">Lunar Phase T-Shirt</h3>
-                        <p class="merch-desc">Minimalist high-contrast moon phase graphic print on combed jersey.</p>
-                        
-                        <div class="merch-size-selector" aria-label="Select size">
-                            <button type="button" class="size-pill" data-size="S">S</button>
-                            <button type="button" class="size-pill active" data-size="M">M</button>
-                            <button type="button" class="size-pill" data-size="L">L</button>
-                            <button type="button" class="size-pill" data-size="XL">XL</button>
-                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
-                        </div>
-
-                        <div class="merch-price-row">
-                            <span class="current-price">$39.00</span>
-                            <button type="button" class="btn-buy-instant" data-item="Lunar Phase T-Shirt" data-id="lunar-tee" data-price="39.00" data-img="images/merch/lunar-tee.png">
-                                Buy Now
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Product 4: Astronaut Tee -->
-                <article class="merch-card" data-product-id="astronaut-tee" data-product-name="Astronaut Tee" data-price="39.00" data-img="images/merch/astronaut-tee.png">
-                    <div class="merch-visual">
-                        <img src="images/merch/astronaut-tee.png" alt="Astronaut Tee" class="merch-img" loading="lazy">
-                    </div>
-                    <div class="merch-details">
-                        <span class="merch-category">GRAPHIC ESSENTIAL</span>
-                        <h3 class="merch-name">Astronaut Tee</h3>
-                        <p class="merch-desc">Classic graphic crewneck celebrating human space exploration.</p>
-                        
-                        <div class="merch-size-selector" aria-label="Select size">
-                            <button type="button" class="size-pill" data-size="S">S</button>
-                            <button type="button" class="size-pill active" data-size="M">M</button>
-                            <button type="button" class="size-pill" data-size="L">L</button>
-                            <button type="button" class="size-pill" data-size="XL">XL</button>
-                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
-                        </div>
-
-                        <div class="merch-price-row">
-                            <span class="current-price">$39.00</span>
-                            <button type="button" class="btn-buy-instant" data-item="Astronaut Tee" data-id="astronaut-tee" data-price="39.00" data-img="images/merch/astronaut-tee.png">
-                                Buy Now
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Product 5: Andromeda Hoodie -->
-                <article class="merch-card" data-product-id="andromeda-hoodie" data-product-name="Andromeda Hoodie" data-price="69.00" data-img="images/merch/andromeda-hoodie.png">
-                    <div class="merch-visual">
-                        <img src="images/merch/andromeda-hoodie.png" alt="Andromeda Hoodie" class="merch-img" loading="lazy">
-                    </div>
-                    <div class="merch-details">
-                        <span class="merch-category">HEAVYWEIGHT FLEECE</span>
-                        <h3 class="merch-name">Andromeda Hoodie</h3>
-                        <p class="merch-desc">Deep-black fleece showcasing the Andromeda Galaxy core.</p>
-                        
-                        <div class="merch-size-selector" aria-label="Select size">
-                            <button type="button" class="size-pill" data-size="S">S</button>
-                            <button type="button" class="size-pill active" data-size="M">M</button>
-                            <button type="button" class="size-pill" data-size="L">L</button>
-                            <button type="button" class="size-pill" data-size="XL">XL</button>
-                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
-                        </div>
-
-                        <div class="merch-price-row">
-                            <span class="current-price">$69.00</span>
-                            <button type="button" class="btn-buy-instant" data-item="Andromeda Hoodie" data-id="andromeda-hoodie" data-price="69.00" data-img="images/merch/andromeda-hoodie.png">
-                                Buy Now
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Product 6: Explorer Jacket -->
-                <article class="merch-card" data-product-id="explorer-jacket" data-product-name="Explorer Jacket" data-price="129.00" data-img="images/merch/explorer-jacket.png">
-                    <div class="merch-visual">
-                        <img src="images/merch/explorer-jacket.png" alt="Explorer Jacket" class="merch-img" loading="lazy">
-                    </div>
-                    <div class="merch-details">
-                        <span class="merch-category">TECHNICAL OUTERWEAR</span>
-                        <h3 class="merch-name">Explorer Jacket</h3>
-                        <p class="merch-desc">All-weather technical jacket built with stormproof hardware.</p>
-                        
-                        <div class="merch-size-selector" aria-label="Select size">
-                            <button type="button" class="size-pill" data-size="S">S</button>
-                            <button type="button" class="size-pill active" data-size="M">M</button>
-                            <button type="button" class="size-pill" data-size="L">L</button>
-                            <button type="button" class="size-pill" data-size="XL">XL</button>
-                            <button type="button" class="size-pill" data-size="2XL">2XL</button>
-                        </div>
-
-                        <div class="merch-price-row">
-                            <span class="current-price">$129.00</span>
-                            <button type="button" class="btn-buy-instant" data-item="Explorer Jacket" data-id="explorer-jacket" data-price="129.00" data-img="images/merch/explorer-jacket.png">
-                                Buy Now
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
+                <!-- Products loaded dynamically from /api/products (data/products.json) -->
+                <div class="merch-loading-state" id="merch-loading">
+                    <div class="merch-loader-ring"></div>
+                    <p>Loading collection from mission database...</p>
+                </div>
             </div>
+
         </section>
 
         <!-- ========================================================
@@ -405,5 +247,127 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+    // =====================================================
+    // MERCHANDISE PAGE: Dynamic catalog from /api/products
+    // Also links orders to logged-in user
+    // =====================================================
+    (async function loadMerchCatalogFromJson() {
+        const targets = [
+            window.location.port === '3000' ? '/api/products' : null,
+            'http://localhost:3000/api/products',
+            'http://127.0.0.1:3000/api/products',
+            'data/products.json',
+            '/api/products'
+        ].filter(Boolean);
+
+        for (const url of targets) {
+            try {
+                const ctrl = new AbortController();
+                const tid = setTimeout(() => ctrl.abort(), 2500);
+                const res = await fetch(url, { signal: ctrl.signal });
+                clearTimeout(tid);
+                if (res.ok) {
+                    const data = await res.json();
+                    const list = Array.isArray(data) ? data : (data.data || []);
+                    if (list.length > 0) {
+                        renderCatalog(list);
+                        return;
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // Fallback product list from JSON schema for offline resilience
+        const fallback = [
+            { id: "lunar-bomber", name: "Lunar Bomber Jacket", category: "TECHNICAL OUTERWEAR", description: "Lightweight space-inspired bomber with weather-resistant shell.", price: 119.00, image: "images/merch/lunar-bomber.png", sizes: ["S", "M", "L", "XL", "2XL"], defaultSize: "M" },
+            { id: "saturn-hoodie", name: "Saturn Orbit Hoodie", category: "HEAVYWEIGHT FLEECE", description: "Premium cotton hoodie featuring monochromatic orbital ring print.", price: 69.00, image: "images/merch/saturn-hoodie.png", sizes: ["S", "M", "L", "XL", "2XL"], defaultSize: "M" },
+            { id: "lunar-tshirt", name: "Lunar Phase T-Shirt", category: "COTTON ESSENTIAL", description: "Minimalist high-contrast moon phase graphic print on combed jersey.", price: 39.00, image: "images/merch/lunar-tshirt.png", sizes: ["S", "M", "L", "XL", "2XL"], defaultSize: "M" },
+            { id: "astronaut-tee", name: "Astronaut Tee", category: "GRAPHIC ESSENTIAL", description: "Classic graphic crewneck celebrating human space exploration.", price: 39.00, image: "images/merch/astronaut-tee.png", sizes: ["S", "M", "L", "XL", "2XL"], defaultSize: "M" },
+            { id: "andromeda-hoodie", name: "Andromeda Hoodie", category: "HEAVYWEIGHT FLEECE", description: "Deep-black fleece showcasing the Andromeda Galaxy core.", price: 69.00, image: "images/merch/andromeda-hoodie.png", sizes: ["S", "M", "L", "XL", "2XL"], defaultSize: "M" },
+            { id: "explorer-jacket", name: "Explorer Jacket", category: "TECHNICAL OUTERWEAR", description: "All-weather technical jacket built with stormproof hardware.", price: 129.00, image: "images/merch/explorer-jacket.png", sizes: ["S", "M", "L", "XL", "2XL"], defaultSize: "M", badge: "BESTSELLER" }
+        ];
+        renderCatalog(fallback);
+    })();
+
+    function renderCatalog(products) {
+        const grid = document.getElementById('merch-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        products.forEach(p => {
+            const sizes = p.sizes || ['S', 'M', 'L', 'XL', '2XL'];
+            const defaultSize = p.defaultSize || 'M';
+            const article = document.createElement('article');
+            article.className = 'merch-card';
+            article.setAttribute('data-product-id', p.id);
+            article.setAttribute('data-product-name', p.name);
+            article.setAttribute('data-price', p.price.toFixed(2));
+            article.setAttribute('data-img', p.image);
+            article.innerHTML = `
+                <div class="merch-visual">
+                    <img src="${p.image}" alt="${escapeHtml(p.name)}" class="merch-img" loading="lazy"
+                         onerror="this.style.opacity='0.3'">
+                    ${p.badge ? `<span class="merch-badge">${p.badge}</span>` : ''}
+                </div>
+                <div class="merch-details">
+                    <span class="merch-category">${escapeHtml(p.category)}</span>
+                    <h3 class="merch-name">${escapeHtml(p.name)}</h3>
+                    <p class="merch-desc">${escapeHtml(p.description)}</p>
+                    <div class="merch-size-selector" aria-label="Select size">
+                        ${sizes.map(s => `<button type="button" class="size-pill${s === defaultSize ? ' active' : ''}" data-size="${s}">${s}</button>`).join('')}
+                    </div>
+                    <div class="merch-price-row">
+                        <span class="current-price">$${p.price.toFixed(2)}</span>
+                        <button type="button" class="btn-buy-instant"
+                            data-item="${escapeHtml(p.name)}"
+                            data-id="${p.id}"
+                            data-price="${p.price.toFixed(2)}"
+                            data-img="${p.image}">
+                            Buy Now
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(article);
+        });
+
+        // Re-init merch page interactions (size pills + buy buttons)
+        initMerchandisePage();
+    }
+
+    // Update nav account button based on login state
+    (function updateNavAccountBtn() {
+        const user = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+        const btn = document.getElementById('nav-account-btn');
+        if (!btn) return;
+        btn.textContent = 'Dashboard';
+        btn.href = 'user-dashboard.html';
+        if (user && user.username) {
+            btn.title = 'Dashboard (' + (user.displayName || user.username) + ')';
+        }
+    })();
+
+    // After an order is placed, link it to the logged-in user
+    document.addEventListener('orderPlaced', function(e) {
+        const user = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+        const orderId = e.detail && e.detail.orderId;
+        if (!user || !orderId) return;
+        const targets = [
+            'http://localhost:3000/api/auth/user/' + encodeURIComponent(user.username) + '/link-order',
+            'http://127.0.0.1:3000/api/auth/user/' + encodeURIComponent(user.username) + '/link-order'
+        ];
+        targets.forEach(url => {
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId })
+            }).then(r => r.ok ? r.json() : null).then(data => {
+                if (data && data.success) {
+                    localStorage.setItem('solarExplorerUser', JSON.stringify(data.user));
+                }
+            }).catch(() => {});
+        });
+    });
+    </script>
 </body>
 </html>

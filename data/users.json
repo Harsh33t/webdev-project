@@ -1,0 +1,35 @@
+[
+  {
+    "userId": "USR-1794858060013",
+    "username": "samarth_jain",
+    "passwordHash": "e9b542929ccc8750455c9f3dfe7fbbb3fa9c6d013ccea8feee89582e2403fd06",
+    "displayName": "Samarth Jain",
+    "email": "",
+    "orderIds": [
+      "ORD-2026-1336",
+      "ORD-2026-3384"
+    ],
+    "achievements": [
+      "First Launch 🚀",
+      "First Purchase 🛍️",
+      "Explorer 🔭"
+    ],
+    "stats": {
+      "quizzesTaken": 2,
+      "totalSpent": 0,
+      "pagesVisited": [
+        "home",
+        "merchandise",
+        "feedback",
+        "fun-space",
+        "satellites",
+        "sun",
+        "extreme",
+        "missions"
+      ],
+      "feedbackSubmitted": 0
+    },
+    "joinedAt": "2026-11-16T19:41:00.013Z",
+    "lastLoginAt": "2026-11-16T19:41:00.013Z"
+  }
+]

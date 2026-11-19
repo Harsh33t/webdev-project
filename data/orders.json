@@ -1,5 +1,333 @@
 [
   {
+    "id": "ORD-2026-2338",
+    "orderId": "ORD-2026-2338",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-tshirt",
+        "title": "Lunar Phase T-Shirt",
+        "price": 39,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-tshirt.png"
+      }
+    ],
+    "totalAmount": 39,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-EOUWX4",
+    "estimatedDelivery": "2026-11-20T19:42:30.749Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "<20b326b0-0fae-834c-d2c6-8a0f8a663475@solarexplorer.org>",
+      "previewUrl": "https://ethereal.email/message/avtcoRxfZbtG7mhQavtcq840LAJkZNFvAAAABiMAMto22I.fV0Ngcr3C8qs",
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-2338.html",
+      "dispatchedAt": "2026-11-16T19:42:34.204Z",
+      "dispatchMode": "ethereal_sandbox"
+    },
+    "createdAt": "2026-11-16T19:42:30.748Z",
+    "updatedAt": "2026-11-16T19:42:34.206Z",
+    "username": null
+  },
+  {
+    "id": "ORD-2026-6291",
+    "orderId": "ORD-2026-6291",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-bomber",
+        "title": "Lunar Bomber Jacket",
+        "price": 119,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-bomber.png"
+      }
+    ],
+    "totalAmount": 119,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-HVXNOL",
+    "estimatedDelivery": "2026-11-20T19:42:30.738Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "<59451d14-b205-9156-aa50-4dd09f70c9ca@solarexplorer.org>",
+      "previewUrl": "https://ethereal.email/message/avtcoRxfZbtG7mhQavtcq7yhcdNudfg9AAAABbRiIs7orQkmmzz8OYARudM",
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-6291.html",
+      "dispatchedAt": "2026-11-16T19:42:34.198Z",
+      "dispatchMode": "ethereal_sandbox"
+    },
+    "createdAt": "2026-11-16T19:42:30.738Z",
+    "updatedAt": "2026-11-16T19:42:34.201Z",
+    "username": null
+  },
+  {
+    "id": "ORD-2026-5195",
+    "orderId": "ORD-2026-5195",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-tshirt",
+        "title": "Lunar Phase T-Shirt",
+        "price": 39,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-tshirt.png"
+      }
+    ],
+    "totalAmount": 39,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-FHDRLG",
+    "estimatedDelivery": "2026-11-20T19:42:28.244Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "FALLBACK-1794858180476",
+      "previewUrl": null,
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-5195.html",
+      "dispatchedAt": "2026-11-16T19:43:00.477Z",
+      "dispatchMode": "local_file_archived"
+    },
+    "createdAt": "2026-11-16T19:42:28.244Z",
+    "updatedAt": "2026-11-16T19:43:00.480Z",
+    "username": null
+  },
+  {
+    "id": "ORD-2026-6765",
+    "orderId": "ORD-2026-6765",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-bomber",
+        "title": "Lunar Bomber Jacket",
+        "price": 119,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-bomber.png"
+      }
+    ],
+    "totalAmount": 119,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-7UZ88P",
+    "estimatedDelivery": "2026-11-20T19:42:28.234Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "<ca0a23d7-0596-7f46-888a-f011d2b846c6@solarexplorer.org>",
+      "previewUrl": "https://ethereal.email/message/avtcoRxfZbtG7mhQavtcqM40LAJkZNFtAAAABOftHYceG0oAgO.WvtjQ-B8",
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-6765.html",
+      "dispatchedAt": "2026-11-16T19:42:31.431Z",
+      "dispatchMode": "ethereal_sandbox"
+    },
+    "createdAt": "2026-11-16T19:42:28.234Z",
+    "updatedAt": "2026-11-16T19:42:31.433Z",
+    "username": null
+  },
+  {
+    "id": "ORD-2026-3849",
+    "orderId": "ORD-2026-3849",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-tshirt",
+        "title": "Lunar Phase T-Shirt",
+        "price": 39,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-tshirt.png"
+      }
+    ],
+    "totalAmount": 39,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-1Y5MY4",
+    "estimatedDelivery": "2026-11-20T19:42:25.738Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "<ed0314c5-ad6b-402d-3548-5a621e6fb56e@solarexplorer.org>",
+      "previewUrl": "https://ethereal.email/message/avtcoRxfZbtG7mhQavtcphu0HW7Ughj1AAAAAyLErmMds.aKnIyDx0wNK64",
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-3849.html",
+      "dispatchedAt": "2026-11-16T19:42:28.563Z",
+      "dispatchMode": "ethereal_sandbox"
+    },
+    "createdAt": "2026-11-16T19:42:25.738Z",
+    "updatedAt": "2026-11-16T19:42:28.565Z",
+    "username": null
+  },
+  {
+    "id": "ORD-2026-7531",
+    "orderId": "ORD-2026-7531",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-bomber",
+        "title": "Lunar Bomber Jacket",
+        "price": 119,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-bomber.png"
+      }
+    ],
+    "totalAmount": 119,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-GS9GDL",
+    "estimatedDelivery": "2026-11-20T19:42:25.718Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "FALLBACK-1794858177107",
+      "previewUrl": null,
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-7531.html",
+      "dispatchedAt": "2026-11-16T19:42:57.108Z",
+      "dispatchMode": "local_file_archived"
+    },
+    "createdAt": "2026-11-16T19:42:25.718Z",
+    "updatedAt": "2026-11-16T19:42:57.112Z",
+    "username": null
+  },
+  {
+    "id": "ORD-2026-8049",
+    "orderId": "ORD-2026-8049",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-tshirt",
+        "title": "Lunar Phase T-Shirt",
+        "price": 39,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-tshirt.png"
+      }
+    ],
+    "totalAmount": 39,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-2M62OR",
+    "estimatedDelivery": "2026-11-20T19:42:23.231Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "<7117fcb9-f7b2-55fb-54e6-3c78f92f9e46@solarexplorer.org>",
+      "previewUrl": "https://ethereal.email/message/avtcoRxfZbtG7mhQavtcpWjCd8MK65glAAAAAXS6bqj2mQENKmB.doNqoXc",
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-8049.html",
+      "dispatchedAt": "2026-11-16T19:42:27.645Z",
+      "dispatchMode": "ethereal_sandbox"
+    },
+    "createdAt": "2026-11-16T19:42:23.231Z",
+    "updatedAt": "2026-11-16T19:42:27.648Z",
+    "username": null
+  },
+  {
+    "id": "ORD-2026-1171",
+    "orderId": "ORD-2026-1171",
+    "customer": {
+      "name": "Commander Alex Vance",
+      "email": "alex.vance@cosmos.io",
+      "address": "450 Orbital Launch Complex",
+      "city": "Cape Canaveral",
+      "state": "CA",
+      "zip": "32920"
+    },
+    "items": [
+      {
+        "productId": "lunar-bomber",
+        "title": "Lunar Bomber Jacket",
+        "price": 119,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-bomber.png"
+      }
+    ],
+    "totalAmount": 119,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "simulated_express",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-X4DW7L",
+    "estimatedDelivery": "2026-11-20T19:42:23.212Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "<0245d543-34e6-ced8-b1f3-13b3682ad6f5@solarexplorer.org>",
+      "previewUrl": "https://ethereal.email/message/avtcoRxfZbtG7mhQavtcpbyhcdNudfg5AAAAApFLg1csEzcx4MeQegbbavI",
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-1171.html",
+      "dispatchedAt": "2026-11-16T19:42:27.663Z",
+      "dispatchMode": "ethereal_sandbox"
+    },
+    "createdAt": "2026-11-16T19:42:23.210Z",
+    "updatedAt": "2026-11-16T19:42:27.665Z",
+    "username": null
+  },
+  {
     "id": "ORD-2026-4063",
     "orderId": "ORD-2026-4063",
     "customer": {

@@ -1,0 +1,75 @@
+[
+  {
+    "id": "lunar-bomber",
+    "name": "Lunar Bomber Jacket",
+    "category": "TECHNICAL OUTERWEAR",
+    "description": "Lightweight space-inspired bomber with weather-resistant shell.",
+    "price": 119.00,
+    "image": "images/merch/lunar-bomber.png",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "defaultSize": "M",
+    "inStock": true,
+    "badge": null
+  },
+  {
+    "id": "saturn-hoodie",
+    "name": "Saturn Orbit Hoodie",
+    "category": "HEAVYWEIGHT FLEECE",
+    "description": "Premium cotton hoodie featuring monochromatic orbital ring print.",
+    "price": 69.00,
+    "image": "images/merch/saturn-hoodie.png",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "defaultSize": "M",
+    "inStock": true,
+    "badge": null
+  },
+  {
+    "id": "lunar-tshirt",
+    "name": "Lunar Phase T-Shirt",
+    "category": "COTTON ESSENTIAL",
+    "description": "Minimalist high-contrast moon phase graphic print on combed jersey.",
+    "price": 39.00,
+    "image": "images/merch/lunar-tshirt.png",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "defaultSize": "M",
+    "inStock": true,
+    "badge": null
+  },
+  {
+    "id": "astronaut-tee",
+    "name": "Astronaut Tee",
+    "category": "GRAPHIC ESSENTIAL",
+    "description": "Classic graphic crewneck celebrating human space exploration.",
+    "price": 39.00,
+    "image": "images/merch/astronaut-tee.png",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "defaultSize": "M",
+    "inStock": true,
+    "badge": null
+  },
+  {
+    "id": "andromeda-hoodie",
+    "name": "Andromeda Hoodie",
+    "category": "HEAVYWEIGHT FLEECE",
+    "description": "Deep-black fleece showcasing the Andromeda Galaxy core.",
+    "price": 69.00,
+    "image": "images/merch/andromeda-hoodie.png",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "defaultSize": "M",
+    "inStock": true,
+    "badge": null
+  },
+  {
+    "id": "explorer-jacket",
+    "name": "Explorer Jacket",
+    "category": "TECHNICAL OUTERWEAR",
+    "description": "All-weather technical jacket built with stormproof hardware.",
+    "price": 129.00,
+    "image": "images/merch/explorer-jacket.png",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "defaultSize": "M",
+    "inStock": true,
+    "badge": "BESTSELLER"
+  }
+]
+

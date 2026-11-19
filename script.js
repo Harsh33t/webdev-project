@@ -144,6 +144,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initSpaceWeather();
     initCelestialTicker();
     initDailyFact();
+
+    // User account nav button — show username or "Account"
+    initNavAccountButton();
+
+    // Track page visit for logged-in user
+    trackPageVisit();
+
+    // Visitor auth check (first-time vs returning visitor prompt)
+    initAuthModal();
 });
 
 /* ========================================================
@@ -707,6 +716,18 @@ function initMerchandisePage() {
     function openCheckoutDrawer(item) {
         currentCart = { ...item, qty: 1 };
         updateDrawerUI();
+
+        // Auto-fill logged-in user profile
+        try {
+            const curUser = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+            if (curUser) {
+                const chkName = document.getElementById('chk-name');
+                const chkEmail = document.getElementById('chk-email');
+                if (chkName && !chkName.value) chkName.value = curUser.displayName || curUser.username;
+                if (chkEmail && !chkEmail.value && curUser.email) chkEmail.value = curUser.email;
+            }
+        } catch (e) {}
+
         if (drawerFormView) drawerFormView.style.display = 'flex';
         if (drawerReceiptView) drawerReceiptView.style.display = 'none';
         if (drawer) {
@@ -841,8 +862,17 @@ function initMerchandisePage() {
             if (spinner) spinner.style.display = 'inline-block';
             if (btnText) btnText.textContent = 'ROUTING ORDER & DISPATCHING EMAIL...';
 
+            const curUser = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
             const orderPayload = {
-                customer: { name, email, address, city, zip },
+                username: (curUser && curUser.username) ? curUser.username : null,
+                customer: {
+                    name,
+                    email,
+                    address,
+                    city,
+                    zip,
+                    username: (curUser && curUser.username) ? curUser.username : null
+                },
                 items: [
                     {
                         productId: currentCart.id,
@@ -854,6 +884,7 @@ function initMerchandisePage() {
                     }
                 ],
                 total: currentCart.price * currentCart.qty,
+                totalAmount: currentCart.price * currentCart.qty,
                 shippingMethod: 'orbital_express',
                 paymentMethod: 'simulated_express'
             };
@@ -883,15 +914,18 @@ function initMerchandisePage() {
                     rEmailLink.href = `/api/orders/${encodeURIComponent(order.orderId)}/receipt`;
                 }
 
-                // Cache in localStorage
+                // Cache in localStorage with username
                 try {
                     const existing = JSON.parse(localStorage.getItem(MERCH_ORDERS_STORAGE_KEY) || '[]');
                     existing.unshift({
                         orderId: order.orderId,
                         trackingNumber: order.trackingNumber,
+                        username: (curUser && curUser.username) ? curUser.username : null,
                         customer: { name, email, address, city, zip },
                         items: orderPayload.items,
                         total: orderPayload.total,
+                        totalAmount: orderPayload.total,
+                        orderStatus: 'confirmed',
                         createdAt: new Date().toISOString()
                     });
                     localStorage.setItem(MERCH_ORDERS_STORAGE_KEY, JSON.stringify(existing.slice(0, 50)));
@@ -899,9 +933,23 @@ function initMerchandisePage() {
                     console.warn('LocalStorage order save failed:', cacheErr);
                 }
 
+                // Auto-link to logged-in user on backend
+                if (curUser && curUser.username) {
+                    sendToBackendApi('/api/auth/user/' + encodeURIComponent(curUser.username) + '/link-order', {
+                        orderId: order.orderId
+                    }).then(linkRes => {
+                        if (linkRes && linkRes.data && linkRes.data.user) {
+                            localStorage.setItem('solarExplorerUser', JSON.stringify(linkRes.data.user));
+                        }
+                    }).catch(() => {});
+                }
+
                 // Flip view
                 if (drawerFormView) drawerFormView.style.display = 'none';
                 if (drawerReceiptView) drawerReceiptView.style.display = 'flex';
+
+                // Dispatch event so merchandise page can link order to user
+                document.dispatchEvent(new CustomEvent('orderPlaced', { detail: { orderId: order.orderId } }));
 
             } catch (err) {
                 console.error('Order creation error:', err);
@@ -1738,6 +1786,21 @@ function initCosmicQuiz() {
                 `;
                 resultTarget.scrollIntoView({ behavior: 'smooth' });
                 loadLeaderboard();
+
+                // Track quiz for logged-in user
+                try {
+                    const curUser = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+                    if (curUser && curUser.username) {
+                        ['http://localhost:3000','http://127.0.0.1:3000'].forEach(base => {
+                            fetch(base + '/api/auth/user/' + encodeURIComponent(curUser.username) + '/update-stats', {
+                                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ quizScore: result.score })
+                            }).then(r => r.ok ? r.json() : null).then(d => {
+                                if (d && d.success) localStorage.setItem('solarExplorerUser', JSON.stringify(d.user));
+                            }).catch(() => {});
+                        });
+                    }
+                } catch (e) {}
             }
         } catch (err) {
             alert('Error evaluating quiz submission.');
@@ -1801,7 +1864,6 @@ function initCelestialTicker() {
     const utcEl = document.getElementById('ticker-utc');
     const issEl = document.getElementById('ticker-iss');
     const windEl = document.getElementById('ticker-wind');
-    const dbEl = document.getElementById('ticker-db');
 
     if (utcEl) {
         function updateClock() {
@@ -1825,11 +1887,6 @@ function initCelestialTicker() {
             }
         });
 
-        fetchFromBackendApi('/api/telemetry').then(res => {
-            if (res && res.success && dbEl) {
-                dbEl.textContent = `${res.database.mode.toUpperCase()} Active (${res.metrics.totalFeedbacks} reviews, ${res.metrics.totalMerchOrders} orders)`;
-            }
-        });
     }
 }
 
@@ -1847,4 +1904,131 @@ function initDailyFact() {
             if (sourceEl) sourceEl.textContent = res.fact.source;
         }
     });
+}
+
+
+/* ========================================================
+   USER AUTH HELPERS — Nav button & page tracking
+   ======================================================== */
+
+function initNavAccountButton() {
+    const btn = document.getElementById('nav-account-btn');
+    if (!btn) return;
+    try {
+        const user = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+        btn.textContent = 'Dashboard';
+        btn.href = 'user-dashboard.html';
+        if (user && user.username) {
+            btn.title = 'Dashboard (' + (user.displayName || user.username) + ')';
+        }
+    } catch (e) {}
+}
+
+function trackPageVisit() {
+    try {
+        const user = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+        if (!user || !user.username) return;
+
+        // Determine current page key
+        const path = window.location.pathname;
+        let pageKey = null;
+        if (path.includes('sun.html')) pageKey = 'sun';
+        else if (path.includes('extreme.html')) pageKey = 'extreme';
+        else if (path.includes('missions.html')) pageKey = 'missions';
+        else if (path.includes('fun-space.html')) pageKey = 'fun-space';
+        else if (path.includes('satellites.html')) pageKey = 'satellites';
+        else if (path.includes('merchandise.html')) pageKey = 'merchandise';
+        else if (path.includes('feedback.html')) pageKey = 'feedback';
+        else if (path === '/' || path.includes('index.html')) pageKey = 'home';
+
+        if (!pageKey) return;
+
+        const stats = user.stats || {};
+        const pagesVisited = stats.pagesVisited || [];
+        if (!pagesVisited.includes(pageKey)) {
+            pagesVisited.push(pageKey);
+            user.stats = { ...stats, pagesVisited };
+            localStorage.setItem('solarExplorerUser', JSON.stringify(user));
+            // Sync to server
+            const targets = [
+                'http://localhost:3000/api/auth/user/' + encodeURIComponent(user.username) + '/update-stats',
+                'http://127.0.0.1:3000/api/auth/user/' + encodeURIComponent(user.username) + '/update-stats'
+            ];
+            targets.forEach(url => {
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pageVisited: pageKey })
+                }).catch(() => {});
+            });
+        }
+    } catch (e) {}
+}
+
+
+function initAuthModal() {
+    try {
+        const path = (window.location.pathname || '').toLowerCase();
+        // Do not pop up on login/dashboard pages
+        if (path.includes('login') || path.includes('user-dashboard')) return;
+
+        const user = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+        if (user && user.username) return; // User is already logged in
+
+        // Do not pop up repeatedly in the same session if dismissed
+        if (sessionStorage.getItem('solarExplorerAuthDismissed')) return;
+
+        const hasVisitedBefore = localStorage.getItem('solarExplorerHasVisited');
+        const isFirstTime = !hasVisitedBefore;
+
+        const modal = document.createElement('div');
+        modal.id = 'visitor-auth-modal';
+        modal.className = 'visitor-auth-overlay';
+        modal.innerHTML = `
+            <div class="visitor-auth-card">
+                <button type="button" class="visitor-auth-close" id="visitor-auth-close-btn" aria-label="Close">&times;</button>
+                <div class="visitor-auth-badge">
+                    <span class="live-dot pulse-green"></span>
+                    <span>${isFirstTime ? 'NEW EXPLORER DETECTED' : 'RETURNING EXPLORER'}</span>
+                </div>
+                <div class="visitor-auth-icon">${isFirstTime ? '🚀' : '🛸'}</div>
+                <h2 class="visitor-auth-title">${isFirstTime ? 'WELCOME TO SOLAR EXPLORER' : 'MISSION RE-ENTRY'}</h2>
+                <p class="visitor-auth-desc">
+                    ${isFirstTime
+                        ? 'First time visiting Solar Explorer? Create your mission account to save your journey, track merchandise orders, and unlock cosmic achievements.'
+                        : 'Welcome back, Explorer! Sign in with your username and password to restore your saved data, order status, and achievements.'}
+                </p>
+
+                <div class="visitor-auth-actions">
+                    ${isFirstTime
+                        ? `<a href="login.html?tab=signup" class="visitor-auth-btn primary">CREATE ACCOUNT</a>
+                           <a href="login.html?tab=login" class="visitor-auth-btn secondary">ALREADY REGISTERED? SIGN IN</a>`
+                        : `<a href="login.html?tab=login" class="visitor-auth-btn primary">SIGN IN WITH USERNAME &amp; PASSWORD</a>
+                           <a href="login.html?tab=signup" class="visitor-auth-btn secondary">CREATE NEW ACCOUNT</a>`
+                    }
+                    <button type="button" class="visitor-auth-guest-btn" id="visitor-auth-guest-btn">Explore as Guest</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Mark as visited for next visits
+        localStorage.setItem('solarExplorerHasVisited', 'true');
+
+        const closeBtn = document.getElementById('visitor-auth-close-btn');
+        const guestBtn = document.getElementById('visitor-auth-guest-btn');
+        const closeModal = () => {
+            sessionStorage.setItem('solarExplorerAuthDismissed', 'true');
+            modal.classList.add('closing');
+            setTimeout(() => modal.remove(), 250);
+        };
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (guestBtn) guestBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    } catch (e) {
+        console.warn('initAuthModal error:', e);
+    }
 }

@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const StorageService = require('../services/storageService');
 const EmailService = require('../services/emailService');
 const { getDatabaseStatus } = require('../config/db');
@@ -884,6 +885,193 @@ router.get('/telemetry', async (req, res) => {
         });
     } catch (err) {
         res.status(500).json({ success: false, error: 'Failed to generate telemetry report' });
+    }
+});
+
+// ====================================================
+// 6. PRODUCTS CATALOG ENDPOINT
+// ====================================================
+
+// GET /api/products - Serve the full merchandise catalog from products.json
+router.get('/products', (req, res) => {
+    try {
+        const productsPath = path.join(__dirname, '..', 'data', 'products.json');
+        const raw = fs.readFileSync(productsPath, 'utf8');
+        const products = JSON.parse(raw);
+        res.json({ success: true, count: products.length, data: products });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Failed to load product catalog' });
+    }
+});
+
+// ====================================================
+// 7. USER AUTH ENDPOINTS (Login / Signup)
+// ====================================================
+
+function hashPassword(password) {
+    return crypto.createHash('sha256').update(password + 'solar_explorer_salt_2026').digest('hex');
+}
+
+// POST /api/auth/signup
+router.post('/auth/signup', async (req, res) => {
+    try {
+        const { username, password, displayName, email } = req.body;
+        if (!username || !password) {
+            return res.status(400).json({ success: false, error: 'Username and password are required.' });
+        }
+        if (username.trim().length < 3) {
+            return res.status(400).json({ success: false, error: 'Username must be at least 3 characters.' });
+        }
+        if (password.length < 4) {
+            return res.status(400).json({ success: false, error: 'Password must be at least 4 characters.' });
+        }
+
+        const existing = await StorageService.getUserByUsername(username.trim());
+        if (existing) {
+            return res.status(409).json({ success: false, error: 'Username already taken. Please choose another.' });
+        }
+
+        const newUser = {
+            userId: 'USR-' + Date.now(),
+            username: username.trim(),
+            passwordHash: hashPassword(password),
+            displayName: (displayName || username).trim(),
+            email: (email || '').trim().toLowerCase(),
+            orderIds: [],
+            achievements: ['First Launch 🚀'],
+            stats: {
+                quizzesTaken: 0,
+                totalSpent: 0,
+                pagesVisited: [],
+                feedbackSubmitted: 0
+            },
+            joinedAt: new Date().toISOString(),
+            lastLoginAt: new Date().toISOString()
+        };
+
+        const created = await StorageService.createUser(newUser);
+        const { passwordHash, ...safeUser } = created;
+        res.status(201).json({ success: true, message: 'Account created! Welcome to Solar Explorer.', user: safeUser });
+    } catch (err) {
+        console.error('Signup error:', err);
+        res.status(500).json({ success: false, error: 'Failed to create account.' });
+    }
+});
+
+// POST /api/auth/login
+router.post('/auth/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        if (!username || !password) {
+            return res.status(400).json({ success: false, error: 'Username and password are required.' });
+        }
+
+        const user = await StorageService.getUserByUsername(username.trim());
+        if (!user) {
+            return res.status(401).json({ success: false, error: 'Invalid username or password.' });
+        }
+        if (user.passwordHash !== hashPassword(password)) {
+            return res.status(401).json({ success: false, error: 'Invalid username or password.' });
+        }
+
+        // Update last login
+        await StorageService.updateUser(user.username, { lastLoginAt: new Date().toISOString() });
+
+        const { passwordHash, ...safeUser } = user;
+        safeUser.lastLoginAt = new Date().toISOString();
+        res.json({ success: true, message: 'Login successful!', user: safeUser });
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).json({ success: false, error: 'Login failed. Please try again.' });
+    }
+});
+
+// GET /api/auth/user/:username - Get user profile + orders
+router.get('/auth/user/:username', async (req, res) => {
+    try {
+        const user = await StorageService.getUserByUsername(req.params.username);
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found.' });
+        }
+
+        // Fetch user's orders
+        const allOrders = StorageService.readJsonPublic ? StorageService.readJsonPublic('orders') : [];
+        const userOrderIds = Array.isArray(user.orderIds) ? user.orderIds : [];
+        const userOrders = allOrders.filter(o =>
+            userOrderIds.includes(o.orderId) ||
+            (o.username && o.username.toLowerCase() === user.username.toLowerCase()) ||
+            (o.customer && o.customer.email && user.email && o.customer.email.toLowerCase() === user.email.toLowerCase())
+        );
+
+        const { passwordHash, ...safeUser } = user;
+        res.json({ success: true, user: safeUser, orders: userOrders });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Failed to load user profile.' });
+    }
+});
+
+// POST /api/auth/user/:username/link-order - Link an order to user
+router.post('/auth/user/:username/link-order', async (req, res) => {
+    try {
+        const { orderId } = req.body;
+        if (!orderId) return res.status(400).json({ success: false, error: 'orderId required.' });
+
+        const user = await StorageService.getUserByUsername(req.params.username);
+        if (!user) return res.status(404).json({ success: false, error: 'User not found.' });
+
+        const orders = StorageService.readJsonPublic ? StorageService.readJsonPublic('orders') : [];
+        const order = orders.find(o => o.orderId === orderId);
+        const amount = order ? order.totalAmount : 0;
+
+        await StorageService.linkUserOrder(user.username, orderId, amount);
+        const updated = await StorageService.getUserByUsername(user.username);
+        const { passwordHash, ...safeUser } = updated;
+        res.json({ success: true, user: safeUser });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Failed to link order.' });
+    }
+});
+
+// POST /api/auth/user/:username/update-stats - Update user stats (quiz, page visits, feedback)
+router.post('/auth/user/:username/update-stats', async (req, res) => {
+    try {
+        const { quizScore, pageVisited, feedbackSubmitted } = req.body;
+        const user = await StorageService.getUserByUsername(req.params.username);
+        if (!user) return res.status(404).json({ success: false, error: 'User not found.' });
+
+        const stats = user.stats || { quizzesTaken: 0, totalSpent: 0, pagesVisited: [], feedbackSubmitted: 0 };
+        const achievements = Array.isArray(user.achievements) ? [...user.achievements] : [];
+
+        if (quizScore !== undefined) {
+            stats.quizzesTaken = (stats.quizzesTaken || 0) + 1;
+            if (quizScore >= 500 && !achievements.includes('Quiz Master 🏆')) {
+                achievements.push('Quiz Master 🏆');
+            } else if (quizScore >= 300 && !achievements.includes('Star Student ⭐')) {
+                achievements.push('Star Student ⭐');
+            }
+        }
+        if (pageVisited) {
+            if (!Array.isArray(stats.pagesVisited)) stats.pagesVisited = [];
+            if (!stats.pagesVisited.includes(pageVisited)) {
+                stats.pagesVisited.push(pageVisited);
+                if (stats.pagesVisited.length >= 5 && !achievements.includes('Explorer 🔭')) {
+                    achievements.push('Explorer 🔭');
+                }
+            }
+        }
+        if (feedbackSubmitted) {
+            stats.feedbackSubmitted = (stats.feedbackSubmitted || 0) + 1;
+            if (!achievements.includes('Community Voice 💬')) {
+                achievements.push('Community Voice 💬');
+            }
+        }
+
+        await StorageService.updateUser(user.username, { stats, achievements });
+        const updated = await StorageService.getUserByUsername(user.username);
+        const { passwordHash, ...safeUser } = updated;
+        res.json({ success: true, user: safeUser });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Failed to update stats.' });
     }
 });
 

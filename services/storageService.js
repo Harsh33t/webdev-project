@@ -13,6 +13,7 @@ const Merchandise = require('../models/Merchandise');
 const SatelliteTrack = require('../models/SatelliteTrack');
 const QuizScore = require('../models/QuizScore');
 const Order = require('../models/Order');
+const User = require('../models/User');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -22,13 +23,16 @@ const FILE_PATHS = {
     merchandise: path.join(DATA_DIR, 'merchandise.json'),
     satellites: path.join(DATA_DIR, 'satellites.json'),
     quizscores: path.join(DATA_DIR, 'quizscores.json'),
-    orders: path.join(DATA_DIR, 'orders.json')
+    orders: path.join(DATA_DIR, 'orders.json'),
+    users: path.join(DATA_DIR, 'users.json'),
+    products: path.join(DATA_DIR, 'products.json')
 };
 
 // Initialize JSON files with defaults if not present
 if (!fs.existsSync(FILE_PATHS.feedback)) fs.writeFileSync(FILE_PATHS.feedback, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.merchandise)) fs.writeFileSync(FILE_PATHS.merchandise, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.orders)) fs.writeFileSync(FILE_PATHS.orders, '[]', 'utf8');
+if (!fs.existsSync(FILE_PATHS.users)) fs.writeFileSync(FILE_PATHS.users, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.satellites)) {
     fs.writeFileSync(FILE_PATHS.satellites, JSON.stringify([
         {
@@ -356,7 +360,8 @@ const StorageService = {
                 dispatchMode: 'pending'
             },
             createdAt: nowIso,
-            updatedAt: nowIso
+            updatedAt: nowIso,
+            username: data.username || (data.customer && data.customer.username) || null
         };
 
         if (isMongoActive()) {
@@ -371,6 +376,14 @@ const StorageService = {
         const list = readJson('orders');
         list.unshift(payload);
         writeJson('orders', list);
+
+        // Auto-link to user if username provided
+        if (payload.username) {
+            try {
+                await this.linkUserOrder(payload.username, orderId, payload.totalAmount);
+            } catch (linkErr) {}
+        }
+
         return payload;
     },
 
@@ -388,7 +401,7 @@ const StorageService = {
                     ]
                 }).lean();
                 if (found) return found;
-            } catch (err) {}
+            } catch (err) { }
         }
 
         const list = readJson('orders');
@@ -399,7 +412,7 @@ const StorageService = {
         if (isMongoActive()) {
             try {
                 return await Order.find(filter).sort({ createdAt: -1 }).limit(limit).lean();
-            } catch (err) {}
+            } catch (err) { }
         }
         let list = readJson('orders');
         if (filter.email) list = list.filter(o => o.customer && o.customer.email.toLowerCase() === filter.email.toLowerCase());
@@ -414,7 +427,7 @@ const StorageService = {
                     { $or: [{ orderId: q }, { id: q }] },
                     { $set: { emailNotification: emailMeta, updatedAt: new Date().toISOString() } }
                 );
-            } catch (err) {}
+            } catch (err) { }
         }
         const list = readJson('orders');
         const o = list.find(item => item.orderId === q || item.id === q);
@@ -426,7 +439,95 @@ const StorageService = {
     },
 
     // ==========================================
-    // 6. AGGREGATE SYSTEM STATS
+    // 5.5 USER OPERATIONS (Dual Storage: MongoDB + JSON)
+    // ==========================================
+    async createUser(userData) {
+        if (isMongoActive()) {
+            try {
+                const doc = await User.create(userData);
+                const list = readJson('users');
+                list.push(doc.toObject ? doc.toObject() : userData);
+                writeJson('users', list);
+                return doc.toObject ? doc.toObject() : userData;
+            } catch (err) {
+                console.warn('[StorageService] Mongo User create:', err.message);
+            }
+        }
+        const list = readJson('users');
+        list.push(userData);
+        writeJson('users', list);
+        return userData;
+    },
+
+    async getUserByUsername(username) {
+        if (!username) return null;
+        const q = String(username).trim().toLowerCase();
+        if (isMongoActive()) {
+            try {
+                const found = await User.findOne({ username: new RegExp('^' + q + '$', 'i') }).lean();
+                if (found) return found;
+            } catch (err) {}
+        }
+        const list = readJson('users');
+        return list.find(u => u.username && u.username.toLowerCase() === q) || null;
+    },
+
+    async updateUser(username, updateFields) {
+        if (!username) return null;
+        const q = String(username).trim().toLowerCase();
+        if (isMongoActive()) {
+            try {
+                await User.findOneAndUpdate(
+                    { username: new RegExp('^' + q + '$', 'i') },
+                    { $set: updateFields }
+                );
+            } catch (err) {}
+        }
+        const list = readJson('users');
+        const user = list.find(u => u.username && u.username.toLowerCase() === q);
+        if (user) {
+            Object.assign(user, updateFields);
+            writeJson('users', list);
+            return user;
+        }
+        return null;
+    },
+
+    async linkUserOrder(username, orderId, amount = 0) {
+        if (!username || !orderId) return;
+        const user = await this.getUserByUsername(username);
+        if (!user) return;
+
+        const orderIds = Array.isArray(user.orderIds) ? user.orderIds : [];
+        if (!orderIds.includes(orderId)) {
+            orderIds.push(orderId);
+            const stats = user.stats || { quizzesTaken: 0, totalSpent: 0, pagesVisited: [], feedbackSubmitted: 0 };
+            stats.totalSpent = (stats.totalSpent || 0) + Number(amount || 0);
+
+            const achievements = Array.isArray(user.achievements) ? user.achievements : [];
+            if (orderIds.length >= 1 && !achievements.includes('First Purchase 🛍️')) {
+                achievements.push('First Purchase 🛍️');
+            }
+            if (orderIds.length >= 3 && !achievements.includes('Space Shopper 🌌')) {
+                achievements.push('Space Shopper 🌌');
+            }
+            if (stats.totalSpent >= 200 && !achievements.includes('Galaxy Collector 🌠')) {
+                achievements.push('Galaxy Collector 🌠');
+            }
+
+            await this.updateUser(username, { orderIds, stats, achievements });
+        }
+    },
+
+    // ==========================================
+    // 6. PUBLIC JSON READ HELPER (for cross-module use)
+    // ==========================================
+    readJsonPublic(key) {
+        return readJson(key);
+    },
+
+    // ==========================================
+    // 7. AGGREGATE SYSTEM STATS
     // ==========================================
     async getSystemStats() {
         const feedbacks = await this.getFeedbacks();
