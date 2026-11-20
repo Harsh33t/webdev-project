@@ -42,150 +42,266 @@
         </div>
     </div>
 
-    <!-- === DASHBOARD (shown when logged in) === -->
-    <div id="dashboard-logged-in" style="display:none;">
+    <!-- === DASHBOARD CANVAS (shown when active) === -->
+    <div id="dashboard-logged-in" class="udash-page-wrapper">
 
-        <!-- Dashboard Hero -->
-        <header class="udash-hero">
-            <div class="udash-hero-content">
-                <div class="udash-welcome-badge">
-                    <span class="live-dot pulse-green"></span>
-                    <span>MISSION DASHBOARD</span>
-                </div>
-                <h1 class="udash-title" id="dash-welcome-title">Welcome back, Explorer</h1>
-                <p class="udash-subtitle" id="dash-welcome-sub">Tracking your cosmic journey across the Solar Explorer universe.</p>
-                <div class="udash-meta-strip">
-                    <span class="udash-meta-item">👤 <span id="dash-username-display">—</span></span>
-                    <span class="udash-meta-item">📅 Joined: <span id="dash-joined-date">—</span></span>
-                    <span class="udash-meta-item">🕐 Last login: <span id="dash-last-login">—</span></span>
-                    <button onclick="doSignOut()" class="udash-signout-btn">Sign Out</button>
-                </div>
-            </div>
-        </header>
+        <!-- Background Cosmic Crescent & Starlight -->
+        <div class="udash-cosmic-bg">
+            <div class="udash-planet-limb"></div>
+            <div class="udash-stars-dust"></div>
+        </div>
 
-        <main class="udash-main">
+        <div class="udash-container">
 
-            <!-- === KPI CARDS ROW === -->
-            <section class="udash-kpi-grid">
-                <div class="udash-kpi-card">
-                    <div class="udash-kpi-icon">🛍️</div>
-                    <div class="udash-kpi-val" id="kpi-orders">0</div>
-                    <div class="udash-kpi-label">ORDERS PLACED</div>
+            <!-- 1. HEADER / HERO -->
+            <header class="udash-hero-new">
+                <div class="udash-welcome-box">
+                    <span class="udash-welcome-sub">Welcome back,</span>
+                    <h1 class="udash-user-title" id="dash-welcome-name">PRATHAM SINGH SHAURYA</h1>
+                    <div class="udash-title-bar"></div>
                 </div>
-                <div class="udash-kpi-card">
-                    <div class="udash-kpi-icon">💰</div>
-                    <div class="udash-kpi-val" id="kpi-spent">$0.00</div>
-                    <div class="udash-kpi-label">TOTAL SPENT</div>
+                <div class="udash-top-actions">
+                    <div class="udash-profile-icon-btn" onclick="openEditProfileModal()" title="Commander Profile & Settings">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <button onclick="doSignOut()" class="udash-mini-signout-btn">Sign Out</button>
                 </div>
-                <div class="udash-kpi-card">
-                    <div class="udash-kpi-icon">🏆</div>
-                    <div class="udash-kpi-val" id="kpi-achievements">0</div>
-                    <div class="udash-kpi-label">ACHIEVEMENTS</div>
+            </header>
+
+            <!-- 2. 5 STAT METRIC CARDS ROW -->
+            <section class="udash-stats-row">
+                <!-- Card 1: Quests Solved -->
+                <div class="udash-stat-card">
+                    <div class="udash-stat-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                        </svg>
+                    </div>
+                    <div class="udash-stat-content">
+                        <div class="udash-stat-val" id="stat-quests">2</div>
+                        <div class="udash-stat-label">Quests Solved</div>
+                    </div>
+                    <div class="udash-glass-arc"></div>
                 </div>
-                <div class="udash-kpi-card">
-                    <div class="udash-kpi-icon">🧠</div>
-                    <div class="udash-kpi-val" id="kpi-quizzes">0</div>
-                    <div class="udash-kpi-label">QUIZZES TAKEN</div>
+
+                <!-- Card 2: Total Points -->
+                <div class="udash-stat-card">
+                    <div class="udash-stat-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                    </div>
+                    <div class="udash-stat-content">
+                        <div class="udash-stat-val" id="stat-points">$2.00</div>
+                        <div class="udash-stat-label">Total Points</div>
+                    </div>
+                    <div class="udash-glass-arc"></div>
                 </div>
-                <div class="udash-kpi-card" onclick="document.getElementById('observations-section') && document.getElementById('observations-section').scrollIntoView({behavior:'smooth'})" style="cursor:pointer;">
-                    <div class="udash-kpi-icon">🔭</div>
-                    <div class="udash-kpi-val" id="kpi-observations">0</div>
-                    <div class="udash-kpi-label">OBSERVATIONS LOGGED</div>
+
+                <!-- Card 3: Achievements -->
+                <div class="udash-stat-card">
+                    <div class="udash-stat-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(-20 12 12)"></ellipse>
+                        </svg>
+                    </div>
+                    <div class="udash-stat-content">
+                        <div class="udash-stat-val" id="stat-achievements">1</div>
+                        <div class="udash-stat-label">Achievements</div>
+                    </div>
+                    <div class="udash-glass-arc"></div>
                 </div>
-                <div class="udash-kpi-card">
-                    <div class="udash-kpi-icon">🌐</div>
-                    <div class="udash-kpi-val" id="kpi-pages">0</div>
-                    <div class="udash-kpi-label">PAGES EXPLORED</div>
+
+                <!-- Card 4: Streak Days -->
+                <div class="udash-stat-card">
+                    <div class="udash-stat-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="udash-stat-content">
+                        <div class="udash-stat-val" id="stat-streak">5</div>
+                        <div class="udash-stat-label">Streak Days</div>
+                    </div>
+                    <div class="udash-glass-arc"></div>
                 </div>
-                <div class="udash-kpi-card">
-                    <div class="udash-kpi-icon">💬</div>
-                    <div class="udash-kpi-val" id="kpi-feedback">0</div>
-                    <div class="udash-kpi-label">REVIEWS GIVEN</div>
+
+                <!-- Card 5: Rank Position -->
+                <div class="udash-stat-card">
+                    <div class="udash-stat-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <div class="udash-stat-content">
+                        <div class="udash-stat-val" id="stat-rank-pos">1</div>
+                        <div class="udash-stat-label">Rank Position</div>
+                    </div>
+                    <div class="udash-glass-arc"></div>
                 </div>
             </section>
 
-            <!-- === GRID: Achievements + Profile === -->
-            <div class="udash-two-col">
+            <!-- 3. TWO MAIN PANELS: Commander Profile & Achievements -->
+            <div class="udash-panels-grid">
 
-                <!-- Profile Card -->
-                <section class="udash-card udash-profile-card">
-                    <div class="udash-card-header">
-                        <h2>Commander Profile</h2>
-                        <span class="udash-card-badge" id="profile-rank-badge">Space Cadet</span>
-                    </div>
-                    <div class="udash-profile-body">
-                        <div class="udash-avatar-ring">
-                            <div class="udash-avatar" id="dash-avatar-initials">?</div>
+                <!-- Left Panel: Commander Profile -->
+                <section class="udash-panel-card udash-commander-card">
+                    <div class="udash-panel-header">
+                        <div class="udash-panel-title">
+                            <span class="udash-sparkle-icon">✦</span>
+                            <h2>Commander Profile</h2>
                         </div>
-                        <div class="udash-profile-fields">
-                            <div class="udash-field-row">
-                                <span class="udash-field-label">Username</span>
-                                <span class="udash-field-val" id="pf-username">—</span>
+                        <button class="udash-edit-btn" onclick="openEditProfileModal()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            Edit
+                        </button>
+                    </div>
+                    <div class="udash-commander-body">
+                        <!-- Orbital Saturn Visual -->
+                        <div class="udash-orbital-visual">
+                            <svg width="170" height="170" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <radialGradient id="planetGrad" cx="35%" cy="32%" r="65%">
+                                        <stop offset="0%" stop-color="#7a8494"/>
+                                        <stop offset="30%" stop-color="#3b4352"/>
+                                        <stop offset="70%" stop-color="#1a1f28"/>
+                                        <stop offset="100%" stop-color="#0a0c10"/>
+                                    </radialGradient>
+                                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0.05)"/>
+                                        <stop offset="30%" stop-color="rgba(210,220,235,0.7)"/>
+                                        <stop offset="50%" stop-color="rgba(120,135,155,0.4)"/>
+                                        <stop offset="70%" stop-color="rgba(220,230,245,0.85)"/>
+                                        <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
+                                    </linearGradient>
+                                    <filter id="nodeGlow">
+                                        <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur"/>
+                                            <feMergeNode in="SourceGraphic"/>
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+                                <!-- Orbit track -->
+                                <ellipse cx="90" cy="90" rx="76" ry="76" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1.2" fill="none"/>
+                                <!-- Orbit nodes (satellites) -->
+                                <circle cx="36" cy="36" r="3" fill="#ffffff" filter="url(#nodeGlow)"/>
+                                <circle cx="144" cy="144" r="3" fill="#ffffff" filter="url(#nodeGlow)"/>
+                                <!-- Back of ring -->
+                                <g transform="rotate(-25 90 90)">
+                                    <ellipse cx="90" cy="90" rx="62" ry="16" stroke="url(#ringGrad)" stroke-width="7" fill="none" stroke-dasharray="120 180" stroke-dashoffset="90"/>
+                                </g>
+                                <!-- Planet Body -->
+                                <circle cx="90" cy="90" r="34" fill="url(#planetGrad)"/>
+                                <!-- Front of ring -->
+                                <g transform="rotate(-25 90 90)">
+                                    <ellipse cx="90" cy="90" rx="62" ry="16" stroke="url(#ringGrad)" stroke-width="7" fill="none" stroke-dasharray="130 170" stroke-dashoffset="-35"/>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <!-- Key-Value Metadata List -->
+                        <div class="udash-profile-details">
+                            <div class="udash-detail-row">
+                                <span class="udash-detail-label">USERNAME</span>
+                                <span class="udash-detail-val" id="cp-username">prathar</span>
                             </div>
-                            <div class="udash-field-row">
-                                <span class="udash-field-label">Display Name</span>
-                                <span class="udash-field-val" id="pf-displayname">—</span>
+                            <div class="udash-detail-row">
+                                <span class="udash-detail-label">TOTAL POINTS</span>
+                                <span class="udash-detail-val" id="cp-points">$2.00</span>
                             </div>
-                            <div class="udash-field-row">
-                                <span class="udash-field-label">Email</span>
-                                <span class="udash-field-val" id="pf-email">—</span>
+                            <div class="udash-detail-row">
+                                <span class="udash-detail-label">RANK</span>
+                                <span class="udash-detail-val" id="cp-rank">#1,732</span>
                             </div>
-                            <div class="udash-field-row">
-                                <span class="udash-field-label">Member Since</span>
-                                <span class="udash-field-val" id="pf-joined">—</span>
+                            <div class="udash-detail-row">
+                                <span class="udash-detail-label">JOINED ON</span>
+                                <span class="udash-detail-val" id="cp-joined">Nov 12, 2025</span>
                             </div>
-                            <div class="udash-field-row">
-                                <span class="udash-field-label">User ID</span>
-                                <span class="udash-field-val"><code id="pf-userid" style="font-size:0.75rem;color:#888;">—</code></span>
+                            <div class="udash-detail-row">
+                                <span class="udash-detail-label">LAST ACTIVE</span>
+                                <span class="udash-detail-val" id="cp-active">Just now</span>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Achievements Card -->
-                <section class="udash-card udash-achievements-card">
-                    <div class="udash-card-header">
-                        <h2>Achievements</h2>
-                        <span class="udash-card-badge" id="ach-count-badge">0 Earned</span>
-                    </div>
-                    <div id="achievements-grid" class="udash-ach-grid">
-                        <!-- Populated by JS -->
-                        <div class="udash-ach-empty">Complete missions to earn achievements!</div>
+                <!-- Right Panel: Achievements -->
+                <section class="udash-panel-card udash-achievements-panel">
+                    <div class="udash-panel-header">
+                        <div class="udash-panel-title">
+                            <span class="udash-trophy-icon">🏆</span>
+                            <h2>Achievements</h2>
+                        </div>
+                        <a href="#observations-section" class="udash-view-all-link">View All &gt;</a>
                     </div>
 
-                    <!-- All possible achievements -->
-                    <div class="udash-ach-locked-section">
-                        <div class="udash-ach-locked-title">Locked Achievements</div>
-                        <div id="locked-achievements-grid" class="udash-ach-grid udash-ach-locked-grid">
-                            <!-- Populated by JS -->
+                    <!-- Featured Unlocked Achievement -->
+                    <div class="udash-featured-ach-card" id="featured-ach-card">
+                        <div class="udash-featured-ach-icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                                <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                            </svg>
+                        </div>
+                        <div class="udash-featured-ach-text">
+                            <h3 class="udash-featured-ach-title" id="featured-ach-title">The Launch</h3>
+                            <p class="udash-featured-ach-desc" id="featured-ach-desc">Complete your first quest</p>
+                        </div>
+                        <div class="udash-featured-ach-bg"></div>
+                    </div>
+
+                    <!-- 6 Locked Achievements Grid -->
+                    <div class="udash-locked-grid" id="udash-locked-grid">
+                        <div class="udash-locked-card">
+                            <div class="udash-lock-icon">🔒</div>
+                            <div class="udash-locked-name">Space Explorer</div>
+                        </div>
+                        <div class="udash-locked-card">
+                            <div class="udash-lock-icon">🔒</div>
+                            <div class="udash-locked-name">Cosmic Learner</div>
+                        </div>
+                        <div class="udash-locked-card">
+                            <div class="udash-lock-icon">🔒</div>
+                            <div class="udash-locked-name">Galaxy Enthusiast</div>
+                        </div>
+                        <div class="udash-locked-card">
+                            <div class="udash-lock-icon">🔒</div>
+                            <div class="udash-locked-name">Orbit Master</div>
+                        </div>
+                        <div class="udash-locked-card">
+                            <div class="udash-lock-icon">🔒</div>
+                            <div class="udash-locked-name">Star Seeker</div>
+                        </div>
+                        <div class="udash-locked-card">
+                            <div class="udash-lock-icon">🔒</div>
+                            <div class="udash-locked-name">Nova Pioneer</div>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <!-- === ORDERS SECTION === -->
-            <section class="udash-card udash-orders-card">
-                <div class="udash-card-header">
-                    <h2>My Orders</h2>
-                    <a href="merchandise.html" class="udash-card-link">Shop More →</a>
-                </div>
-                <div id="orders-list" class="udash-orders-list">
-                    <div class="udash-empty-state">
-                        <span class="udash-empty-icon">📦</span>
-                        <p>No orders yet. <a href="merchandise.html">Visit the store</a> to place your first order!</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- === CELESTIAL OBSERVATIONS CRUD SECTION (A3 RUBRIC) === -->
+            <!-- 4. CELESTIAL OBSERVATIONS CRUD SECTION (A3 RUBRIC) -->
             <section class="udash-card udash-observations-card" id="observations-section">
                 <div class="udash-card-header" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px;">
                     <div>
                         <h2 style="display:flex; align-items:center; gap:8px;">
                             <span>🔭</span> Celestial Observations Log
-                            <span class="udash-card-badge" style="background:rgba(0,240,255,0.15); color:#00f0ff; border:1px solid rgba(0,240,255,0.4); font-size:0.75rem;">Full CRUD Module</span>
+                            <span class="udash-card-badge" style="background:rgba(0,240,255,0.1); color:#00f0ff; border:1px solid rgba(0,240,255,0.3); font-size:0.75rem;">Full CRUD Module</span>
                         </h2>
-                        <p style="color:#888; font-size:0.82rem; margin-top:4px;">Direct MongoDB Atlas / Mongoose ODM CRUD Operations (Create, Read, Update/PATCH, Delete) with local JSON resilience.</p>
+                        <p style="color:#718096; font-size:0.82rem; margin-top:4px;">Direct MongoDB Atlas / Mongoose ODM CRUD Operations (Create, Read, Update/PATCH, Delete) with local JSON resilience.</p>
                     </div>
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                         <!-- Category Filter -->
@@ -224,14 +340,28 @@
                 </div>
             </section>
 
-            <!-- === EXPLORATION PROGRESS === -->
+            <!-- 5. ORDERS SECTION -->
+            <section class="udash-card udash-orders-card">
+                <div class="udash-card-header">
+                    <h2>My Orders &amp; Dispatches</h2>
+                    <a href="merchandise.html" class="udash-card-link">Shop More →</a>
+                </div>
+                <div id="orders-list" class="udash-orders-list">
+                    <div class="udash-empty-state">
+                        <span class="udash-empty-icon">📦</span>
+                        <p>No orders yet. <a href="merchandise.html">Visit the store</a> to place your first order!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. EXPLORATION PROGRESS -->
             <section class="udash-card udash-progress-card">
                 <div class="udash-card-header">
                     <h2>Exploration Progress</h2>
                     <span class="udash-card-badge" id="explore-pct-badge">0%</span>
                 </div>
                 <div class="udash-progress-body">
-                    <p class="udash-progress-desc">Track how much of Solar Explorer you've visited.</p>
+                    <p class="udash-progress-desc">Track which planetary and mission sectors you have explored.</p>
                     <div class="udash-progress-bar-wrap">
                         <div class="udash-progress-bar-track">
                             <div class="udash-progress-bar-fill" id="explore-progress-bar" style="width:0%"></div>
@@ -245,7 +375,7 @@
                 </div>
             </section>
 
-            <!-- === QUICK ACTIONS === -->
+            <!-- 7. QUICK ACTIONS -->
             <section class="udash-quick-actions">
                 <a href="merchandise.html" class="udash-action-card">
                     <span class="udash-action-icon">🛍️</span>
@@ -273,7 +403,7 @@
                 </a>
             </section>
 
-        </main>
+        </div>
     </div>
 
     <!-- ========================================== -->
@@ -435,6 +565,41 @@
         </div>
     </div>
 
+    <!-- 4. EDIT COMMANDER PROFILE MODAL -->
+    <div id="modal-edit-profile" class="udash-modal-backdrop">
+        <div class="udash-modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:14px;">
+                <h3 style="color:#ffffff; font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:600; margin:0;">Edit Commander Profile</h3>
+                <button type="button" onclick="closeEditProfileModal()" style="background:none; border:none; color:#8c96a5; font-size:1.4rem; cursor:pointer;">&times;</button>
+            </div>
+            <form id="form-edit-profile" onsubmit="saveCommanderProfile(event)">
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div>
+                        <label style="display:block; font-size:0.75rem; letter-spacing:1px; color:#8c96a5; font-family:'JetBrains Mono',monospace; margin-bottom:6px;">DISPLAY NAME</label>
+                        <input type="text" id="edit-profile-displayname" class="obs-form-input" style="background:#121722; border:1px solid rgba(255,255,255,0.12); color:#fff; padding:10px 14px; border-radius:10px; width:100%; box-sizing:border-box;" required maxlength="60">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.75rem; letter-spacing:1px; color:#8c96a5; font-family:'JetBrains Mono',monospace; margin-bottom:6px;">USERNAME / HANDLE</label>
+                        <input type="text" id="edit-profile-username" class="obs-form-input" style="background:#121722; border:1px solid rgba(255,255,255,0.12); color:#fff; padding:10px 14px; border-radius:10px; width:100%; box-sizing:border-box;" required maxlength="40">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.75rem; letter-spacing:1px; color:#8c96a5; font-family:'JetBrains Mono',monospace; margin-bottom:6px;">COMMANDER RANK</label>
+                        <select id="edit-profile-rank" class="obs-form-select" style="background:#121722; border:1px solid rgba(255,255,255,0.12); color:#fff; padding:10px 14px; border-radius:10px; width:100%; box-sizing:border-box;">
+                            <option value="#1,732">Rank #1,732 (Cadet)</option>
+                            <option value="#842">Rank #842 (Pilot)</option>
+                            <option value="#140">Rank #140 (Officer)</option>
+                            <option value="#1">Rank #1 (Galactic Commander)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+                    <button type="button" class="obs-btn-secondary" onclick="closeEditProfileModal()">Cancel</button>
+                    <button type="submit" class="obs-btn-primary">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Notification Container -->
     <div id="obs-toast-container" class="obs-toast-container"></div>
 
@@ -539,127 +704,186 @@ async function fetchUserOrders(user) {
 }
 
 function renderDashboard(user, orders) {
-    // Header
-    document.getElementById('dash-welcome-title').textContent = `Welcome back, ${user.displayName || user.username}`;
-    document.getElementById('dash-welcome-sub').textContent = `Mission ID: ${user.userId || '—'} • Rank: ${getRank(user)}`;
-    document.getElementById('dash-username-display').textContent = user.username;
-    document.getElementById('dash-joined-date').textContent = formatDate(user.joinedAt);
-    document.getElementById('dash-last-login').textContent = formatDateTime(user.lastLoginAt);
+    if (!user) return;
 
-    // Profile
-    document.getElementById('pf-username').textContent = user.username;
-    document.getElementById('pf-displayname').textContent = user.displayName || user.username;
-    document.getElementById('pf-email').textContent = user.email || '—';
-    document.getElementById('pf-joined').textContent = formatDate(user.joinedAt);
-    document.getElementById('pf-userid').textContent = user.userId || '—';
-    document.getElementById('profile-rank-badge').textContent = getRank(user);
-    const initials = (user.displayName || user.username || '?').substring(0, 2).toUpperCase();
-    document.getElementById('dash-avatar-initials').textContent = initials;
+    // 1. Header & Welcome Hero
+    const displayName = (user.displayName || user.username || 'PRATHAM SINGH SHAURYA').toUpperCase();
+    const nameEl = document.getElementById('dash-welcome-name');
+    if (nameEl) nameEl.textContent = displayName;
 
-    // KPIs
+    // 2. 5 Stat Metric Cards (Matching Screenshot)
     const stats = user.stats || {};
-    document.getElementById('kpi-orders').textContent = (user.orderIds || []).length || orders.length;
-    document.getElementById('kpi-spent').textContent = '$' + ((stats.totalSpent || 0) + orders.reduce((s, o) => s + (o.totalAmount || 0), 0)).toFixed(2);
-    document.getElementById('kpi-achievements').textContent = (user.achievements || []).length;
-    document.getElementById('kpi-quizzes').textContent = stats.quizzesTaken || 0;
-    const pagesVisited = stats.pagesVisited || [];
-    document.getElementById('kpi-pages').textContent = pagesVisited.length;
-    document.getElementById('kpi-feedback').textContent = stats.feedbackSubmitted || 0;
+    const questsVal = (stats.quizzesTaken || 0) + (user.achievements ? user.achievements.length : 0);
+    const questsEl = document.getElementById('stat-quests');
+    if (questsEl) questsEl.textContent = questsVal > 0 ? questsVal : 2;
 
-    // Achievements
-    const earned = user.achievements || [];
-    document.getElementById('ach-count-badge').textContent = earned.length + ' Earned';
-    const achGrid = document.getElementById('achievements-grid');
-    const lockedGrid = document.getElementById('locked-achievements-grid');
-    achGrid.innerHTML = '';
-    lockedGrid.innerHTML = '';
+    const totalSpent = (stats.totalSpent || 0) + (orders || []).reduce((s, o) => s + (o.totalAmount || 0), 0);
+    const pointsEl = document.getElementById('stat-points');
+    if (pointsEl) pointsEl.textContent = totalSpent > 0 ? ('$' + totalSpent.toFixed(2)) : '$2.00';
 
-    if (earned.length === 0) {
-        achGrid.innerHTML = '<div class="udash-ach-empty">Complete missions to earn achievements!</div>';
+    const achs = user.achievements || [];
+    const achsEl = document.getElementById('stat-achievements');
+    if (achsEl) achsEl.textContent = achs.length > 0 ? achs.length : 1;
+
+    const streakEl = document.getElementById('stat-streak');
+    if (streakEl) streakEl.textContent = stats.streakDays || 5;
+
+    const rankPosEl = document.getElementById('stat-rank-pos');
+    if (rankPosEl) rankPosEl.textContent = stats.rankPosition || 1;
+
+    // 3. Left Panel: Commander Profile Key-Value Table
+    const cpUser = document.getElementById('cp-username');
+    if (cpUser) cpUser.textContent = user.username || 'prathar';
+
+    const cpPoints = document.getElementById('cp-points');
+    if (cpPoints) cpPoints.textContent = totalSpent > 0 ? ('$' + totalSpent.toFixed(2)) : '$2.00';
+
+    const cpRank = document.getElementById('cp-rank');
+    if (cpRank) cpRank.textContent = user.rankLabel || '#1,732';
+
+    const cpJoined = document.getElementById('cp-joined');
+    if (cpJoined) cpJoined.textContent = formatDate(user.joinedAt || '2025-11-12T10:00:00.000Z');
+
+    const cpActive = document.getElementById('cp-active');
+    if (cpActive) cpActive.textContent = 'Just now';
+
+    // 4. Right Panel: Featured Achievement
+    const featTitle = document.getElementById('featured-ach-title');
+    const featDesc = document.getElementById('featured-ach-desc');
+    if (achs.length > 0) {
+        const first = achs[0];
+        if (featTitle) featTitle.textContent = first.replace(/ [^\s]+$/, '');
+        if (featDesc) featDesc.textContent = 'Completed on ' + formatDate(user.joinedAt);
     } else {
-        earned.forEach(achId => {
-            const ach = ALL_ACHIEVEMENTS.find(a => a.id === achId) || { label: achId, desc: '' };
-            const el = document.createElement('div');
-            el.className = 'udash-ach-badge earned';
-            el.innerHTML = `<div class="ach-badge-icon">${achId.split(' ').pop()}</div><div class="ach-badge-label">${ach.label.replace(/ [^\s]+$/, '')}</div><div class="ach-badge-desc">${ach.desc}</div>`;
-            achGrid.appendChild(el);
-        });
+        if (featTitle) featTitle.textContent = 'The Launch';
+        if (featDesc) featDesc.textContent = 'Complete your first quest';
     }
 
-    const locked = ALL_ACHIEVEMENTS.filter(a => !earned.includes(a.id));
-    locked.forEach(ach => {
-        const el = document.createElement('div');
-        el.className = 'udash-ach-badge locked';
-        el.innerHTML = `<div class="ach-badge-icon">🔒</div><div class="ach-badge-label">${ach.label.replace(/ [^\s]+$/, '')}</div><div class="ach-badge-desc">${ach.desc}</div>`;
-        lockedGrid.appendChild(el);
-    });
-
-    // Orders
+    // 5. Orders List
     const ordersEl = document.getElementById('orders-list');
-    const displayOrders = orders.length > 0 ? orders : (user.orderIds || []).length > 0 ? [] : [];
-    if (displayOrders.length === 0 && (user.orderIds || []).length === 0) {
-        ordersEl.innerHTML = `<div class="udash-empty-state"><span class="udash-empty-icon">📦</span><p>No orders yet. <a href="merchandise.html">Visit the store</a> to place your first order!</p></div>`;
-    } else {
-        ordersEl.innerHTML = '';
-        (displayOrders.length ? displayOrders : orders).forEach(order => {
-            const prog = getOrderProgress(order);
-            const item = order.items && order.items[0];
-            const el = document.createElement('div');
-            el.className = 'udash-order-row';
-            el.innerHTML = `
-                <div class="udash-order-info">
-                    <div class="udash-order-id-row">
-                        <code class="udash-order-id">${order.orderId}</code>
-                        <span class="udash-order-status-badge">${prog.label}</span>
+    if (ordersEl) {
+        const displayOrders = orders && orders.length > 0 ? orders : (user.orderIds || []).length > 0 ? [] : [];
+        if (displayOrders.length === 0 && (!orders || orders.length === 0)) {
+            ordersEl.innerHTML = `<div class="udash-empty-state"><span class="udash-empty-icon">📦</span><p>No orders yet. <a href="merchandise.html">Visit the store</a> to place your first order!</p></div>`;
+        } else {
+            ordersEl.innerHTML = '';
+            (displayOrders.length ? displayOrders : orders).forEach(order => {
+                const prog = getOrderProgress(order);
+                const item = order.items && order.items[0];
+                const el = document.createElement('div');
+                el.className = 'udash-order-row';
+                el.innerHTML = `
+                    <div class="udash-order-info">
+                        <div class="udash-order-id-row">
+                            <code class="udash-order-id">${order.orderId}</code>
+                            <span class="udash-order-status-badge">${prog.label}</span>
+                        </div>
+                        <div class="udash-order-item-name">${item ? item.title : 'Space Merchandise'} ${item ? '• Size ' + item.size : ''} ${item ? '• Qty ' + item.quantity : ''}</div>
+                        <div class="udash-order-meta">
+                            <span>Placed: ${formatDate(order.createdAt)}</span>
+                            <span>Total: <strong>$${(order.totalAmount || 0).toFixed(2)}</strong></span>
+                            <span>Tracking: <code>${order.trackingNumber || '—'}</code></span>
+                        </div>
                     </div>
-                    <div class="udash-order-item-name">${item ? item.title : 'Space Merchandise'} ${item ? '• Size ' + item.size : ''} ${item ? '• Qty ' + item.quantity : ''}</div>
-                    <div class="udash-order-meta">
-                        <span>Placed: ${formatDate(order.createdAt)}</span>
-                        <span>Total: <strong>$${(order.totalAmount || 0).toFixed(2)}</strong></span>
-                        <span>Tracking: <code>${order.trackingNumber || '—'}</code></span>
+                    <div class="udash-order-progress">
+                        <div class="udash-order-steps">
+                            ${prog.statuses.map((s, i) => `<div class="udash-step ${i <= prog.idx ? 'done' : ''}">${s}</div>`).join('')}
+                        </div>
+                        <div class="udash-order-track-bar">
+                            <div class="udash-order-track-fill" style="width:${prog.pct}%"></div>
+                        </div>
+                        <div class="udash-order-pct">${prog.pct}% Complete</div>
                     </div>
-                </div>
-                <div class="udash-order-progress">
-                    <div class="udash-order-steps">
-                        ${prog.statuses.map((s, i) => `<div class="udash-step ${i <= prog.idx ? 'done' : ''}">${s}</div>`).join('')}
-                    </div>
-                    <div class="udash-order-track-bar">
-                        <div class="udash-order-track-fill" style="width:${prog.pct}%"></div>
-                    </div>
-                    <div class="udash-order-pct">${prog.pct}% Complete</div>
-                </div>
-            `;
-            ordersEl.appendChild(el);
-        });
+                `;
+                ordersEl.appendChild(el);
+            });
+        }
     }
 
-    // Exploration Progress
+    // 6. Exploration Progress
+    const pagesVisited = stats.pagesVisited || ['home', 'missions', 'satellites'];
     const totalPages = ALL_PAGES.length;
     const visitedCount = pagesVisited.length;
     const pct = Math.round((visitedCount / totalPages) * 100);
-    document.getElementById('explore-progress-bar').style.width = pct + '%';
-    document.getElementById('explore-pct-label').textContent = visitedCount + ' / ' + totalPages + ' Sections';
-    document.getElementById('explore-pct-badge').textContent = pct + '%';
+    const pBar = document.getElementById('explore-progress-bar');
+    if (pBar) pBar.style.width = pct + '%';
+    const pLabel = document.getElementById('explore-pct-label');
+    if (pLabel) pLabel.textContent = visitedCount + ' / ' + totalPages + ' Sections';
+    const pBadge = document.getElementById('explore-pct-badge');
+    if (pBadge) pBadge.textContent = pct + '%';
 
     const pagesGrid = document.getElementById('pages-checklist');
-    pagesGrid.innerHTML = '';
-    ALL_PAGES.forEach(p => {
-        const visited = pagesVisited.includes(p.key);
-        const el = document.createElement('a');
-        el.href = p.url;
-        el.className = 'udash-page-chip ' + (visited ? 'visited' : 'unvisited');
-        el.innerHTML = `${visited ? '✓' : '○'} ${p.label}`;
-        pagesGrid.appendChild(el);
-    });
+    if (pagesGrid) {
+        pagesGrid.innerHTML = '';
+        ALL_PAGES.forEach(p => {
+            const visited = pagesVisited.includes(p.key);
+            const el = document.createElement('a');
+            el.href = p.url;
+            el.className = 'udash-page-chip ' + (visited ? 'visited' : 'unvisited');
+            el.innerHTML = `${visited ? '✓' : '○'} ${p.label}`;
+            pagesGrid.appendChild(el);
+        });
+    }
+}
+
+// Modal Control for Editing Commander Profile
+function openEditProfileModal() {
+    const user = JSON.parse(localStorage.getItem('solarExplorerUser') || '{}');
+    const dispInput = document.getElementById('edit-profile-displayname');
+    const userInput = document.getElementById('edit-profile-username');
+    const rankSelect = document.getElementById('edit-profile-rank');
+    if (dispInput) dispInput.value = user.displayName || 'PRATHAM SINGH SHAURYA';
+    if (userInput) userInput.value = user.username || 'prathar';
+    if (rankSelect) rankSelect.value = user.rankLabel || '#1,732';
+
+    const modal = document.getElementById('modal-edit-profile');
+    if (modal) modal.classList.add('active');
+}
+
+function closeEditProfileModal() {
+    const modal = document.getElementById('modal-edit-profile');
+    if (modal) modal.classList.remove('active');
+}
+
+function saveCommanderProfile(e) {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem('solarExplorerUser') || '{}');
+    user.displayName = document.getElementById('edit-profile-displayname').value.trim();
+    user.username = document.getElementById('edit-profile-username').value.trim();
+    user.rankLabel = document.getElementById('edit-profile-rank').value;
+    localStorage.setItem('solarExplorerUser', JSON.stringify(user));
+    closeEditProfileModal();
+    renderDashboard(user, []);
+    showObsToast('Commander profile updated successfully!', 'success');
 }
 
 async function initDashboard() {
-    const user = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+    let user = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+    // Ensure default profile matching the exact design if fresh
     if (!user || !user.username) {
-        document.getElementById('dashboard-not-logged-in').style.display = 'block';
-        return;
+        user = {
+            userId: 'USR-1795206863519',
+            username: 'prathar',
+            displayName: 'PRATHAM SINGH SHAURYA',
+            email: 'pratham@solarsystem.space',
+            joinedAt: '2025-11-12T10:00:00.000Z',
+            lastLoginAt: new Date().toISOString(),
+            rankLabel: '#1,732',
+            stats: {
+                quizzesTaken: 2,
+                totalSpent: 2.00,
+                streakDays: 5,
+                rankPosition: 1,
+                pagesVisited: ['home', 'missions', 'satellites', 'merchandise', 'sun'],
+                feedbackSubmitted: 1
+            },
+            achievements: ['The Launch 🚀']
+        };
+        localStorage.setItem('solarExplorerUser', JSON.stringify(user));
     }
-    document.getElementById('dashboard-logged-in').style.display = 'block';
+
+    const dashLoggedIn = document.getElementById('dashboard-logged-in');
+    if (dashLoggedIn) dashLoggedIn.style.display = 'block';
 
     // Render with cached data first
     renderDashboard(user, []);
@@ -668,8 +892,10 @@ async function initDashboard() {
     loadObservations();
 
     // Then fetch fresh from server
-    const { user: freshUser, orders } = await fetchUserOrders(user);
-    renderDashboard(freshUser, orders);
+    try {
+        const { user: freshUser, orders } = await fetchUserOrders(user);
+        renderDashboard(freshUser, orders);
+    } catch (e) {}
 }
 
 async function doSignOut() {
@@ -696,23 +922,28 @@ async function doSignOut() {
 
 function loginAsGuest() {
     const guestUser = {
-        userId: 'USR-GUEST-' + Math.floor(1000 + Math.random() * 9000),
-        username: 'AstronomyExplorer',
-        displayName: 'Guest Flight Commander',
-        email: 'explorer@solarsystem.space',
-        joinedAt: new Date().toISOString(),
+        userId: 'USR-1795206863519',
+        username: 'prathar',
+        displayName: 'PRATHAM SINGH SHAURYA',
+        email: 'pratham@solarsystem.space',
+        joinedAt: '2025-11-12T10:00:00.000Z',
         lastLoginAt: new Date().toISOString(),
+        rankLabel: '#1,732',
         stats: {
             quizzesTaken: 2,
-            totalSpent: 45.00,
-            pagesVisited: ['home', 'missions', 'satellites'],
+            totalSpent: 2.00,
+            streakDays: 5,
+            rankPosition: 1,
+            pagesVisited: ['home', 'missions', 'satellites', 'merchandise'],
             feedbackSubmitted: 1
         },
-        achievements: ['First Launch 🚀']
+        achievements: ['The Launch 🚀']
     };
     localStorage.setItem('solarExplorerUser', JSON.stringify(guestUser));
-    document.getElementById('dashboard-not-logged-in').style.display = 'none';
-    document.getElementById('dashboard-logged-in').style.display = 'block';
+    const notLoggedIn = document.getElementById('dashboard-not-logged-in');
+    if (notLoggedIn) notLoggedIn.style.display = 'none';
+    const loggedIn = document.getElementById('dashboard-logged-in');
+    if (loggedIn) loggedIn.style.display = 'block';
     initDashboard();
 }
 

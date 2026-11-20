@@ -1,5 +1,34 @@
 [
   {
+    "userId": "USR-1795206863519",
+    "username": "prathar",
+    "passwordHash": "$2b$10$gNNLiOo8UOPQZE4iaqNOV.Xhb/8A0ovAcTQ1isGFmk0CA56VgkuOK",
+    "displayName": "Pratham Singh Shaurya",
+    "email": "pratham@solarsystem.space",
+    "orderIds": [
+      "ORD-2026-1171",
+      "ORD-2026-2338"
+    ],
+    "achievements": [
+      "The Launch 🚀"
+    ],
+    "stats": {
+      "quizzesTaken": 2,
+      "totalSpent": 2.00,
+      "pagesVisited": [
+        "home",
+        "sun",
+        "extreme",
+        "missions",
+        "satellites",
+        "merchandise"
+      ],
+      "feedbackSubmitted": 1
+    },
+    "joinedAt": "2025-11-12T10:00:00.000Z",
+    "lastLoginAt": "2026-11-20T20:30:00.000Z"
+  },
+  {
     "userId": "USR-1794858060013",
     "username": "samarth_jain",
     "passwordHash": "$2b$10$gNNLiOo8UOPQZE4iaqNOV.Xhb/8A0ovAcTQ1isGFmk0CA56VgkuOK",
