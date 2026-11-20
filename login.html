@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up - Solar Explorer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><h2>Solar Explorer</h2></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="sun.html">The Sun</a>
+            <a href="extreme.html">Extreme Space</a>
+            <a href="missions.html">Missions</a>
+            <a href="fun-space.html">Fun Space</a>
+            <a href="satellites.html">Satellites</a>
+            <a href="merchandise.html">Merchandise</a>
+            <a href="feedback.html">Feedback</a>
+            <a href="user-dashboard.html" id="nav-account-btn">Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Auth Container -->
+    <div class="auth-page-bg">
+        <div class="auth-container">
+
+            <!-- Toggle Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">SIGN IN</button>
+                <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">CREATE ACCOUNT</button>
+            </div>
+
+            <!-- === LOGIN FORM === -->
+            <div id="auth-login-panel" class="auth-panel active">
+                <div class="auth-header">
+                    <div class="auth-icon">🛸</div>
+                    <h2 class="auth-title">MISSION RE-ENTRY</h2>
+                    <p class="auth-subtitle">Sign in to your Solar Explorer account</p>
+                </div>
+
+                <form id="login-form" class="auth-form" novalidate>
+                    <div class="auth-field">
+                        <label for="login-username">USERNAME</label>
+                        <input type="text" id="login-username" placeholder="Your username..." autocomplete="username" required>
+                        <span class="auth-err" id="login-err-username"></span>
+                    </div>
+                    <div class="auth-field">
+                        <label for="login-password">PASSWORD</label>
+                        <input type="password" id="login-password" placeholder="Your password..." autocomplete="current-password" required>
+                        <span class="auth-err" id="login-err-password"></span>
+                    </div>
+                    <div class="auth-status" id="login-status" style="display:none;"></div>
+                    <button type="submit" class="auth-submit-btn" id="login-btn">
+                        <span id="login-btn-text">LAUNCH SESSION</span>
+                        <span id="login-spinner" class="btn-spinner" style="display:none;"></span>
+                    </button>
+                </form>
+                <p class="auth-switch-msg">New to Solar Explorer? <button class="auth-link-btn" onclick="switchTab('signup')">Create an account →</button></p>
+            </div>
+
+            <!-- === SIGNUP FORM === -->
+            <div id="auth-signup-panel" class="auth-panel">
+                <div class="auth-header">
+                    <div class="auth-icon">🚀</div>
+                    <h2 class="auth-title">JOIN THE MISSION</h2>
+                    <p class="auth-subtitle">Create your Solar Explorer account</p>
+                </div>
+
+                <form id="signup-form" class="auth-form" novalidate>
+                    <div class="auth-field">
+                        <label for="signup-username">USERNAME <span class="auth-required">*</span></label>
+                        <input type="text" id="signup-username" placeholder="Choose a username (min. 3 chars)..." autocomplete="username" required>
+                        <span class="auth-err" id="signup-err-username"></span>
+                    </div>
+                    <div class="auth-field">
+                        <label for="signup-displayname">DISPLAY NAME</label>
+                        <input type="text" id="signup-displayname" placeholder="Your name shown on dashboard..." autocomplete="name">
+                    </div>
+                    <div class="auth-field">
+                        <label for="signup-email">EMAIL <span class="auth-hint">(optional — for order receipts)</span></label>
+                        <input type="email" id="signup-email" placeholder="your@email.com..." autocomplete="email">
+                    </div>
+                    <div class="auth-field">
+                        <label for="signup-password">PASSWORD <span class="auth-required">*</span></label>
+                        <input type="password" id="signup-password" placeholder="Choose a password (min. 6 chars)..." autocomplete="new-password" required>
+                        <div id="password-strength-container" style="margin-top:6px;display:none;">
+                            <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.15);overflow:hidden;">
+                                <div id="password-strength-bar" style="height:100%;width:0%;transition:all 0.3s ease;"></div>
+                            </div>
+                            <span id="password-strength-text" style="font-size:0.75rem;margin-top:4px;display:block;color:#888;"></span>
+                        </div>
+                        <span class="auth-err" id="signup-err-password"></span>
+                    </div>
+                    <div class="auth-field">
+                        <label for="signup-confirm">CONFIRM PASSWORD <span class="auth-required">*</span></label>
+                        <input type="password" id="signup-confirm" placeholder="Confirm your password..." autocomplete="new-password" required>
+                        <span class="auth-err" id="signup-err-confirm"></span>
+                    </div>
+                    <div class="auth-status" id="signup-status" style="display:none;"></div>
+                    <button type="submit" class="auth-submit-btn" id="signup-btn">
+                        <span id="signup-btn-text">INITIATE ACCOUNT</span>
+                        <span id="signup-spinner" class="btn-spinner" style="display:none;"></span>
+                    </button>
+                </form>
+                <p class="auth-switch-msg">Already have an account? <button class="auth-link-btn" onclick="switchTab('login')">Sign in →</button></p>
+            </div>
+
+        </div>
+
+        <!-- Cosmic background blobs -->
+        <div class="auth-bg-orb auth-orb-1"></div>
+        <div class="auth-bg-orb auth-orb-2"></div>
+        <div class="auth-bg-orb auth-orb-3"></div>
+    </div>
+
+    <footer>
+        <p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // AUTH PAGE LOGIC
+        // ==========================================
+
+        // Check if already logged in
+        const currentUser = JSON.parse(localStorage.getItem('solarExplorerUser') || 'null');
+        if (currentUser && currentUser.username) {
+            // Show logged-in state at top
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'auth-already-in';
+            statusDiv.innerHTML = `
+                <div class="already-in-content">
+                    <span>✓ Signed in as <strong>${currentUser.displayName || currentUser.username}</strong></span>
+                    <div class="already-in-actions">
+                        <a href="user-dashboard.html" class="btn-small-white">Go to Dashboard</a>
+                        <button onclick="signOut()" class="btn-small-outline">Sign Out</button>
+                    </div>
+                </div>
+            `;
+            document.querySelector('.auth-page-bg').insertBefore(statusDiv, document.querySelector('.auth-container'));
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('auth-' + tab + '-panel').classList.add('active');
+        }
+
+        // Auto-switch to tab if passed in URL: ?tab=signup or ?tab=login
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('tab') === 'signup') {
+            switchTab('signup');
+        } else if (urlParams.get('tab') === 'login') {
+            switchTab('login');
+        }
+
+        async function fetchApi(endpoint, payload) {
+            const targets = [
+                window.location.port === '3000' ? endpoint : null,
+                'http://localhost:3000' + endpoint,
+                'http://127.0.0.1:3000' + endpoint,
+                endpoint
+            ].filter(Boolean);
+
+            for (const url of targets) {
+                try {
+                    const ctrl = new AbortController();
+                    const tid = setTimeout(() => ctrl.abort(), 4000);
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload),
+                        signal: ctrl.signal
+                    });
+                    clearTimeout(tid);
+                    const data = await res.json().catch(() => null);
+                    if (data) {
+                        return data;
+                    }
+                } catch (e) {}
+            }
+            return { success: false, error: 'Cannot connect to server. Make sure the server is running on port 3000.' };
+        }
+
+        // Live Password Strength Meter
+        const passwordInput = document.getElementById('signup-password');
+        const strengthContainer = document.getElementById('password-strength-container');
+        const strengthBar = document.getElementById('password-strength-bar');
+        const strengthText = document.getElementById('password-strength-text');
+
+        if (passwordInput && strengthContainer) {
+            passwordInput.addEventListener('input', () => {
+                const val = passwordInput.value;
+                if (!val) {
+                    strengthContainer.style.display = 'none';
+                    return;
+                }
+                strengthContainer.style.display = 'block';
+
+                let score = 0;
+                if (val.length >= 6) score++;
+                if (val.length >= 8) score++;
+                if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+                if (/[0-9]/.test(val)) score++;
+                if (/[^A-Za-z0-9]/.test(val)) score++;
+
+                if (val.length < 6) {
+                    strengthBar.style.width = '25%';
+                    strengthBar.style.background = '#ff4d4d';
+                    strengthText.textContent = 'Too short (min. 6 characters required)';
+                    strengthText.style.color = '#ff4d4d';
+                } else if (score <= 2) {
+                    strengthBar.style.width = '45%';
+                    strengthBar.style.background = '#ffaa00';
+                    strengthText.textContent = 'Moderate strength';
+                    strengthText.style.color = '#ffaa00';
+                } else if (score <= 3) {
+                    strengthBar.style.width = '75%';
+                    strengthBar.style.background = '#00c3ff';
+                    strengthText.textContent = 'Good password';
+                    strengthText.style.color = '#00c3ff';
+                } else {
+                    strengthBar.style.width = '100%';
+                    strengthBar.style.background = '#00ff88';
+                    strengthText.textContent = 'Strong password 🚀';
+                    strengthText.style.color = '#00ff88';
+                }
+            });
+        }
+
+        // LOGIN
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const statusEl = document.getElementById('login-status');
+            const btn = document.getElementById('login-btn');
+            const btnText = document.getElementById('login-btn-text');
+            const spinner = document.getElementById('login-spinner');
+
+            // Clear errors
+            document.getElementById('login-err-username').textContent = '';
+            document.getElementById('login-err-password').textContent = '';
+            statusEl.style.display = 'none';
+
+            if (!username) { document.getElementById('login-err-username').textContent = 'Username is required.'; return; }
+            if (!password) { document.getElementById('login-err-password').textContent = 'Password is required.'; return; }
+
+            btn.disabled = true;
+            btnText.textContent = 'AUTHENTICATING...';
+            spinner.style.display = 'inline-block';
+
+            let result = await fetchApi('/api/auth/login', { username, password });
+            if (!result || !result.success) {
+                // Secondary fallback attempt against /api/login
+                if (result && result.error && result.error.includes('Cannot connect')) {
+                    const fallback = await fetchApi('/api/login', { username, password });
+                    if (fallback && (fallback.success || fallback.error)) result = fallback;
+                }
+            }
+
+            btn.disabled = false;
+            btnText.textContent = 'LAUNCH SESSION';
+            spinner.style.display = 'none';
+
+            if (result && result.success) {
+                // Save to localStorage
+                localStorage.setItem('solarExplorerUser', JSON.stringify(result.user));
+                if (result.token) localStorage.setItem('solarExplorerToken', result.token);
+                statusEl.textContent = `✓ Welcome back, ${result.user.displayName || result.user.username}! Redirecting to dashboard...`;
+                statusEl.className = 'auth-status success';
+                statusEl.style.display = 'block';
+                setTimeout(() => { window.location.href = 'user-dashboard.html'; }, 1000);
+            } else {
+                statusEl.textContent = '✗ ' + ((result && result.error) || 'Invalid username or password.');
+                statusEl.className = 'auth-status error';
+                statusEl.style.display = 'block';
+            }
+        });
+
+        // SIGNUP / REGISTER
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value.trim();
+            const displayName = document.getElementById('signup-displayname').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+            const statusEl = document.getElementById('signup-status');
+            const btn = document.getElementById('signup-btn');
+            const btnText = document.getElementById('signup-btn-text');
+            const spinner = document.getElementById('signup-spinner');
+
+            // Clear errors
+            ['username','password','confirm'].forEach(f => {
+                document.getElementById('signup-err-' + f).textContent = '';
+            });
+            statusEl.style.display = 'none';
+
+            let valid = true;
+            if (!username || username.length < 3) {
+                document.getElementById('signup-err-username').textContent = 'Username must be at least 3 characters.';
+                valid = false;
+            } else if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+                document.getElementById('signup-err-username').textContent = 'Username may only contain letters, numbers, underscores, and hyphens.';
+                valid = false;
+            }
+            if (!password || password.length < 6) {
+                document.getElementById('signup-err-password').textContent = 'Password must be at least 6 characters.';
+                valid = false;
+            }
+            if (password !== confirm) {
+                document.getElementById('signup-err-confirm').textContent = 'Passwords do not match.';
+                valid = false;
+            }
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                statusEl.textContent = '✗ Please enter a valid email address.';
+                statusEl.className = 'auth-status error';
+                statusEl.style.display = 'block';
+                valid = false;
+            }
+            if (!valid) return;
+
+            btn.disabled = true;
+            btnText.textContent = 'CREATING ACCOUNT...';
+            spinner.style.display = 'inline-block';
+
+            // Try /api/auth/register first, then fallback to /api/auth/signup
+            let result = await fetchApi('/api/auth/register', { username, password, displayName, email });
+            if (!result || (!result.success && result.error && result.error.includes('Cannot connect'))) {
+                result = await fetchApi('/api/auth/signup', { username, password, displayName, email });
+            }
+
+            btn.disabled = false;
+            btnText.textContent = 'INITIATE ACCOUNT';
+            spinner.style.display = 'none';
+
+            if (result && result.success) {
+                localStorage.setItem('solarExplorerUser', JSON.stringify(result.user));
+                if (result.token) localStorage.setItem('solarExplorerToken', result.token);
+                statusEl.textContent = `✓ Account created! Welcome, ${result.user.displayName || result.user.username}! Redirecting...`;
+                statusEl.className = 'auth-status success';
+                statusEl.style.display = 'block';
+                setTimeout(() => { window.location.href = 'user-dashboard.html'; }, 1000);
+            } else {
+                statusEl.textContent = '✗ ' + ((result && result.error) || 'Registration failed.');
+                statusEl.className = 'auth-status error';
+                statusEl.style.display = 'block';
+            }
+        });
+
+        async function signOut() {
+            try {
+                await fetchApi('/api/auth/logout', {});
+            } catch (e) {}
+            localStorage.removeItem('solarExplorerUser');
+            localStorage.removeItem('solarExplorerToken');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
+
