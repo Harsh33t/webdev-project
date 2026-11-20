@@ -1,0 +1,87 @@
+[
+  {
+    "_id": "673f8a1e9c2b4e0012345671",
+    "title": "Jupiter Great Red Spot & Galilean Moons Transit",
+    "category": "Planet",
+    "celestialObject": "Jupiter",
+    "coordinates": {
+      "ra": "03h 05m 12s",
+      "dec": "+16° 32' 40\""
+    },
+    "observerName": "Cmdr. Samarth Sharma",
+    "userId": "USR-1001",
+    "notes": "Clear viewing with 8-inch Schmidt-Cassegrain telescope. Great Red Spot prominent near Central Meridian. Io and Europa observed transiting across the southern equatorial belt.",
+    "status": "Flagship Observation",
+    "rating": 5,
+    "createdAt": "2026-11-18T20:15:00.000Z",
+    "updatedAt": "2026-11-18T20:15:00.000Z"
+  },
+  {
+    "_id": "673f8a1e9c2b4e0012345672",
+    "title": "Andromeda Galaxy (M31) Spiral Arms & Core",
+    "category": "Deep Space",
+    "celestialObject": "Andromeda Galaxy (M31)",
+    "coordinates": {
+      "ra": "00h 42m 44s",
+      "dec": "+41° 16' 09\""
+    },
+    "observerName": "Dr. Pratham Varma",
+    "userId": "USR-1002",
+    "notes": "Captured 45-minute stacked exposure using dual narrowband filter. Dust lanes clearly resolved alongside companion satellite galaxy M32.",
+    "status": "Verified",
+    "rating": 5,
+    "createdAt": "2026-11-19T02:40:00.000Z",
+    "updatedAt": "2026-11-19T02:40:00.000Z"
+  },
+  {
+    "_id": "673f8a1e9c2b4e0012345673",
+    "title": "ISS Evening Twilight Pass & Solar Array Flare",
+    "category": "Satellite",
+    "celestialObject": "International Space Station",
+    "coordinates": {
+      "ra": "06h 18m 05s",
+      "dec": "+28° 45' 10\""
+    },
+    "observerName": "Pilot Aviraj Singh",
+    "userId": "USR-1003",
+    "notes": "Magnitude -3.8 high elevation pass across zenith. Spectacular specular flash observed as solar arrays caught low sunset angle.",
+    "status": "Verified",
+    "rating": 4,
+    "createdAt": "2026-11-19T18:55:00.000Z",
+    "updatedAt": "2026-11-19T18:55:00.000Z"
+  },
+  {
+    "_id": "673f8a1e9c2b4e0012345674",
+    "title": "Sunspot Complex AR3664 & X-Class Flare Ejection",
+    "category": "Solar Event",
+    "celestialObject": "Sunspot AR3664",
+    "coordinates": {
+      "ra": "15h 22m 30s",
+      "dec": "-19° 04' 15\""
+    },
+    "observerName": "Specialist Harsheet Patel",
+    "userId": "USR-1004",
+    "notes": "Observed via Hydrogen-Alpha solar scope with Baader solar filter. Extreme coronal mass ejection magnetic filament loop visible off southwest limb.",
+    "status": "Flagship Observation",
+    "rating": 5,
+    "createdAt": "2026-11-20T11:10:00.000Z",
+    "updatedAt": "2026-11-20T11:10:00.000Z"
+  },
+  {
+    "_id": "673f8a1e9c2b4e0012345675",
+    "title": "TRAPPIST-1e Habitable Zone Transit Anomaly",
+    "category": "Exoplanet",
+    "celestialObject": "TRAPPIST-1e",
+    "coordinates": {
+      "ra": "23h 06m 29s",
+      "dec": "-05° 02' 28\""
+    },
+    "observerName": "Officer Shivansh Gupta",
+    "userId": "USR-1005",
+    "notes": "Photometric dip matching predicted transit ephemeris. Light curve analysis indicates atmospheric attenuation consistent with water vapor signature.",
+    "status": "Draft",
+    "rating": 4,
+    "createdAt": "2026-11-20T16:30:00.000Z",
+    "updatedAt": "2026-11-20T16:30:00.000Z"
+  }
+]
