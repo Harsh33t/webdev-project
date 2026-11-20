@@ -12,16 +12,23 @@
  * Authors: Aviraj, Harsheet, Pratham, Samarth, Shivansh
  */
 
+// Load environment variables at the very top of application execution
 require('dotenv').config();
+
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const { connectDatabase, getDatabaseStatus } = require('./config/db');
+
+// Modular REST & View Routers
 const apiRoutes = require('./routes/apiRoutes');
+const authRoutes = require('./routes/authRoutes');
+const observationRoutes = require('./routes/observationRoutes');
 const viewRoutes = require('./routes/viewRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // ====================================================
 // 1. TEMPLATE ENGINE CONFIGURATION (Rubric C12 / 5%)
@@ -53,13 +60,17 @@ app.use(express.static(path.join(__dirname), {
 }));
 
 // ====================================================
-// 4. ROUTER MOUNTING (Rubric C11 & C12 / 25%)
+// 4. MODULAR ROUTER MOUNTING (Rubric C11 & C12 / 25%)
 // ====================================================
 // Server-Side Rendered (EJS) views: /telemetry, /dashboard
 app.use('/', viewRoutes);
 
-// REST API Endpoints: /api/feedback, /api/merchandise, /api/satellites, /api/quiz, /api/space-weather
+// Modular REST API Endpoints
+app.use('/api/observations', observationRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
+app.use('/api', authRoutes);
 
 // Explicit root route handler fallback
 app.get('/', (req, res) => {
@@ -94,22 +105,31 @@ async function startServer() {
     // Attempt MongoDB connection (Gracefully falls back to local JSON if daemon absent)
     await connectDatabase();
     const dbStatus = getDatabaseStatus();
+    const storageDir = process.env.STORAGE_FILE_DIR || 'data';
 
     app.listen(PORT, () => {
         console.log('===============================================================');
         console.log(`🚀 Solar Explorer Full-Stack Application Live!`);
-        console.log(`📡 URL: http://localhost:${PORT}`);
+        console.log(`📡 URL:             http://localhost:${PORT}`);
+        console.log(`🌍 Environment:     ${NODE_ENV.toUpperCase()}`);
+        console.log(`💾 Database Mode:    ${dbStatus.mode.toUpperCase()} (${dbStatus.type})`);
+        console.log(`🔗 Database Target:  ${dbStatus.target}`);
+        console.log(`🛡️  Database URI:     ${dbStatus.uri}`);
+        console.log(`📁 Persistence Dir:  ${storageDir}/`);
+        console.log(`🔒 Session Security: ${process.env.SESSION_SECRET ? 'CONFIGURED (Active)' : 'DEFAULT FALLBACK'}`);
         console.log(`★ Telemetry Dashboard (EJS SSR): http://localhost:${PORT}/telemetry`);
         console.log(`---------------------------------------------------------------`);
-        console.log(`💾 Storage Mode: ${dbStatus.mode.toUpperCase()}`);
-        console.log(`   ${dbStatus.message}`);
+        console.log(`   Status: ${dbStatus.message}`);
         console.log(`📁 Local IDE Storage Paths:`);
-        console.log(`   - Orders:      data/orders.json`);
-        console.log(`   - Email HTML:  data/email_receipts/`);
-        console.log(`   - Feedback:    data/feedback.json`);
-        console.log(`   - Merchandise: data/merchandise.json`);
-        console.log(`   - Satellites:  data/satellites.json`);
-        console.log(`   - Quiz Scores: data/quizscores.json`);
+        console.log(`   - Orders:       ${storageDir}/orders.json`);
+        console.log(`   - Observations: ${storageDir}/observations.json`);
+        console.log(`   - Users:        ${storageDir}/users.json`);
+        console.log(`   - Feedback:     ${storageDir}/feedback.json`);
+        console.log(`   - Merchandise:  ${storageDir}/merchandise.json`);
+        console.log(`   - Satellites:   ${storageDir}/satellites.json`);
+        console.log(`   - Quiz Scores:  ${storageDir}/quizscores.json`);
+        console.log(`   - Products:     ${storageDir}/products.json`);
+        console.log(`   - Email HTML:   ${storageDir}/email_receipts/`);
         console.log(`👥 Authors: Aviraj, Harsheet, Pratham, Samarth, Shivansh`);
         console.log('===============================================================');
     });

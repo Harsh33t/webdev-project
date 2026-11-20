@@ -14,8 +14,11 @@ const SatelliteTrack = require('../models/SatelliteTrack');
 const QuizScore = require('../models/QuizScore');
 const Order = require('../models/Order');
 const User = require('../models/User');
+const Observation = require('../models/Observation');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const DATA_DIR = process.env.STORAGE_FILE_DIR
+    ? path.resolve(__dirname, '..', process.env.STORAGE_FILE_DIR)
+    : path.join(__dirname, '..', 'data');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 const FILE_PATHS = {
@@ -25,7 +28,8 @@ const FILE_PATHS = {
     quizscores: path.join(DATA_DIR, 'quizscores.json'),
     orders: path.join(DATA_DIR, 'orders.json'),
     users: path.join(DATA_DIR, 'users.json'),
-    products: path.join(DATA_DIR, 'products.json')
+    products: path.join(DATA_DIR, 'products.json'),
+    observations: path.join(DATA_DIR, 'observations.json')
 };
 
 // Initialize JSON files with defaults if not present
@@ -33,6 +37,7 @@ if (!fs.existsSync(FILE_PATHS.feedback)) fs.writeFileSync(FILE_PATHS.feedback, '
 if (!fs.existsSync(FILE_PATHS.merchandise)) fs.writeFileSync(FILE_PATHS.merchandise, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.orders)) fs.writeFileSync(FILE_PATHS.orders, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.users)) fs.writeFileSync(FILE_PATHS.users, '[]', 'utf8');
+if (!fs.existsSync(FILE_PATHS.observations)) fs.writeFileSync(FILE_PATHS.observations, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.satellites)) {
     fs.writeFileSync(FILE_PATHS.satellites, JSON.stringify([
         {
@@ -438,6 +443,36 @@ const StorageService = {
         }
     },
 
+    async updateOrderStatus(orderId, status) {
+        const q = String(orderId).trim();
+        if (isMongoActive()) {
+            try {
+                const updatedDoc = await Order.findOneAndUpdate(
+                    {
+                        $or: [
+                            { orderId: q },
+                            { id: q },
+                            { trackingNumber: q },
+                            ...(q.match(/^[0-9a-fA-F]{24}$/) ? [{ _id: q }] : [])
+                        ]
+                    },
+                    { $set: { orderStatus: status, updatedAt: new Date().toISOString() } },
+                    { new: true }
+                ).lean();
+                if (updatedDoc) return updatedDoc;
+            } catch (err) { }
+        }
+        const list = readJson('orders');
+        const o = list.find(item => item.orderId === q || item.id === q || item.trackingNumber === q);
+        if (o) {
+            o.orderStatus = status;
+            o.updatedAt = new Date().toISOString();
+            writeJson('orders', list);
+            return o;
+        }
+        return null;
+    },
+
     // ==========================================
     // 5.5 USER OPERATIONS (Dual Storage: MongoDB + JSON)
     // ==========================================
@@ -517,6 +552,139 @@ const StorageService = {
 
             await this.updateUser(username, { orderIds, stats, achievements });
         }
+    },
+
+    // ==========================================
+    // 5.8 CELESTIAL OBSERVATIONS (CRUD Operations)
+    // ==========================================
+    async getObservations(filter = {}) {
+        if (isMongoActive()) {
+            try {
+                const query = {};
+                if (filter.category) query.category = filter.category;
+                if (filter.celestialBody) query.celestialBody = new RegExp(filter.celestialBody, 'i');
+                return await Observation.find(query).sort({ observationDate: -1 }).lean();
+            } catch (err) {
+                console.warn('[StorageService] Mongo Observation find:', err.message);
+            }
+        }
+        let list = readJson('observations');
+        if (filter.category) list = list.filter(o => o.category === filter.category);
+        if (filter.celestialBody) {
+            const term = filter.celestialBody.toLowerCase();
+            list = list.filter(o => o.celestialBody && o.celestialBody.toLowerCase().includes(term));
+        }
+        return list;
+    },
+
+    async getObservationById(id) {
+        if (!id) return null;
+        const q = String(id).trim();
+        if (isMongoActive()) {
+            try {
+                const found = await Observation.findOne({
+                    $or: [
+                        { id: q },
+                        ...(q.match(/^[0-9a-fA-F]{24}$/) ? [{ _id: q }] : [])
+                    ]
+                }).lean();
+                if (found) return found;
+            } catch (err) { }
+        }
+        const list = readJson('observations');
+        return list.find(o => o.id === q || String(o._id) === q) || null;
+    },
+
+    async createObservation(data) {
+        const obsId = data.id || ('OBS-2026-' + Math.floor(100 + Math.random() * 900));
+        const nowIso = new Date().toISOString();
+        const payload = {
+            id: obsId,
+            observerName: data.observerName || 'Cosmic Observer',
+            celestialBody: data.celestialBody || 'Unidentified Celestial Target',
+            category: data.category || 'Planet',
+            observationDate: data.observationDate || nowIso,
+            location: data.location || 'Standard Ground Station',
+            coordinates: data.coordinates || { rightAscension: '00h 00m 00s', declination: '+00° 00\' 00"' },
+            equipment: data.equipment || { telescope: '8-inch Dobsonian', eyepieceOrSensor: '25mm Eyepiece', filter: 'None' },
+            seeingConditions: data.seeingConditions || { bortleScale: 4, transparency: 'Good', temperatureCelsius: 18 },
+            notes: data.notes || 'Routine celestial survey and optical verification.',
+            verified: data.verified !== undefined ? Boolean(data.verified) : false,
+            tags: Array.isArray(data.tags) ? data.tags : ['amateur-astronomy'],
+            createdAt: nowIso,
+            updatedAt: nowIso
+        };
+
+        if (isMongoActive()) {
+            try {
+                const doc = await Observation.create(payload);
+                payload._id = doc._id;
+            } catch (err) {
+                console.warn('[StorageService] Mongo Observation create:', err.message);
+            }
+        }
+        const list = readJson('observations');
+        list.unshift(payload);
+        writeJson('observations', list);
+        return payload;
+    },
+
+    async updateObservation(id, updateFields) {
+        if (!id) return null;
+        const q = String(id).trim();
+        const nowIso = new Date().toISOString();
+        const cleanUpdate = { ...updateFields, updatedAt: nowIso };
+        delete cleanUpdate._id;
+        delete cleanUpdate.id;
+
+        if (isMongoActive()) {
+            try {
+                const updatedDoc = await Observation.findOneAndUpdate(
+                    {
+                        $or: [
+                            { id: q },
+                            ...(q.match(/^[0-9a-fA-F]{24}$/) ? [{ _id: q }] : [])
+                        ]
+                    },
+                    { $set: cleanUpdate },
+                    { new: true }
+                ).lean();
+                if (updatedDoc) return updatedDoc;
+            } catch (err) { }
+        }
+
+        const list = readJson('observations');
+        const idx = list.findIndex(o => o.id === q || String(o._id) === q);
+        if (idx !== -1) {
+            list[idx] = { ...list[idx], ...cleanUpdate };
+            writeJson('observations', list);
+            return list[idx];
+        }
+        return null;
+    },
+
+    async deleteObservation(id) {
+        if (!id) return null;
+        const q = String(id).trim();
+        if (isMongoActive()) {
+            try {
+                const deleted = await Observation.findOneAndDelete({
+                    $or: [
+                        { id: q },
+                        ...(q.match(/^[0-9a-fA-F]{24}$/) ? [{ _id: q }] : [])
+                    ]
+                }).lean();
+                if (deleted) return deleted;
+            } catch (err) { }
+        }
+        let list = readJson('observations');
+        const idx = list.findIndex(o => o.id === q || String(o._id) === q);
+        if (idx !== -1) {
+            const removed = list.splice(idx, 1)[0];
+            writeJson('observations', list);
+            return removed;
+        }
+        return null;
     },
 
     // ==========================================

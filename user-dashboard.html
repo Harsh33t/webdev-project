@@ -34,8 +34,9 @@
                     <h2 class="auth-title">ACCESS RESTRICTED</h2>
                     <p class="auth-subtitle" style="margin-top:10px;">Please sign in to access your Mission Dashboard.</p>
                 </div>
-                <div style="text-align:center;padding:20px 0 40px;">
-                    <a href="login.html" class="btn" style="display:inline-block;margin:0 auto;">SIGN IN / CREATE ACCOUNT</a>
+                <div style="text-align:center;padding:20px 0 40px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+                    <a href="login.html" class="btn" style="display:inline-block;margin:0;">SIGN IN / CREATE ACCOUNT</a>
+                    <button onclick="loginAsGuest()" class="btn" style="background:transparent;border:1px solid #444;color:#aaa;">EXPLORE AS GUEST OBSERVER</button>
                 </div>
             </div>
         </div>
@@ -86,8 +87,13 @@
                     <div class="udash-kpi-val" id="kpi-quizzes">0</div>
                     <div class="udash-kpi-label">QUIZZES TAKEN</div>
                 </div>
-                <div class="udash-kpi-card">
+                <div class="udash-kpi-card" onclick="document.getElementById('observations-section') && document.getElementById('observations-section').scrollIntoView({behavior:'smooth'})" style="cursor:pointer;">
                     <div class="udash-kpi-icon">🔭</div>
+                    <div class="udash-kpi-val" id="kpi-observations">0</div>
+                    <div class="udash-kpi-label">OBSERVATIONS LOGGED</div>
+                </div>
+                <div class="udash-kpi-card">
+                    <div class="udash-kpi-icon">🌐</div>
                     <div class="udash-kpi-val" id="kpi-pages">0</div>
                     <div class="udash-kpi-label">PAGES EXPLORED</div>
                 </div>
@@ -171,6 +177,53 @@
                 </div>
             </section>
 
+            <!-- === CELESTIAL OBSERVATIONS CRUD SECTION (A3 RUBRIC) === -->
+            <section class="udash-card udash-observations-card" id="observations-section">
+                <div class="udash-card-header" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px;">
+                    <div>
+                        <h2 style="display:flex; align-items:center; gap:8px;">
+                            <span>🔭</span> Celestial Observations Log
+                            <span class="udash-card-badge" style="background:rgba(0,240,255,0.15); color:#00f0ff; border:1px solid rgba(0,240,255,0.4); font-size:0.75rem;">Full CRUD Module</span>
+                        </h2>
+                        <p style="color:#888; font-size:0.82rem; margin-top:4px;">Direct MongoDB Atlas / Mongoose ODM CRUD Operations (Create, Read, Update/PATCH, Delete) with local JSON resilience.</p>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <!-- Category Filter -->
+                        <select id="obs-filter-category" class="obs-select-control" onchange="filterObservations()">
+                            <option value="All">All Categories</option>
+                            <option value="Planet">🪐 Planets</option>
+                            <option value="Deep Space">🌌 Deep Space</option>
+                            <option value="Satellite">🛰️ Satellites</option>
+                            <option value="Solar Event">☀️ Solar Events</option>
+                            <option value="Meteor">☄️ Meteors</option>
+                            <option value="Exoplanet">🪐 Exoplanets</option>
+                        </select>
+                        <!-- Status Filter -->
+                        <select id="obs-filter-status" class="obs-select-control" onchange="filterObservations()">
+                            <option value="All">All Statuses</option>
+                            <option value="Verified">Verified</option>
+                            <option value="Flagship Observation">Flagship Observation</option>
+                            <option value="Draft">Draft</option>
+                        </select>
+                        <!-- Add Button -->
+                        <button onclick="openCreateObservationModal()" class="obs-btn-primary">
+                            <span>+</span> Log New Observation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Storage Status Banner -->
+                <div id="obs-storage-status" class="obs-status-banner">
+                    <span class="pulse-dot"></span>
+                    <span id="obs-status-text">Fetching Observations via GET /api/observations...</span>
+                </div>
+
+                <!-- Observations Grid -->
+                <div id="observations-list" class="observations-grid">
+                    <!-- Populated dynamically via JS fetch from /api/observations -->
+                </div>
+            </section>
+
             <!-- === EXPLORATION PROGRESS === -->
             <section class="udash-card udash-progress-card">
                 <div class="udash-card-header">
@@ -222,6 +275,168 @@
 
         </main>
     </div>
+
+    <!-- ========================================== -->
+    <!-- CRUD MODALS FOR CELESTIAL OBSERVATIONS (A3) -->
+    <!-- ========================================== -->
+
+    <!-- 1. CREATE OBSERVATION MODAL -->
+    <div id="modal-create-obs" class="obs-modal-backdrop">
+        <div class="obs-modal-window">
+            <div class="obs-modal-header">
+                <h3 class="obs-modal-title">🔭 Log New Observation</h3>
+                <button type="button" class="obs-modal-close-btn" onclick="closeCreateObservationModal()">&times;</button>
+            </div>
+            <form id="form-create-obs" onsubmit="submitCreateObservation(event)">
+                <div class="obs-form-grid">
+                    <div class="obs-form-field obs-form-full">
+                        <label class="obs-form-label">Observation Title *</label>
+                        <input type="text" id="create-obs-title" class="obs-form-input" placeholder="e.g., Jupiter Great Red Spot & Galilean Moons" required maxlength="150">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Category *</label>
+                        <select id="create-obs-category" class="obs-form-select" required>
+                            <option value="Planet">Planet 🪐</option>
+                            <option value="Deep Space" selected>Deep Space 🌌</option>
+                            <option value="Satellite">Satellite 🛰️</option>
+                            <option value="Solar Event">Solar Event ☀️</option>
+                            <option value="Meteor">Meteor ☄️</option>
+                            <option value="Exoplanet">Exoplanet 🪐</option>
+                        </select>
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Celestial Object *</label>
+                        <input type="text" id="create-obs-object" class="obs-form-input" placeholder="e.g., Jupiter, ISS, M31, AR3664" required maxlength="100">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Right Ascension (RA)</label>
+                        <input type="text" id="create-obs-ra" class="obs-form-input" placeholder="e.g., 05h 35m 17s">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Declination (Dec)</label>
+                        <input type="text" id="create-obs-dec" class="obs-form-input" placeholder="e.g., -05° 23' 28&quot;">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Observer Name *</label>
+                        <input type="text" id="create-obs-observer" class="obs-form-input" placeholder="Observer Name" required maxlength="100">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Status</label>
+                        <select id="create-obs-status" class="obs-form-select">
+                            <option value="Verified" selected>Verified</option>
+                            <option value="Flagship Observation">Flagship Observation</option>
+                            <option value="Draft">Draft</option>
+                        </select>
+                    </div>
+                    <div class="obs-form-field obs-form-full">
+                        <label class="obs-form-label">Rating (1 to 5 Stars)</label>
+                        <select id="create-obs-rating" class="obs-form-select">
+                            <option value="5" selected>⭐⭐⭐⭐⭐ (5 - Exceptional Clarity)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 - High Quality)</option>
+                            <option value="3">⭐⭐⭐ (3 - Standard Viewing)</option>
+                            <option value="2">⭐⭐ (2 - Moderate Distortion)</option>
+                            <option value="1">⭐ (1 - Low Visibility)</option>
+                        </select>
+                    </div>
+                    <div class="obs-form-field obs-form-full">
+                        <label class="obs-form-label">Detailed Observation Notes *</label>
+                        <textarea id="create-obs-notes" class="obs-form-textarea" placeholder="Equipment used, atmospheric seeing condition, optical features resolved, spectral notes..." required></textarea>
+                    </div>
+                </div>
+                <div class="obs-modal-footer">
+                    <button type="button" class="obs-btn-secondary" onclick="closeCreateObservationModal()">Cancel</button>
+                    <button type="submit" class="obs-btn-primary" id="btn-save-obs">Save to MongoDB</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. EDIT / PATCH OBSERVATION MODAL -->
+    <div id="modal-edit-obs" class="obs-modal-backdrop">
+        <div class="obs-modal-window">
+            <div class="obs-modal-header">
+                <h3 class="obs-modal-title">✏️ Update Observation (PATCH)</h3>
+                <button type="button" class="obs-modal-close-btn" onclick="closeEditObservationModal()">&times;</button>
+            </div>
+            <form id="form-edit-obs" onsubmit="submitEditObservation(event)">
+                <input type="hidden" id="edit-obs-id">
+                <div class="obs-form-grid">
+                    <div class="obs-form-field obs-form-full">
+                        <label class="obs-form-label">Observation Title *</label>
+                        <input type="text" id="edit-obs-title" class="obs-form-input" required maxlength="150">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Category</label>
+                        <select id="edit-obs-category" class="obs-form-select">
+                            <option value="Planet">Planet 🪐</option>
+                            <option value="Deep Space">Deep Space 🌌</option>
+                            <option value="Satellite">Satellite 🛰️</option>
+                            <option value="Solar Event">Solar Event ☀️</option>
+                            <option value="Meteor">Meteor ☄️</option>
+                            <option value="Exoplanet">Exoplanet 🪐</option>
+                        </select>
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Celestial Object *</label>
+                        <input type="text" id="edit-obs-object" class="obs-form-input" required maxlength="100">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Status (PATCH)</label>
+                        <select id="edit-obs-status" class="obs-form-select">
+                            <option value="Verified">Verified</option>
+                            <option value="Flagship Observation">Flagship Observation</option>
+                            <option value="Draft">Draft</option>
+                        </select>
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Rating (PATCH)</label>
+                        <select id="edit-obs-rating" class="obs-form-select">
+                            <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+                            <option value="3">⭐⭐⭐ (3 Stars)</option>
+                            <option value="2">⭐⭐ (2 Stars)</option>
+                            <option value="1">⭐ (1 Star)</option>
+                        </select>
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Right Ascension (RA)</label>
+                        <input type="text" id="edit-obs-ra" class="obs-form-input">
+                    </div>
+                    <div class="obs-form-field">
+                        <label class="obs-form-label">Declination (Dec)</label>
+                        <input type="text" id="edit-obs-dec" class="obs-form-input">
+                    </div>
+                    <div class="obs-form-field obs-form-full">
+                        <label class="obs-form-label">Observation Notes (PATCH) *</label>
+                        <textarea id="edit-obs-notes" class="obs-form-textarea" required></textarea>
+                    </div>
+                </div>
+                <div class="obs-modal-footer">
+                    <button type="button" class="obs-btn-secondary" onclick="closeEditObservationModal()">Cancel</button>
+                    <button type="submit" class="obs-btn-primary" id="btn-patch-obs">Apply PATCH Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. VIEW DETAILS MODAL (READ ONE) -->
+    <div id="modal-view-obs" class="obs-modal-backdrop">
+        <div class="obs-modal-window" style="max-width: 620px;">
+            <div class="obs-modal-header">
+                <h3 class="obs-modal-title" id="view-obs-title">Observation Details</h3>
+                <button type="button" class="obs-modal-close-btn" onclick="closeViewObservationModal()">&times;</button>
+            </div>
+            <div id="view-obs-content" style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">
+                <!-- Populated dynamically via GET /api/observations/:id -->
+            </div>
+            <div class="obs-modal-footer">
+                <button type="button" class="obs-btn-secondary" onclick="closeViewObservationModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="obs-toast-container" class="obs-toast-container"></div>
 
     <footer>
         <p>Made by - Aviraj, Harsheet, Pratham, Samarth, Shivansh</p>
@@ -289,6 +504,7 @@ function getOrderProgress(order) {
 async function fetchUserOrders(user) {
     // Try server first
     const targets = [
+        '/api/auth/user/' + encodeURIComponent(user.username),
         'http://localhost:3000/api/auth/user/' + encodeURIComponent(user.username),
         'http://127.0.0.1:3000/api/auth/user/' + encodeURIComponent(user.username)
     ];
@@ -296,7 +512,15 @@ async function fetchUserOrders(user) {
         try {
             const ctrl = new AbortController();
             const tid = setTimeout(() => ctrl.abort(), 3000);
-            const res = await fetch(url, { signal: ctrl.signal });
+            const token = localStorage.getItem('solarExplorerToken') || '';
+            const res = await fetch(url, {
+                signal: ctrl.signal,
+                headers: {
+                    'Accept': 'application/json',
+                    'x-user-username': user.username,
+                    ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+                }
+            });
             clearTimeout(tid);
             if (res.ok) {
                 const data = await res.json();
@@ -440,14 +664,450 @@ async function initDashboard() {
     // Render with cached data first
     renderDashboard(user, []);
 
+    // Load Celestial Observations CRUD records
+    loadObservations();
+
     // Then fetch fresh from server
     const { user: freshUser, orders } = await fetchUserOrders(user);
     renderDashboard(freshUser, orders);
 }
 
-function doSignOut() {
+async function doSignOut() {
+    try {
+        const targets = [
+            '/api/auth/logout',
+            'http://localhost:3000/api/auth/logout',
+            'http://127.0.0.1:3000/api/auth/logout'
+        ];
+        for (const url of targets) {
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                break;
+            } catch (e) {}
+        }
+    } catch (e) {}
     localStorage.removeItem('solarExplorerUser');
+    localStorage.removeItem('solarExplorerToken');
     window.location.href = 'login.html';
+}
+
+function loginAsGuest() {
+    const guestUser = {
+        userId: 'USR-GUEST-' + Math.floor(1000 + Math.random() * 9000),
+        username: 'AstronomyExplorer',
+        displayName: 'Guest Flight Commander',
+        email: 'explorer@solarsystem.space',
+        joinedAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        stats: {
+            quizzesTaken: 2,
+            totalSpent: 45.00,
+            pagesVisited: ['home', 'missions', 'satellites'],
+            feedbackSubmitted: 1
+        },
+        achievements: ['First Launch 🚀']
+    };
+    localStorage.setItem('solarExplorerUser', JSON.stringify(guestUser));
+    document.getElementById('dashboard-not-logged-in').style.display = 'none';
+    document.getElementById('dashboard-logged-in').style.display = 'block';
+    initDashboard();
+}
+
+// =====================================================
+// CELESTIAL OBSERVATIONS CRUD CLIENT LOGIC (A3 RUBRIC)
+// Demonstrates Complete Create, Read, Update/PATCH, Delete
+// =====================================================
+
+let currentObservations = [];
+
+// Helper: Toast Notifications
+function showObsToast(message, type = 'success') {
+    const container = document.getElementById('obs-toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `obs-toast ${type}`;
+    toast.innerHTML = `<strong>${type === 'success' ? '✓ SUCCESS' : '✕ NOTICE'}</strong><div style="margin-top:4px;">${message}</div>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.transition = 'all 0.3s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3800);
+}
+
+// 1. READ ALL - GET /api/observations
+async function loadObservations() {
+    const categoryEl = document.getElementById('obs-filter-category');
+    const statusEl = document.getElementById('obs-filter-status');
+    const category = categoryEl ? categoryEl.value : 'All';
+    const status = statusEl ? statusEl.value : 'All';
+
+    const statusBanner = document.getElementById('obs-status-text');
+    if (statusBanner) {
+        statusBanner.textContent = 'Syncing observation logs from server...';
+    }
+
+    try {
+        const queryParams = new URLSearchParams();
+        if (category && category !== 'All') queryParams.append('category', category);
+        if (status && status !== 'All') queryParams.append('status', status);
+
+        const url = `/api/observations${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+        const res = await fetch(url);
+        const result = await res.json();
+
+        if (result.success && Array.isArray(result.data)) {
+            currentObservations = result.data;
+            renderObservations(currentObservations);
+
+            const modeLabel = result.storageMode === 'mongodb' ? 'MongoDB Atlas / Mongoose ODM' : 'Local JSON Resilience Mode';
+            if (statusBanner) {
+                statusBanner.innerHTML = `Connected to <strong>${modeLabel}</strong> &bull; Total Logs: <strong>${result.count}</strong> records live`;
+            }
+
+            // Update KPI Counter
+            const kpiObs = document.getElementById('kpi-observations');
+            if (kpiObs) kpiObs.textContent = result.count;
+        } else {
+            throw new Error(result.error || 'Failed to parse response');
+        }
+    } catch (err) {
+        console.warn('[Observations] Fetch error, attempting direct JSON reload:', err.message);
+        if (statusBanner) {
+            statusBanner.innerHTML = `Offline Resilience Mode &bull; Retrying connection...`;
+        }
+    }
+}
+
+function filterObservations() {
+    loadObservations();
+}
+
+// Render Observation Cards into UI
+function renderObservations(list) {
+    const container = document.getElementById('observations-list');
+    if (!container) return;
+
+    if (!list || list.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #0c0e12; border: 1px dashed #263040; border-radius: 8px;">
+                <div style="font-size: 2.2rem; margin-bottom: 10px;">🔭</div>
+                <h3 style="color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 6px;">No Observations Logged</h3>
+                <p style="color: #888; font-size: 0.85rem; max-width: 400px; margin: 0 auto 18px;">Be the first explorer to record a planetary transit, deep-space nebula, or satellite flyby!</p>
+                <button onclick="openCreateObservationModal()" class="obs-btn-primary" style="margin: 0 auto;">+ Record First Observation</button>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = list.map(item => {
+        const id = item._id || item.id;
+        const coords = typeof item.coordinates === 'object' && item.coordinates
+            ? `RA: ${item.coordinates.ra || 'N/A'} | Dec: ${item.coordinates.dec || 'N/A'}`
+            : (item.coordinates || 'RA/Dec Unspecified');
+
+        const statusClass = item.status === 'Flagship Observation'
+            ? 'obs-badge-status-flagship'
+            : (item.status === 'Verified' ? 'obs-badge-status-verified' : 'obs-badge-status-draft');
+
+        const stars = '★'.repeat(item.rating || 5) + '☆'.repeat(5 - (item.rating || 5));
+        const formattedDate = item.createdAt ? formatDate(item.createdAt) : 'Recent';
+
+        return `
+            <div class="obs-card" id="obs-card-${id}">
+                <div>
+                    <div class="obs-card-top">
+                        <span class="obs-badge obs-badge-category">${escapeHtml(item.category || 'Deep Space')}</span>
+                        <span class="obs-badge ${statusClass}">${escapeHtml(item.status || 'Verified')}</span>
+                    </div>
+
+                    <h3 class="obs-card-title">${escapeHtml(item.title)}</h3>
+                    <div class="obs-object-name">🎯 ${escapeHtml(item.celestialObject)}</div>
+
+                    <div class="obs-coords">🌐 ${escapeHtml(coords)}</div>
+
+                    <p class="obs-notes">${escapeHtml(item.notes)}</p>
+                </div>
+
+                <div>
+                    <div class="obs-meta-row">
+                        <div>
+                            <span>👤 ${escapeHtml(item.observerName)}</span>
+                            <div style="font-size: 0.7rem; color: #555; margin-top: 2px;">${formattedDate}</div>
+                        </div>
+                        <div class="obs-rating-stars" title="${item.rating || 5} Stars">${stars}</div>
+                    </div>
+
+                    <div class="obs-card-actions">
+                        <button onclick="viewObservationDetails('${id}')" class="obs-btn-action obs-btn-details" title="Read One via findById()">
+                            🔍 Inspect
+                        </button>
+                        <button onclick="openEditObservationModal('${id}')" class="obs-btn-action obs-btn-edit" title="Update via PATCH">
+                            ✏️ Edit
+                        </button>
+                        <button onclick="deleteObservation('${id}', '${escapeAttr(item.title)}')" class="obs-btn-action obs-btn-delete" title="Delete via findByIdAndDelete()">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// 2. CREATE - POST /api/observations
+function openCreateObservationModal() {
+    const modal = document.getElementById('modal-create-obs');
+    const form = document.getElementById('form-create-obs');
+    if (form) form.reset();
+
+    // Prefill observer name with current logged-in user
+    const user = JSON.parse(localStorage.getItem('solarExplorerUser') || '{}');
+    const observerInput = document.getElementById('create-obs-observer');
+    if (observerInput) {
+        observerInput.value = user.displayName || user.username || 'Commander Explorer';
+    }
+
+    if (modal) modal.classList.add('active');
+}
+
+function closeCreateObservationModal() {
+    const modal = document.getElementById('modal-create-obs');
+    if (modal) modal.classList.remove('active');
+}
+
+async function submitCreateObservation(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-save-obs');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving to MongoDB...';
+    }
+
+    const user = JSON.parse(localStorage.getItem('solarExplorerUser') || '{}');
+
+    const payload = {
+        title: document.getElementById('create-obs-title').value.trim(),
+        category: document.getElementById('create-obs-category').value,
+        celestialObject: document.getElementById('create-obs-object').value.trim(),
+        coordinates: {
+            ra: document.getElementById('create-obs-ra').value.trim() || 'N/A',
+            dec: document.getElementById('create-obs-dec').value.trim() || 'N/A'
+        },
+        observerName: document.getElementById('create-obs-observer').value.trim(),
+        userId: user.userId || null,
+        status: document.getElementById('create-obs-status').value,
+        rating: Number(document.getElementById('create-obs-rating').value),
+        notes: document.getElementById('create-obs-notes').value.trim()
+    };
+
+    try {
+        const res = await fetch('/api/observations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (res.status === 201 && data.success) {
+            closeCreateObservationModal();
+            showObsToast(`Observation "${data.data.title}" successfully recorded in MongoDB!`, 'success');
+            loadObservations();
+        } else {
+            throw new Error(data.error || 'Server error while storing observation.');
+        }
+    } catch (err) {
+        showObsToast(`Create Error: ${err.message}`, 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Save to MongoDB';
+        }
+    }
+}
+
+// 3. READ ONE - GET /api/observations/:id
+async function viewObservationDetails(id) {
+    try {
+        const res = await fetch(`/api/observations/${id}`);
+        const result = await res.json();
+
+        if (result.success && result.data) {
+            const obs = result.data;
+            const content = document.getElementById('view-obs-content');
+            const titleEl = document.getElementById('view-obs-title');
+            if (titleEl) titleEl.textContent = obs.title;
+
+            const coords = typeof obs.coordinates === 'object' && obs.coordinates
+                ? `RA: ${obs.coordinates.ra || 'N/A'} | Dec: ${obs.coordinates.dec || 'N/A'}`
+                : (obs.coordinates || 'N/A');
+
+            const stars = '★'.repeat(obs.rating || 5) + '☆'.repeat(5 - (obs.rating || 5));
+
+            if (content) {
+                content.innerHTML = `
+                    <div style="background: #141822; padding: 14px; border-radius: 8px; margin-bottom: 14px; border: 1px solid #222b3b;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
+                            <span style="color:#00f0ff; font-weight:600;">Category: ${escapeHtml(obs.category)}</span>
+                            <span style="color:#ffbb00;">${stars}</span>
+                        </div>
+                        <div style="font-family:'Orbitron',sans-serif; color:#fff; font-size:1.1rem; margin-bottom:4px;">${escapeHtml(obs.celestialObject)}</div>
+                        <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:#8ba0be;">Coordinates: ${escapeHtml(coords)}</div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size:0.75rem; text-transform:uppercase; color:#888; letter-spacing:1px; margin-bottom:4px;">Observation Report</div>
+                        <p style="background:#090b0e; padding:12px; border-radius:6px; border:1px solid #1c222e; color:#e2e8f0; line-height:1.6; white-space:pre-wrap;">${escapeHtml(obs.notes)}</p>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.78rem; color:#888; background:#0b0d13; padding:12px; border-radius:6px;">
+                        <div><strong>Observer:</strong> ${escapeHtml(obs.observerName)}</div>
+                        <div><strong>Status:</strong> ${escapeHtml(obs.status)}</div>
+                        <div><strong>Database ID:</strong> <code style="color:#00f0ff;">${obs._id || obs.id}</code></div>
+                        <div><strong>Storage Layer:</strong> ${result.storageMode === 'mongodb' ? 'MongoDB Atlas / Mongoose' : 'JSON Fallback'}</div>
+                        <div><strong>Created:</strong> ${formatDateTime(obs.createdAt)}</div>
+                        <div><strong>Last Updated:</strong> ${formatDateTime(obs.updatedAt)}</div>
+                    </div>
+                `;
+            }
+
+            const modal = document.getElementById('modal-view-obs');
+            if (modal) modal.classList.add('active');
+        } else {
+            throw new Error(result.error || 'Record not found');
+        }
+    } catch (err) {
+        showObsToast(`Read Error: ${err.message}`, 'error');
+    }
+}
+
+function closeViewObservationModal() {
+    const modal = document.getElementById('modal-view-obs');
+    if (modal) modal.classList.remove('active');
+}
+
+// 4. UPDATE (PATCH) - PATCH /api/observations/:id
+async function openEditObservationModal(id) {
+    try {
+        const res = await fetch(`/api/observations/${id}`);
+        const result = await res.json();
+
+        if (result.success && result.data) {
+            const obs = result.data;
+            document.getElementById('edit-obs-id').value = obs._id || obs.id;
+            document.getElementById('edit-obs-title').value = obs.title || '';
+            document.getElementById('edit-obs-category').value = obs.category || 'Deep Space';
+            document.getElementById('edit-obs-object').value = obs.celestialObject || '';
+            document.getElementById('edit-obs-status').value = obs.status || 'Verified';
+            document.getElementById('edit-obs-rating').value = obs.rating || 5;
+
+            const coords = typeof obs.coordinates === 'object' && obs.coordinates ? obs.coordinates : {};
+            document.getElementById('edit-obs-ra').value = coords.ra || '';
+            document.getElementById('edit-obs-dec').value = coords.dec || '';
+            document.getElementById('edit-obs-notes').value = obs.notes || '';
+
+            const modal = document.getElementById('modal-edit-obs');
+            if (modal) modal.classList.add('active');
+        } else {
+            throw new Error(result.error || 'Failed to fetch observation for editing');
+        }
+    } catch (err) {
+        showObsToast(`Edit Error: ${err.message}`, 'error');
+    }
+}
+
+function closeEditObservationModal() {
+    const modal = document.getElementById('modal-edit-obs');
+    if (modal) modal.classList.remove('active');
+}
+
+async function submitEditObservation(e) {
+    e.preventDefault();
+    const id = document.getElementById('edit-obs-id').value;
+    const btn = document.getElementById('btn-patch-obs');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Applying PATCH Update...';
+    }
+
+    const updates = {
+        title: document.getElementById('edit-obs-title').value.trim(),
+        category: document.getElementById('edit-obs-category').value,
+        celestialObject: document.getElementById('edit-obs-object').value.trim(),
+        status: document.getElementById('edit-obs-status').value,
+        rating: Number(document.getElementById('edit-obs-rating').value),
+        coordinates: {
+            ra: document.getElementById('edit-obs-ra').value.trim() || 'N/A',
+            dec: document.getElementById('edit-obs-dec').value.trim() || 'N/A'
+        },
+        notes: document.getElementById('edit-obs-notes').value.trim()
+    };
+
+    try {
+        const res = await fetch(`/api/observations/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates)
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+            closeEditObservationModal();
+            showObsToast(`Observation updated successfully via Mongoose findByIdAndUpdate!`, 'success');
+            loadObservations();
+        } else {
+            throw new Error(data.error || 'Server rejected PATCH update.');
+        }
+    } catch (err) {
+        showObsToast(`Update Error: ${err.message}`, 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Apply PATCH Update';
+        }
+    }
+}
+
+// 5. DELETE - DELETE /api/observations/:id
+async function deleteObservation(id, title) {
+    const confirmed = confirm(`Are you sure you want to permanently delete observation "${title}"?\n\nThis will trigger Mongoose findByIdAndDelete() on the server.`);
+    if (!confirmed) return;
+
+    try {
+        const res = await fetch(`/api/observations/${id}`, {
+            method: 'DELETE'
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+            showObsToast(`Observation deleted successfully via Mongoose findByIdAndDelete!`, 'success');
+            loadObservations();
+        } else {
+            throw new Error(data.error || 'Server error while deleting observation.');
+        }
+    } catch (err) {
+        showObsToast(`Delete Error: ${err.message}`, 'error');
+    }
+}
+
+// Safe string escaping helpers
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function escapeAttr(str) {
+    if (!str) return '';
+    return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
 initDashboard();

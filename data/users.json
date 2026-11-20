@@ -2,9 +2,9 @@
   {
     "userId": "USR-1794858060013",
     "username": "samarth_jain",
-    "passwordHash": "e9b542929ccc8750455c9f3dfe7fbbb3fa9c6d013ccea8feee89582e2403fd06",
+    "passwordHash": "$2b$10$gNNLiOo8UOPQZE4iaqNOV.Xhb/8A0ovAcTQ1isGFmk0CA56VgkuOK",
     "displayName": "Samarth Jain",
-    "email": "",
+    "email": "samarth@solarsystem.space",
     "orderIds": [
       "ORD-2026-1336",
       "ORD-2026-3384"
@@ -31,5 +31,51 @@
     },
     "joinedAt": "2026-11-16T19:41:00.013Z",
     "lastLoginAt": "2026-11-16T19:41:00.013Z"
+  },
+  {
+    "userId": "USR-1794858099001",
+    "username": "demo_commander",
+    "passwordHash": "$2b$10$gNNLiOo8UOPQZE4iaqNOV.Xhb/8A0ovAcTQ1isGFmk0CA56VgkuOK",
+    "displayName": "Commander Shepard",
+    "email": "commander@solarsystem.space",
+    "orderIds": [],
+    "achievements": [
+      "First Launch 🚀",
+      "Quiz Master 🏆",
+      "Explorer 🔭"
+    ],
+    "stats": {
+      "quizzesTaken": 5,
+      "totalSpent": 150,
+      "pagesVisited": [
+        "home",
+        "sun",
+        "extreme",
+        "missions",
+        "satellites"
+      ],
+      "feedbackSubmitted": 1
+    },
+    "joinedAt": "2026-11-18T10:00:00.000Z",
+    "lastLoginAt": "2026-11-20T12:00:00.000Z"
+  },
+  {
+    "userId": "USR-1795205501637",
+    "username": "evaluator_1469",
+    "passwordHash": "$2b$10$DsDoQUOFYxTiKRRfKP.jeOQiW8vo/gNjL0j58/LAjCHGW8zH.wOFi",
+    "displayName": "Prof. Evaluation Lead",
+    "email": "eval@university.edu",
+    "orderIds": [],
+    "achievements": [
+      "First Launch 🚀"
+    ],
+    "stats": {
+      "quizzesTaken": 0,
+      "totalSpent": 0,
+      "pagesVisited": [],
+      "feedbackSubmitted": 0
+    },
+    "joinedAt": "2026-11-20T20:11:41.637Z",
+    "lastLoginAt": "2026-11-20T20:11:41.637Z"
   }
 ]
