@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Harsh33t/webdev-project#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.10",
     "ejs": "^7.0.2",
