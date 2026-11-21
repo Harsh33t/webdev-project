@@ -299,7 +299,7 @@
                     <div>
                         <h2 style="display:flex; align-items:center; gap:8px;">
                             <span>🔭</span> Celestial Observations Log
-                            <span class="udash-card-badge" style="background:rgba(0,240,255,0.1); color:#00f0ff; border:1px solid rgba(0,240,255,0.3); font-size:0.75rem;">Full CRUD Module</span>
+                            <span class="udash-card-badge" style="background:rgba(255,255,255,0.06); color:#cbd5e1; border:1px solid rgba(255,255,255,0.14); font-size:0.72rem; letter-spacing:0.8px;">FULL CRUD MODULE</span>
                         </h2>
                         <p style="color:#718096; font-size:0.82rem; margin-top:4px;">Direct MongoDB Atlas / Mongoose ODM CRUD Operations (Create, Read, Update/PATCH, Delete) with local JSON resilience.</p>
                     </div>
@@ -351,6 +351,17 @@
                         <span class="udash-empty-icon">📦</span>
                         <p>No orders yet. <a href="merchandise.html">Visit the store</a> to place your first order!</p>
                     </div>
+                </div>
+
+                <!-- Live Order Tracking Lookup Form (Matching Minimalist Design) -->
+                <div style="margin-top:24px; padding:20px; background:#000000; border:1px solid rgba(255,255,255,0.1); border-radius:12px; position:relative; overflow:hidden;">
+                    <h3 style="font-size:0.95rem; color:#ffffff; font-weight:700; margin:0 0 6px; letter-spacing:1px; text-transform:uppercase;">Track Your Order Status</h3>
+                    <p style="color:#888888; font-size:0.82rem; margin-bottom:14px; font-family:'JetBrains Mono',monospace;">Enter your Order ID (e.g. <code>ORD-2026-3185</code>) to check live fulfillment status and dispatch telemetry from the server database.</p>
+                    <form id="dash-lookup-form" style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <input type="text" id="dash-lookup-input" placeholder="Enter Order ID (e.g. ORD-2026-3185)..." style="flex:1; min-width:240px; padding:12px 14px; background:#0d0d0d; border:1px solid rgba(255,255,255,0.15); color:#ffffff; font-family:'JetBrains Mono',monospace; font-size:0.85rem; border-radius:6px; outline:none;" autocomplete="off">
+                        <button type="submit" id="dash-lookup-btn" class="btn" style="background:#ffffff; color:#000000; font-weight:700; border:1px solid #ffffff; padding:12px 24px; font-size:0.8rem; letter-spacing:1.5px; border-radius:6px; cursor:pointer;">CHECK STATUS</button>
+                    </form>
+                    <div id="dash-lookup-output" style="margin-top:14px; display:none;"></div>
                 </div>
             </section>
 
@@ -713,13 +724,13 @@ function renderDashboard(user, orders) {
 
     // 2. 5 Stat Metric Cards (Matching Screenshot)
     const stats = user.stats || {};
-    const questsVal = (stats.quizzesTaken || 0) + (user.achievements ? user.achievements.length : 0);
     const questsEl = document.getElementById('stat-quests');
-    if (questsEl) questsEl.textContent = questsVal > 0 ? questsVal : 2;
+    if (questsEl) questsEl.textContent = stats.quizzesTaken !== undefined ? stats.quizzesTaken : 2;
 
-    const totalSpent = (stats.totalSpent || 0) + (orders || []).reduce((s, o) => s + (o.totalAmount || 0), 0);
     const pointsEl = document.getElementById('stat-points');
-    if (pointsEl) pointsEl.textContent = totalSpent > 0 ? ('$' + totalSpent.toFixed(2)) : '$2.00';
+    if (pointsEl) {
+        pointsEl.textContent = user.totalPoints || '$2.00';
+    }
 
     const achs = user.achievements || [];
     const achsEl = document.getElementById('stat-achievements');
@@ -736,7 +747,9 @@ function renderDashboard(user, orders) {
     if (cpUser) cpUser.textContent = user.username || 'prathar';
 
     const cpPoints = document.getElementById('cp-points');
-    if (cpPoints) cpPoints.textContent = totalSpent > 0 ? ('$' + totalSpent.toFixed(2)) : '$2.00';
+    if (cpPoints) {
+        cpPoints.textContent = user.totalPoints || '$2.00';
+    }
 
     const cpRank = document.getElementById('cp-rank');
     if (cpRank) cpRank.textContent = user.rankLabel || '#1,732';
@@ -759,44 +772,54 @@ function renderDashboard(user, orders) {
         if (featDesc) featDesc.textContent = 'Complete your first quest';
     }
 
-    // 5. Orders List
+    // 5. Orders List - Smooth Non-Glitching Rendering
     const ordersEl = document.getElementById('orders-list');
     if (ordersEl) {
-        const displayOrders = orders && orders.length > 0 ? orders : (user.orderIds || []).length > 0 ? [] : [];
-        if (displayOrders.length === 0 && (!orders || orders.length === 0)) {
-            ordersEl.innerHTML = `<div class="udash-empty-state"><span class="udash-empty-icon">📦</span><p>No orders yet. <a href="merchandise.html">Visit the store</a> to place your first order!</p></div>`;
-        } else {
-            ordersEl.innerHTML = '';
-            (displayOrders.length ? displayOrders : orders).forEach(order => {
-                const prog = getOrderProgress(order);
-                const item = order.items && order.items[0];
-                const el = document.createElement('div');
-                el.className = 'udash-order-row';
-                el.innerHTML = `
-                    <div class="udash-order-info">
-                        <div class="udash-order-id-row">
-                            <code class="udash-order-id">${order.orderId}</code>
-                            <span class="udash-order-status-badge">${prog.label}</span>
+        const fallbackOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+        const listToRender = (Array.isArray(orders) && orders.length > 0) ? orders : fallbackOrders;
+
+        // Check if currently displayed order IDs match to avoid unnecessary DOM tear-down and progress animation jerking
+        const currentRenderedIds = Array.from(ordersEl.querySelectorAll('.udash-order-id')).map(el => el.textContent.trim());
+        const newOrderIds = listToRender.map(o => o.orderId || 'ORD-2026');
+        const isSame = currentRenderedIds.length === newOrderIds.length &&
+            currentRenderedIds.every((id, idx) => id === newOrderIds[idx]);
+
+        if (!isSame) {
+            if (listToRender.length === 0) {
+                ordersEl.innerHTML = `<div class="udash-empty-state"><span class="udash-empty-icon">📦</span><p>No orders yet. <a href="merchandise.html">Visit the store</a> to place your first order!</p></div>`;
+            } else {
+                ordersEl.innerHTML = '';
+                listToRender.forEach(order => {
+                    const prog = getOrderProgress(order);
+                    const item = (order.items && order.items[0]) || { title: 'Space Merchandise Item', size: 'M', quantity: 1 };
+                    const el = document.createElement('div');
+                    el.className = 'udash-order-row';
+                    el.innerHTML = `
+                        <div class="udash-order-info">
+                            <div class="udash-order-id-row">
+                                <code class="udash-order-id">${escapeHtml(order.orderId || 'ORD-2026')}</code>
+                                <span class="udash-order-status-badge">${escapeHtml(prog.label)}</span>
+                            </div>
+                            <div class="udash-order-item-name">${escapeHtml(item.title || 'Space Gear')} • Size ${escapeHtml(item.size || 'M')} • Qty ${item.quantity || 1}</div>
+                            <div class="udash-order-meta">
+                                <span>Placed: ${formatDate(order.createdAt)}</span>
+                                <span>Total: <strong>$${Number(order.totalAmount || order.total || 0).toFixed(2)}</strong></span>
+                                <span>Tracking: <code>${escapeHtml(order.trackingNumber || '—')}</code></span>
+                            </div>
                         </div>
-                        <div class="udash-order-item-name">${item ? item.title : 'Space Merchandise'} ${item ? '• Size ' + item.size : ''} ${item ? '• Qty ' + item.quantity : ''}</div>
-                        <div class="udash-order-meta">
-                            <span>Placed: ${formatDate(order.createdAt)}</span>
-                            <span>Total: <strong>$${(order.totalAmount || 0).toFixed(2)}</strong></span>
-                            <span>Tracking: <code>${order.trackingNumber || '—'}</code></span>
+                        <div class="udash-order-progress">
+                            <div class="udash-order-steps">
+                                ${prog.statuses.map((s, i) => `<div class="udash-step ${i <= prog.idx ? 'done' : ''}">${s}</div>`).join('')}
+                            </div>
+                            <div class="udash-order-track-bar">
+                                <div class="udash-order-track-fill" style="width:${prog.pct}%"></div>
+                            </div>
+                            <div class="udash-order-pct">${prog.pct}% Complete</div>
                         </div>
-                    </div>
-                    <div class="udash-order-progress">
-                        <div class="udash-order-steps">
-                            ${prog.statuses.map((s, i) => `<div class="udash-step ${i <= prog.idx ? 'done' : ''}">${s}</div>`).join('')}
-                        </div>
-                        <div class="udash-order-track-bar">
-                            <div class="udash-order-track-fill" style="width:${prog.pct}%"></div>
-                        </div>
-                        <div class="udash-order-pct">${prog.pct}% Complete</div>
-                    </div>
-                `;
-                ordersEl.appendChild(el);
-            });
+                    `;
+                    ordersEl.appendChild(el);
+                });
+            }
         }
     }
 
@@ -885,15 +908,103 @@ async function initDashboard() {
     const dashLoggedIn = document.getElementById('dashboard-logged-in');
     if (dashLoggedIn) dashLoggedIn.style.display = 'block';
 
-    // Render with cached data first
-    renderDashboard(user, []);
+    // Render with cached data first to prevent layout jumping/glitching
+    const cachedOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+    renderDashboard(user, cachedOrders);
 
     // Load Celestial Observations CRUD records
     loadObservations();
 
+    // Wire live Order ID Status Lookup Form
+    const lookupForm = document.getElementById('dash-lookup-form');
+    const lookupInput = document.getElementById('dash-lookup-input');
+    const lookupOut = document.getElementById('dash-lookup-output');
+    const lookupBtn = document.getElementById('dash-lookup-btn');
+
+    if (lookupForm && lookupInput && lookupOut) {
+        lookupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const orderId = lookupInput.value.trim().toUpperCase();
+            if (!orderId) return;
+
+            if (lookupBtn) {
+                lookupBtn.disabled = true;
+                lookupBtn.textContent = 'QUERYING...';
+            }
+            lookupOut.style.display = 'block';
+            lookupOut.innerHTML = '<div style="color:#888;font-family:\'JetBrains Mono\',monospace;font-size:0.8rem;padding:10px 0;">Searching server database for dispatch telemetry...</div>';
+
+            let order = null;
+            try {
+                const endpoints = [
+                    '/api/orders/' + encodeURIComponent(orderId),
+                    '/api/merch/orders/' + encodeURIComponent(orderId),
+                    'http://localhost:3000/api/orders/' + encodeURIComponent(orderId),
+                    'http://127.0.0.1:3000/api/orders/' + encodeURIComponent(orderId)
+                ];
+                for (const url of endpoints) {
+                    try {
+                        const res = await fetch(url);
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data.success && (data.data || data.order)) {
+                                order = data.data || data.order;
+                                break;
+                            }
+                        }
+                    } catch (err) {}
+                }
+            } catch (err) {}
+
+            // Check localStorage cached orders if server fetch didn't return
+            if (!order) {
+                const localOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+                order = localOrders.find(o => (o.orderId || '').toUpperCase() === orderId || (o.id || '').toUpperCase() === orderId);
+            }
+
+            if (lookupBtn) {
+                lookupBtn.disabled = false;
+                lookupBtn.textContent = 'CHECK STATUS';
+            }
+
+            if (!order) {
+                lookupOut.innerHTML = `
+                    <div style="background:#0d0d0d;border:1px solid rgba(255,255,255,0.15);padding:14px;border-radius:8px;color:#94a3b8;font-family:'JetBrains Mono',monospace;font-size:0.82rem;">
+                        <span style="color:#ffffff;font-weight:700;">⚠ Order Not Found:</span> No record matching <code>${escapeHtml(orderId)}</code> was located in database. Verify your Order ID format.
+                    </div>
+                `;
+                return;
+            }
+
+            const prog = getOrderProgress(order);
+            const firstItem = (order.items && order.items[0]) || { title: 'Space Mission Gear', size: 'M', quantity: 1 };
+            lookupOut.innerHTML = `
+                <div style="background:#050505;border:1px solid rgba(255,255,255,0.18);padding:18px;border-radius:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:700;color:#ffffff;">${escapeHtml(order.orderId || orderId)}</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:#ffffff;background:rgba(255,255,255,0.1);padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.2);">${escapeHtml(prog.label)}</span>
+                    </div>
+                    <div style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">${escapeHtml(firstItem.title || 'Space Equipment')} • Size ${escapeHtml(firstItem.size || 'Standard')} • Qty ${firstItem.quantity || 1}</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:#64748b;margin-bottom:12px;">
+                        <div>Tracking: <code style="color:#ffffff;">${escapeHtml(order.trackingNumber || 'TRK-PENDING')}</code></div>
+                        <div>Total: <strong style="color:#ffffff;">$${Number(order.totalAmount || order.total || 0).toFixed(2)}</strong></div>
+                        <div>Estimated: <span style="color:#cbd5e1;">${formatDate(order.estimatedDelivery || order.createdAt)}</span></div>
+                    </div>
+                    <div class="udash-order-track-bar" style="height:6px;margin-bottom:6px;">
+                        <div class="udash-order-track-fill" style="width:${prog.pct}%;"></div>
+                    </div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#888;text-align:right;">${prog.pct}% Complete (${prog.label})</div>
+                </div>
+            `;
+        });
+    }
+
     // Then fetch fresh from server
     try {
         const { user: freshUser, orders } = await fetchUserOrders(user);
+        if (Array.isArray(orders) && orders.length > 0) {
+            localStorage.setItem('solarExplorerOrders', JSON.stringify(orders));
+        }
         renderDashboard(freshUser, orders);
     } catch (e) {}
 }
@@ -1057,9 +1168,9 @@ function renderObservations(list) {
                     </div>
 
                     <h3 class="obs-card-title">${escapeHtml(item.title)}</h3>
-                    <div class="obs-object-name">🎯 ${escapeHtml(item.celestialObject)}</div>
+                    <div class="obs-object-name"><span style="opacity:0.6;">◎</span> ${escapeHtml(item.celestialObject)}</div>
 
-                    <div class="obs-coords">🌐 ${escapeHtml(coords)}</div>
+                    <div class="obs-coords"><span style="opacity:0.6;">◷</span> ${escapeHtml(coords)}</div>
 
                     <p class="obs-notes">${escapeHtml(item.notes)}</p>
                 </div>
@@ -1067,21 +1178,21 @@ function renderObservations(list) {
                 <div>
                     <div class="obs-meta-row">
                         <div>
-                            <span>👤 ${escapeHtml(item.observerName)}</span>
-                            <div style="font-size: 0.7rem; color: #555; margin-top: 2px;">${formattedDate}</div>
+                            <span>${escapeHtml(item.observerName)}</span>
+                            <div style="font-size: 0.7rem; color: #64748b; margin-top: 2px;">${formattedDate}</div>
                         </div>
                         <div class="obs-rating-stars" title="${item.rating || 5} Stars">${stars}</div>
                     </div>
 
                     <div class="obs-card-actions">
-                        <button onclick="viewObservationDetails('${id}')" class="obs-btn-action obs-btn-details" title="Read One via findById()">
-                            🔍 Inspect
+                        <button onclick="viewObservationDetails('${id}')" class="obs-btn-action obs-btn-details" title="Read via findById()">
+                            Inspect
                         </button>
                         <button onclick="openEditObservationModal('${id}')" class="obs-btn-action obs-btn-edit" title="Update via PATCH">
-                            ✏️ Edit
+                            Edit
                         </button>
                         <button onclick="deleteObservation('${id}', '${escapeAttr(item.title)}')" class="obs-btn-action obs-btn-delete" title="Delete via findByIdAndDelete()">
-                            🗑️ Delete
+                            Delete
                         </button>
                     </div>
                 </div>
@@ -1181,27 +1292,27 @@ async function viewObservationDetails(id) {
 
             if (content) {
                 content.innerHTML = `
-                    <div style="background: #141822; padding: 14px; border-radius: 8px; margin-bottom: 14px; border: 1px solid #222b3b;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
-                            <span style="color:#00f0ff; font-weight:600;">Category: ${escapeHtml(obs.category)}</span>
-                            <span style="color:#ffbb00;">${stars}</span>
+                    <div style="background: #000000; padding: 16px; border-radius: 10px; margin-bottom: 14px; border: 1px solid rgba(255, 255, 255, 0.12);">
+                        <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+                            <span style="color:#ffffff; font-weight:700; font-family:'JetBrains Mono',monospace; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">Category: ${escapeHtml(obs.category)}</span>
+                            <span style="color:#ffffff; letter-spacing:2px;">${stars}</span>
                         </div>
-                        <div style="font-family:'Orbitron',sans-serif; color:#fff; font-size:1.1rem; margin-bottom:4px;">${escapeHtml(obs.celestialObject)}</div>
-                        <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:#8ba0be;">Coordinates: ${escapeHtml(coords)}</div>
+                        <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; color:#fff; font-size:1.15rem; margin-bottom:4px;">${escapeHtml(obs.celestialObject)}</div>
+                        <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:#94a3b8;">Coordinates: ${escapeHtml(coords)}</div>
                     </div>
 
                     <div style="margin-bottom: 16px;">
-                        <div style="font-size:0.75rem; text-transform:uppercase; color:#888; letter-spacing:1px; margin-bottom:4px;">Observation Report</div>
-                        <p style="background:#090b0e; padding:12px; border-radius:6px; border:1px solid #1c222e; color:#e2e8f0; line-height:1.6; white-space:pre-wrap;">${escapeHtml(obs.notes)}</p>
+                        <div style="font-size:0.75rem; text-transform:uppercase; color:#888; letter-spacing:1px; margin-bottom:6px; font-family:'JetBrains Mono',monospace;">Observation Report</div>
+                        <p style="background:#050505; padding:14px; border-radius:8px; border:1px solid rgba(255, 255, 255, 0.08); color:#cbd5e1; line-height:1.6; white-space:pre-wrap; margin:0; font-size:0.88rem;">${escapeHtml(obs.notes)}</p>
                     </div>
 
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.78rem; color:#888; background:#0b0d13; padding:12px; border-radius:6px;">
-                        <div><strong>Observer:</strong> ${escapeHtml(obs.observerName)}</div>
-                        <div><strong>Status:</strong> ${escapeHtml(obs.status)}</div>
-                        <div><strong>Database ID:</strong> <code style="color:#00f0ff;">${obs._id || obs.id}</code></div>
-                        <div><strong>Storage Layer:</strong> ${result.storageMode === 'mongodb' ? 'MongoDB Atlas / Mongoose' : 'JSON Fallback'}</div>
-                        <div><strong>Created:</strong> ${formatDateTime(obs.createdAt)}</div>
-                        <div><strong>Last Updated:</strong> ${formatDateTime(obs.updatedAt)}</div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.78rem; color:#888; background:#000000; padding:14px; border-radius:8px; border:1px solid rgba(255, 255, 255, 0.08); font-family:'JetBrains Mono',monospace;">
+                        <div><strong style="color:#cbd5e1;">Observer:</strong> ${escapeHtml(obs.observerName)}</div>
+                        <div><strong style="color:#cbd5e1;">Status:</strong> <span style="color:#ffffff;">${escapeHtml(obs.status)}</span></div>
+                        <div><strong style="color:#cbd5e1;">Database ID:</strong> <code style="color:#ffffff;">${obs._id || obs.id}</code></div>
+                        <div><strong style="color:#cbd5e1;">Storage Layer:</strong> <span style="color:#cbd5e1;">${result.storageMode === 'mongodb' ? 'MongoDB Atlas / Mongoose' : 'JSON Fallback'}</span></div>
+                        <div><strong style="color:#cbd5e1;">Created:</strong> ${formatDateTime(obs.createdAt)}</div>
+                        <div><strong style="color:#cbd5e1;">Last Updated:</strong> ${formatDateTime(obs.updatedAt)}</div>
                     </div>
                 `;
             }
