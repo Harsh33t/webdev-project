@@ -21,7 +21,9 @@ router.post('/logout', authController.logout);
 // 4. Session & User Profile
 router.get('/me', authController.getMe);
 router.get('/user/:username', authController.getUserProfile);
-router.get('/:username', authController.getUserProfile);
+// NOTE: /:username greedy route is kept but moved after /me and /user/:username
+// to prevent intercepting /me or other fixed paths
+router.get('/profile/:username', authController.getUserProfile);
 
 // 5. Link Order
 router.post('/user/:username/link-order', authController.linkOrder);

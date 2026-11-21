@@ -53,10 +53,11 @@ router.patch('/orders/:id/status', orderController.updateOrderStatus);
 router.put('/orders/:id/status', orderController.updateOrderStatus);
 
 // Merchandise VIP Pre-orders
-router.get('/merchandise', orderController.getMerchandise);
+// IMPORTANT: /merchandise/stats MUST be defined before /merchandise/:id to avoid Express matching "stats" as :id
 router.get('/merchandise/stats', orderController.getMerchandiseStats);
-router.get('/merchandise/:id', orderController.getMerchandiseById);
+router.get('/merchandise', orderController.getMerchandise);
 router.post('/merchandise', orderController.createMerchandise);
+router.get('/merchandise/:id', orderController.getMerchandiseById);
 router.delete('/merchandise/:id', orderController.deleteMerchandise);
 
 // ====================================================

@@ -38,6 +38,7 @@ if (!fs.existsSync(FILE_PATHS.merchandise)) fs.writeFileSync(FILE_PATHS.merchand
 if (!fs.existsSync(FILE_PATHS.orders)) fs.writeFileSync(FILE_PATHS.orders, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.users)) fs.writeFileSync(FILE_PATHS.users, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.observations)) fs.writeFileSync(FILE_PATHS.observations, '[]', 'utf8');
+if (!fs.existsSync(FILE_PATHS.products)) fs.writeFileSync(FILE_PATHS.products, '[]', 'utf8');
 if (!fs.existsSync(FILE_PATHS.satellites)) {
     fs.writeFileSync(FILE_PATHS.satellites, JSON.stringify([
         {
@@ -98,6 +99,7 @@ function readJson(key) {
 
 function writeJson(key, data) {
     fs.writeFileSync(FILE_PATHS[key], JSON.stringify(data, null, 2), 'utf8');
+    console.log(`[Storage] ✅ Wrote ${data.length} record(s) to ${FILE_PATHS[key]}`);
 }
 
 // ----------------------------------------------------

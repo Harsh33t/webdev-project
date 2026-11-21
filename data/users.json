@@ -10,18 +10,20 @@
       "ORD-2026-2338"
     ],
     "achievements": [
-      "The Launch 🚀"
+      "The Launch 🚀",
+      "Explorer 🔭"
     ],
     "stats": {
       "quizzesTaken": 2,
-      "totalSpent": 2.00,
+      "totalSpent": 2,
       "pagesVisited": [
         "home",
         "sun",
         "extreme",
         "missions",
         "satellites",
-        "merchandise"
+        "merchandise",
+        "feedback"
       ],
       "feedbackSubmitted": 1
     },
@@ -106,5 +108,24 @@
     },
     "joinedAt": "2026-11-20T20:11:41.637Z",
     "lastLoginAt": "2026-11-20T20:11:41.637Z"
+  },
+  {
+    "userId": "USR-1795292609268",
+    "username": "debug_tester2",
+    "passwordHash": "$2b$10$CtY8dX7Nb89.nRVnsHTd0eXqe.qsxcmrqLToH.S.7aM5Xd2AKgnhG",
+    "displayName": "debug_tester2",
+    "email": "debug2@test.com",
+    "orderIds": [],
+    "achievements": [
+      "First Launch 🚀"
+    ],
+    "stats": {
+      "quizzesTaken": 0,
+      "totalSpent": 0,
+      "pagesVisited": [],
+      "feedbackSubmitted": 0
+    },
+    "joinedAt": "2026-11-21T20:23:29.268Z",
+    "lastLoginAt": "2026-11-21T20:23:29.467Z"
   }
 ]

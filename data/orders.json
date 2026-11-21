@@ -1,5 +1,46 @@
 [
   {
+    "id": "ORD-2026-8954",
+    "orderId": "ORD-2026-8954",
+    "customer": {
+      "name": "Test User",
+      "email": "t@t.com",
+      "address": "123 Main",
+      "city": "Houston",
+      "state": "TX",
+      "zip": "77001"
+    },
+    "items": [
+      {
+        "productId": "lunar-bomber",
+        "title": "Lunar Bomber",
+        "price": 119,
+        "size": "M",
+        "quantity": 1,
+        "image": "images/merch/lunar-bomber.png"
+      }
+    ],
+    "totalAmount": 119,
+    "shippingFee": 0,
+    "currency": "USD",
+    "paymentMethod": "demo_card",
+    "paymentStatus": "paid",
+    "orderStatus": "confirmed",
+    "trackingNumber": "TRK-SOLAR-DD48S4",
+    "estimatedDelivery": "2026-11-25T20:23:29.538Z",
+    "emailNotification": {
+      "dispatched": true,
+      "messageId": "FALLBACK-1795292644408",
+      "previewUrl": null,
+      "receiptFile": "data\\email_receipts\\receipt-ORD-2026-8954.html",
+      "dispatchedAt": "2026-11-21T20:24:04.408Z",
+      "dispatchMode": "local_file_archived"
+    },
+    "createdAt": "2026-11-21T20:23:29.538Z",
+    "updatedAt": "2026-11-21T20:24:04.410Z",
+    "username": null
+  },
+  {
     "id": "ORD-2026-2338",
     "orderId": "ORD-2026-2338",
     "customer": {

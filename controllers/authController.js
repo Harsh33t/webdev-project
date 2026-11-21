@@ -217,8 +217,8 @@ const getUserProfile = async (req, res) => {
             return res.status(404).json({ success: false, error: 'User not found.' });
         }
 
-        // Fetch user's orders
-        const allOrders = StorageService.readJsonPublic ? StorageService.readJsonPublic('orders') : [];
+        // Fetch user's orders (using async getOrders for consistent access)
+        const allOrders = await StorageService.getOrders({}, 200);
         const userOrderIds = Array.isArray(user.orderIds) ? user.orderIds : [];
         const userOrders = allOrders.filter(o =>
             userOrderIds.includes(o.orderId) ||
@@ -282,7 +282,7 @@ const linkOrder = async (req, res) => {
             return res.status(404).json({ success: false, error: 'User not found.' });
         }
 
-        const orders = StorageService.readJsonPublic ? StorageService.readJsonPublic('orders') : [];
+        const orders = await StorageService.getOrders({}, 200);
         const order = orders.find(o => o.orderId === orderId);
         const amount = order ? order.totalAmount : (Number(req.body.amount) || 0);
 

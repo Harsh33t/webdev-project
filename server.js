@@ -66,11 +66,13 @@ app.use(express.static(path.join(__dirname), {
 app.use('/', viewRoutes);
 
 // Modular REST API Endpoints
+// NOTE: observationRoutes must be mounted BEFORE apiRoutes to avoid /api conflict
 app.use('/api/observations', observationRoutes);
+// Auth routes mounted at two canonical paths only (removed duplicate /api mount to prevent route shadowing)
 app.use('/api/auth', authRoutes);
 app.use('/auth', authRoutes);
+// Main API gateway — must come after specific mounts above
 app.use('/api', apiRoutes);
-app.use('/api', authRoutes);
 
 // Explicit root route handler fallback
 app.get('/', (req, res) => {
