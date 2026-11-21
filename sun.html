@@ -37,26 +37,31 @@
             <!-- LIVE SPACE WEATHER & SOLAR ACTIVITY TELEMETRY -->
             <section class="sun-block space-weather-block" id="space-weather-widget">
                 <div class="sw-header">
-                    <h2 class="sec-title">LIVE SOLAR TELEMETRY &bull; NOAA SWPC</h2>
+                    <h2 class="sec-title" style="letter-spacing: 2px; font-weight: 700;">NOAA SWPC FEED</h2>
                 </div>
-                <p class="sun-desc">Real-time space weather data fetched from the Space Weather Prediction Center API.</p>
+                <p class="sun-desc" style="color: #8892b0; font-size: 0.95rem; margin-bottom: 24px;">Real-time space weather data fetched from the Space Weather Prediction Center API.</p>
                 
-                <div class="planet-specs sw-specs-list">
-                    <div class="spec-row">
-                        <span class="spec-label">Planetary K-Index</span>
-                        <span class="spec-val"><span id="sw-kp">2.33 Kp</span> &bull; <span id="sw-activity" class="spec-sub">Quiet (Nominal)</span></span>
+                <div class="swpc-grid">
+                    <div class="swpc-card">
+                        <span class="swpc-label">PLANETARY K-INDEX</span>
+                        <div class="swpc-val" id="sw-kp">2.33 Kp</div>
+                        <div class="swpc-sub" id="sw-activity">Quiet (Nominal)</div>
                     </div>
-                    <div class="spec-row">
-                        <span class="spec-label">Solar Wind Speed</span>
-                        <span class="spec-val" id="sw-wind">425 km/s</span>
+                    <div class="swpc-card">
+                        <span class="swpc-label">SOLAR WIND SPEED</span>
+                        <div class="swpc-val" id="sw-wind">385 km/s</div>
+                        <div class="swpc-sub" id="sw-wind-sub">Interplanetary Plasma Stream</div>
                     </div>
-                    <div class="spec-row">
-                        <span class="spec-label">X-Ray Flare Level</span>
-                        <span class="spec-val" id="sw-flare">Class C1.4</span>
+                    <div class="swpc-card">
+                        <span class="swpc-label">X-RAY FLARE LEVEL</span>
+                        <div class="swpc-val" id="sw-flare">Class C1.4</div>
+                        <div class="swpc-sub" id="sw-flare-sub">Nominal</div>
+                        <div class="swpc-meta">Background Flux</div>
                     </div>
-                    <div class="spec-row">
-                        <span class="spec-label">Radio Blackout Status</span>
-                        <span class="spec-val" id="sw-radio">None (R0)</span>
+                    <div class="swpc-card">
+                        <span class="swpc-label">RADIO BLACKOUT</span>
+                        <div class="swpc-val" id="sw-radio">None (R0)</div>
+                        <div class="swpc-sub" id="sw-radio-sub">HF Comms Operational</div>
                     </div>
                 </div>
                 <div class="sw-timestamp" id="sw-updated">Synchronized with NOAA Space Weather Center: Just now</div>
