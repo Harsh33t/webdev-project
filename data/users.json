@@ -127,5 +127,46 @@
     },
     "joinedAt": "2026-11-21T20:23:29.268Z",
     "lastLoginAt": "2026-11-21T20:23:29.467Z"
+  },
+  {
+    "userId": "USR-1795294366732",
+    "username": "pratham",
+    "passwordHash": "$2b$10$Jt5fxEVRI3gvs43CPq/UlePP6lqwRGMYIYnUWb1/MATtVxjkVajqm",
+    "displayName": "Pratham Singh Shaurya",
+    "email": "prathamsingh.shaurya.25cse@bmu.edu.in",
+    "orderIds": [
+      "ORD-2026-7754",
+      "ORD-2026-2920",
+      "ORD-2026-9940",
+      "ORD-2026-5095",
+      "ORD-2026-9236",
+      "ORD-2026-8215",
+      "ORD-2026-3950",
+      "ORD-2026-3185",
+      "ORD-2026-6789",
+      "ORD-2026-3493"
+    ],
+    "achievements": [
+      "First Launch 🚀",
+      "Explorer 🔭",
+      "First Purchase 🛍️",
+      "Space Shopper 🌌",
+      "Galaxy Collector 🌠"
+    ],
+    "stats": {
+      "quizzesTaken": 0,
+      "totalSpent": 632,
+      "pagesVisited": [
+        "home",
+        "extreme",
+        "missions",
+        "fun-space",
+        "satellites",
+        "merchandise"
+      ],
+      "feedbackSubmitted": 0
+    },
+    "joinedAt": "2026-11-21T20:52:46.732Z",
+    "lastLoginAt": "2026-11-21T20:52:46.732Z"
   }
 ]
