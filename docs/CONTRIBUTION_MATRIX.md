@@ -122,3 +122,13 @@ We hereby certify that the deliverables submitted for Phase Evaluation 3 (A3 End
   - *Aviraj* — Asynchronous Integration & External Telemetry Lead
   - *Samarth* — Scientific Astrophysics Computations Lead
   - *Shivansh* — UI/UX Engineering & EJS Templating Lead
+
+
+### Updated Contribution Breakdown - Final Audit
+| Team Member | Module | Deliverable | Status |
+| :--- | :--- | :--- | :--- |
+| Pratham Singh | Dashboard & Minimalist UI | Metric stabilization, order tracking form, observation CRUD | Completed (100%) |
+| Aviraj Singh | Satellites & Live Radar | Find ISS Location, canvas radar engine, CelesTrak proxy | Completed (100%) |
+| Harsheet Patel | Merch & Route Gateway | API route aliasing, order persistence verification, email invoices | Completed (100%) |
+| Samarth Sharma | Auth & Pass Prediction | Pass prediction tests, watchlist CRUD, dual-storage persistence | Completed (100%) |
+| Shivansh Gupta | NOAA SWPC & System Testing | Space weather 2x2 grid, test suites, API gateway validation | Completed (100%) |
