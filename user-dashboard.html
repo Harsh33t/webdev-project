@@ -677,7 +677,31 @@ function getOrderProgress(order) {
     return { pct, label: labels[idx] || 'Confirmed', idx, statuses: labels };
 }
 
+// Browser storage is shared by every account that uses this device. Never show
+// the whole cached order list on a user's dashboard—only retain records that
+// can be tied to the active account.
+function isOrderOwnedByUser(order, user) {
+    if (!order || !user) return false;
+
+    const orderId = String(order.orderId || order.id || '');
+    const linkedOrderIds = new Set(Array.isArray(user.orderIds) ? user.orderIds.map(String) : []);
+    if (orderId && linkedOrderIds.has(orderId)) return true;
+
+    const username = String(user.username || '').trim().toLowerCase();
+    const orderUsername = String(order.username || order.customer?.username || '').trim().toLowerCase();
+    if (username && orderUsername && username === orderUsername) return true;
+
+    const email = String(user.email || '').trim().toLowerCase();
+    const orderEmail = String(order.customer?.email || order.email || '').trim().toLowerCase();
+    return Boolean(email && orderEmail && email === orderEmail);
+}
+
+function getOrdersOwnedByUser(orders, user) {
+    return Array.isArray(orders) ? orders.filter(order => isOrderOwnedByUser(order, user)) : [];
+}
+
 async function fetchUserOrders(user) {
+    const cachedOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
     // Try server first
     const targets = [
         '/api/auth/user/' + encodeURIComponent(user.username),
@@ -704,14 +728,13 @@ async function fetchUserOrders(user) {
                     // Merge server data with local
                     const merged = { ...user, ...data.user };
                     localStorage.setItem('solarExplorerUser', JSON.stringify(merged));
-                    return { user: merged, orders: data.orders || [] };
+                    return { user: merged, orders: getOrdersOwnedByUser(data.orders || [], merged) };
                 }
             }
         } catch (e) {}
     }
-    // Fallback: use localStorage orders
-    const localOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
-    return { user, orders: localOrders };
+    // Fallback: show only cached orders that belong to this account.
+    return { user, orders: getOrdersOwnedByUser(cachedOrders, user) };
 }
 
 function renderDashboard(user, orders) {
@@ -776,7 +799,9 @@ function renderDashboard(user, orders) {
     const ordersEl = document.getElementById('orders-list');
     if (ordersEl) {
         const fallbackOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
-        const listToRender = (Array.isArray(orders) && orders.length > 0) ? orders : fallbackOrders;
+        const currentUserOrders = getOrdersOwnedByUser(orders, user);
+        const cachedUserOrders = getOrdersOwnedByUser(fallbackOrders, user);
+        const listToRender = currentUserOrders.length > 0 ? currentUserOrders : cachedUserOrders;
 
         // Check if currently displayed order IDs match to avoid unnecessary DOM tear-down and progress animation jerking
         const currentRenderedIds = Array.from(ordersEl.querySelectorAll('.udash-order-id')).map(el => el.textContent.trim());
@@ -909,7 +934,7 @@ async function initDashboard() {
     if (dashLoggedIn) dashLoggedIn.style.display = 'block';
 
     // Render with cached data first to prevent layout jumping/glitching
-    const cachedOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+    const cachedOrders = getOrdersOwnedByUser(JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]'), user);
     renderDashboard(user, cachedOrders);
 
     // Load Celestial Observations CRUD records

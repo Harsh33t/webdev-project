@@ -100,13 +100,12 @@ const userSchema = new mongoose.Schema({
 });
 
 // Pre-save hook: Hash password with bcrypt before saving if modified & not already a bcrypt hash
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function() {
     if (this.isModified('passwordHash')) {
         if (this.passwordHash && !this.passwordHash.startsWith('$2a$') && !this.passwordHash.startsWith('$2b$')) {
             this.passwordHash = bcrypt.hashSync(this.passwordHash, 10);
         }
     }
-    next();
 });
 
 // Static methods
