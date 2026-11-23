@@ -827,7 +827,10 @@ function initMerchandisePage() {
 
     // 7. Express Order Checkout Submission
     const checkoutForm = document.getElementById('drawer-checkout-form');
-    if (checkoutForm) {
+    // The product catalog is rendered asynchronously and re-runs this setup.
+    // Bind the form once only; otherwise one click dispatches multiple orders.
+    if (checkoutForm && checkoutForm.dataset.checkoutBound !== 'true') {
+        checkoutForm.dataset.checkoutBound = 'true';
         checkoutForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = (document.getElementById('chk-name')?.value || '').trim();
