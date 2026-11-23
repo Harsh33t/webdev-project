@@ -6,19 +6,20 @@
 async function sendToBackendApi(endpoint, payload) {
     const targets = [];
 
-    // 1. If currently on port 3000, relative is fastest
-    if (typeof window !== 'undefined' && window.location && window.location.port === '3000') {
+    // A deployed site must post to its own server first. Otherwise an open
+    // localhost development server can capture a live checkout and prevent it
+    // from reaching the deployed MongoDB-backed API.
+    if (typeof window !== 'undefined' && window.location && /^https?:$/.test(window.location.protocol)) {
         targets.push(endpoint);
     }
 
-    // 2. Primary local server
+    // Development fallbacks, useful when the static pages run via Live Server.
     targets.push('http://localhost:3000' + endpoint);
-
-    // 3. IPv4 fallback
     targets.push('http://127.0.0.1:3000' + endpoint);
 
-    // 4. Relative fallback
-    targets.push(endpoint);
+    // file:// pages do not meet the condition above, so retain a final
+    // relative attempt for any unusual development host.
+    if (!targets.includes(endpoint)) targets.push(endpoint);
 
     for (const url of targets) {
         try {
@@ -882,11 +883,10 @@ function initMerchandisePage() {
 
             try {
                 const res = await sendToBackendApi('/api/orders', orderPayload);
-                const order = (res && res.data) ? res.data : {
-                    orderId: 'ORD-2026-' + Math.floor(1000 + Math.random() * 9000),
-                    trackingNumber: 'TRK-SOLAR-' + Math.floor(100000 + Math.random() * 900000),
-                    status: 'confirmed'
-                };
+                if (!res || !res.success || !res.data) {
+                    throw new Error('The order server could not be reached.');
+                }
+                const order = res.data;
 
                 // Update receipt view
                 const rId = document.getElementById('receipt-order-id');
