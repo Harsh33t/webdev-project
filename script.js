@@ -907,7 +907,10 @@ function initMerchandisePage() {
 
                 // Cache in localStorage with username
                 try {
-                    const existing = JSON.parse(localStorage.getItem(MERCH_ORDERS_STORAGE_KEY) || '[]');
+                    const orderCacheKey = (curUser && curUser.username)
+                        ? `${MERCH_ORDERS_STORAGE_KEY}:${String(curUser.username).trim().toLowerCase()}`
+                        : MERCH_ORDERS_STORAGE_KEY;
+                    const existing = JSON.parse(localStorage.getItem(orderCacheKey) || '[]');
                     existing.unshift({
                         orderId: order.orderId,
                         trackingNumber: order.trackingNumber,
@@ -919,7 +922,7 @@ function initMerchandisePage() {
                         orderStatus: 'confirmed',
                         createdAt: new Date().toISOString()
                     });
-                    localStorage.setItem(MERCH_ORDERS_STORAGE_KEY, JSON.stringify(existing.slice(0, 50)));
+                    localStorage.setItem(orderCacheKey, JSON.stringify(existing.slice(0, 50)));
                 } catch (cacheErr) {
                     console.warn('LocalStorage order save failed:', cacheErr);
                 }

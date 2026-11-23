@@ -700,8 +700,33 @@ function getOrdersOwnedByUser(orders, user) {
     return Array.isArray(orders) ? orders.filter(order => isOrderOwnedByUser(order, user)) : [];
 }
 
+function getUserOrdersCacheKey(user) {
+    const username = String(user?.username || '').trim().toLowerCase();
+    return username ? `solarExplorerOrders:${username}` : 'solarExplorerOrders:anonymous';
+}
+
+function readCachedOrdersForUser(user) {
+    try {
+        const key = getUserOrdersCacheKey(user);
+        const scopedOrders = JSON.parse(localStorage.getItem(key) || '[]');
+        if (Array.isArray(scopedOrders) && scopedOrders.length) {
+            return getOrdersOwnedByUser(scopedOrders, user);
+        }
+
+        // One-time safe migration from the legacy device-wide cache.
+        const legacyOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+        const ownedLegacyOrders = getOrdersOwnedByUser(legacyOrders, user);
+        if (ownedLegacyOrders.length) {
+            localStorage.setItem(key, JSON.stringify(ownedLegacyOrders));
+        }
+        return ownedLegacyOrders;
+    } catch {
+        return [];
+    }
+}
+
 async function fetchUserOrders(user) {
-    const cachedOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+    const cachedOrders = readCachedOrdersForUser(user);
     // Try server first
     const targets = [
         '/api/auth/user/' + encodeURIComponent(user.username),
@@ -798,7 +823,7 @@ function renderDashboard(user, orders) {
     // 5. Orders List - Smooth Non-Glitching Rendering
     const ordersEl = document.getElementById('orders-list');
     if (ordersEl) {
-        const fallbackOrders = JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]');
+        const fallbackOrders = readCachedOrdersForUser(user);
         const currentUserOrders = getOrdersOwnedByUser(orders, user);
         const cachedUserOrders = getOrdersOwnedByUser(fallbackOrders, user);
         const listToRender = currentUserOrders.length > 0 ? currentUserOrders : cachedUserOrders;
@@ -934,7 +959,7 @@ async function initDashboard() {
     if (dashLoggedIn) dashLoggedIn.style.display = 'block';
 
     // Render with cached data first to prevent layout jumping/glitching
-    const cachedOrders = getOrdersOwnedByUser(JSON.parse(localStorage.getItem('solarExplorerOrders') || '[]'), user);
+    const cachedOrders = readCachedOrdersForUser(user);
     renderDashboard(user, cachedOrders);
 
     // Load Celestial Observations CRUD records
@@ -1028,7 +1053,7 @@ async function initDashboard() {
     try {
         const { user: freshUser, orders } = await fetchUserOrders(user);
         if (Array.isArray(orders) && orders.length > 0) {
-            localStorage.setItem('solarExplorerOrders', JSON.stringify(orders));
+            localStorage.setItem(getUserOrdersCacheKey(freshUser), JSON.stringify(getOrdersOwnedByUser(orders, freshUser)));
         }
         renderDashboard(freshUser, orders);
     } catch (e) {}
