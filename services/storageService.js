@@ -166,7 +166,10 @@ const StorageService = {
     // ==========================================
     async getMerchandise(filter = {}) {
         if (isMongoActive()) {
-            return await Merchandise.find(filter).sort({ registeredAt: -1 }).lean();
+            // Do not send `{ status: undefined }` to MongoDB: it filters out
+            // every real pre-order instead of meaning "all statuses".
+            const query = filter.status ? { status: filter.status } : {};
+            return await Merchandise.find(query).sort({ registeredAt: -1 }).lean();
         }
         let list = readJson('merchandise');
         if (filter.status) list = list.filter(m => m.status === filter.status);
