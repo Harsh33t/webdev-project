@@ -184,13 +184,24 @@ const StorageService = {
     },
 
     async createMerchandise(data) {
+        // The storefront and API clients use short apparel sizes (S/M/L), while
+        // the database keeps the descriptive values required by its schema.
+        const sizeAliases = {
+            S: 'Small',
+            M: 'Medium',
+            L: 'Large',
+            XL: 'XL',
+            XXL: '2XL',
+            '2XL': '2XL'
+        };
+        const requestedSize = String(data.size || 'Medium').trim();
         const payload = {
             id: data.id || 'MERCH-' + Date.now(),
             vipPassId: data.vipPassId || 'VIP-ORBIT-' + Math.floor(1000 + Math.random() * 9000),
             name: data.name,
             email: data.email,
             product: data.product,
-            size: data.size || 'Medium',
+            size: sizeAliases[requestedSize.toUpperCase()] || requestedSize,
             quantity: Number(data.quantity || 1),
             suggestions: data.suggestions || data.wishlist || 'None provided',
             discount: data.discount || '20% VIP DISCOUNT',
