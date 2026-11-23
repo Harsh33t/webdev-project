@@ -15,6 +15,11 @@ const EmailService = require('../services/emailService');
 async function handleOrderPlacement(req, res) {
     try {
         const { customer, items, totalAmount, paymentMethod } = req.body;
+        // The storefront labels its demo option "simulated_express". Persist it
+        // using the schema's supported demo-card value.
+        const normalizedPaymentMethod = paymentMethod === 'simulated_express'
+            ? 'demo_card'
+            : (paymentMethod || 'demo_card');
 
         if (!customer || typeof customer !== 'object') {
             return res.status(400).json({
@@ -60,7 +65,7 @@ async function handleOrderPlacement(req, res) {
                 image: i.image || 'images/merch/lunar-bomber.png'
             })),
             totalAmount: finalTotal,
-            paymentMethod: paymentMethod || 'demo_card',
+            paymentMethod: normalizedPaymentMethod,
             username: req.body.username || (customer && customer.username) || null
         });
 
