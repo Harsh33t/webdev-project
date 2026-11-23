@@ -529,42 +529,6 @@ function initSatelliteExplorer() {
     }
 }
 
-    function fetchNoaaFallback() {
-        if (statusMsg) statusMsg.textContent = 'Connecting to NOAA Space Weather API...';
-        const noaaUrl = 'https://services.swpc.noaa.gov/products/noaa-scales.json';
-
-        fetch(noaaUrl)
-            .then((res) => {
-                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-                return res.json();
-            })
-            .then((data) => {
-                if (statusMsg) statusMsg.textContent = 'Successfully retrieved NOAA space weather data:';
-                if (!resultsGrid) return;
-                resultsGrid.innerHTML = '';
-
-                const latestKey = Object.keys(data)[0] || '0';
-                const latest = data[latestKey] || {};
-
-                const card = document.createElement('div');
-                card.className = 'satcat-card';
-                card.innerHTML = `
-                    <div class="satcat-name">NOAA Space Weather Status</div>
-                    <div class="satcat-meta">
-                        <span><strong>Timestamp:</strong> ${latest.DateStamp || ''} ${latest.TimeStamp || ''} UTC</span>
-                        <span><strong>Geomagnetic (G-Scale):</strong> Scale ${latest.G?.Scale || '0'} (${latest.G?.Text || 'None'})</span>
-                        <span><strong>Solar Radiation (S-Scale):</strong> Scale ${latest.S?.Scale || '0'} (${latest.S?.Text || 'None'})</span>
-                        <span><strong>Radio Blackouts (R-Scale):</strong> Scale ${latest.R?.Scale || '0'} (${latest.R?.Text || 'None'})</span>
-                    </div>
-                `;
-                resultsGrid.appendChild(card);
-            })
-            .catch((err) => {
-                if (statusMsg) statusMsg.textContent = `NOAA API request also failed: ${err.message}`;
-            });
-    }
-}
-
 /* ========================================================
    Feature H — Feedback Form & Local JSON Storage (feedback.html)
    ======================================================== */
@@ -1591,9 +1555,6 @@ function initSatelliteWatchlist() {
             loadWatchlist();
         });
     }
-
-    loadWatchlist();
-}
 
     loadWatchlist();
 }
