@@ -69,18 +69,26 @@ async function handleOrderPlacement(req, res) {
             username: req.body.username || (customer && customer.username) || null
         });
 
-        // Trigger email confirmation dispatch
-        const emailResult = await EmailService.sendOrderConfirmation(orderRecord);
-
-        // Update audit metadata
-        await StorageService.updateOrderEmailStatus(orderRecord.orderId, {
-            dispatched: emailResult.success,
-            messageId: emailResult.messageId,
-            previewUrl: emailResult.previewUrl,
-            receiptFile: emailResult.receiptPath,
-            dispatchedAt: new Date().toISOString(),
-            dispatchMode: emailResult.mode
-        });
+        // Save first and return the checkout result immediately. Email providers
+        // (especially the Ethereal test relay) can take several seconds, while
+        // the storefront deliberately uses a short request timeout.
+        // Sending in the background prevents a successfully saved order from
+        // looking like a failed checkout in the browser.
+        void (async () => {
+            try {
+                const emailResult = await EmailService.sendOrderConfirmation(orderRecord);
+                await StorageService.updateOrderEmailStatus(orderRecord.orderId, {
+                    dispatched: emailResult.success,
+                    messageId: emailResult.messageId,
+                    previewUrl: emailResult.previewUrl,
+                    receiptFile: emailResult.receiptPath,
+                    dispatchedAt: new Date().toISOString(),
+                    dispatchMode: emailResult.mode
+                });
+            } catch (emailErr) {
+                console.warn(`[orderController] Order ${orderRecord.orderId} was saved, but email dispatch failed: ${emailErr.message}`);
+            }
+        })();
 
         return res.status(201).json({
             success: true,
@@ -90,16 +98,16 @@ async function handleOrderPlacement(req, res) {
             data: {
                 ...orderRecord,
                 emailNotification: {
-                    dispatched: emailResult.success,
-                    previewUrl: emailResult.previewUrl,
-                    receiptPath: emailResult.receiptPath,
-                    dispatchMode: emailResult.mode
+                    dispatched: false,
+                    previewUrl: null,
+                    receiptPath: null,
+                    dispatchMode: 'queued'
                 }
             },
             email: {
-                sent: emailResult.success,
-                previewUrl: emailResult.previewUrl,
-                receiptPath: emailResult.receiptPath,
+                sent: false,
+                previewUrl: null,
+                receiptPath: null,
                 viewReceiptUrl: `/api/orders/${orderRecord.orderId}/receipt`
             }
         });
